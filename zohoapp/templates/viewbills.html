@@ -37,15 +37,17 @@
 
     <div class="col-md-4 py-3 d-flex align-items-center">
       <input type="text" class="form-control text-dark bg-white" id="search" placeholder="search...">
+
     </div>
-    
+
    
+
     <div class="col-md-6 py-2 d-flex justify-content-end">
       <select id="selectOption" class="btn btn-outline-warning dropdown-toggle "
               aria-label=".form-select-lg example"  name="type">
-              <option value="1" selected>All Bills</option>
-              <option value="2">Customer A-Z</option>
-              <option value="3">Vendor A-Z</option>
+              <option value="" selected>All</option>
+              <option value="Save">Save</option>
+              <option value="Draft">Draft</option>
       </select>
   </div>
   <div class="col-md-2 py-3">
@@ -68,11 +70,12 @@
         <tr>
           <th>DATE</th>
           <th>BILL NUMBER</th>
-          <th>ORDER NUMBER</th>
           <th>CUSTOMER NAME</th>
           <th>VENDOR NAME</th>
           <th>STATUS</th>
           <th>AMOUNT</th>
+          <th>BALANCE</th>
+          <th>ACTION</th>
         </tr>
       </thead>
       <tbody id="myTable">
@@ -80,11 +83,12 @@
         <tr class="clickable-row" data-href="{% url 'bill_view' bill.id %}">
           <td>{{bill.bill_date}}</td>
           <td>{{bill.bill_no}}</td>
-          <td>{{bill.order_number}}</td>
           <td>{{bill.customer_name}}</td>
           <td>Mr.{{bill.vendor_name}}</td>
           <td>{{bill.status}}</td>
           <td>{{bill.total}}</td>
+          <td></td>
+          <td></td>
         </tr>
         {% endfor %}
       </tbody>

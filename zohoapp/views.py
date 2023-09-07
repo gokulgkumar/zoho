@@ -10890,3 +10890,20 @@ def vendor_credit_vendor(request):
         vndr.save()
 
         return HttpResponse({"message":"success"})
+    
+
+def purchasebyitem(request):
+    customer1 = customer.objects.all()
+    company_data = company_details.objects.get(user=request.user)
+    return render(request,'purchases_by_item.html',{'cust': customer1, 'company_data': company_data})
+
+    
+
+def purchasebyvendor(request):
+    customer1 = customer.objects.all()
+    company_data = company_details.objects.get(user=request.user)
+    return render(request,'purchases_by_vendor.html',{'cust': customer1, 'company_data': company_data})
+
+
+def customize_vendor_report(request):
+    return render(request,'customize_report_vendor.html')
