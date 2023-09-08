@@ -10897,6 +10897,10 @@ def purchasebyitem(request):
     company_data = company_details.objects.get(user=request.user)
     return render(request,'purchases_by_item.html',{'cust': customer1, 'company_data': company_data})
 
+def customize_report_purchasebyitem(request):
+    vendor=vendor_table.objects.all()
+    return render(request,'customize_report_purchasebyitem.html',{'vendors':vendor})
+
     
 
 def purchasebyvendor(request):
@@ -10906,4 +10910,6 @@ def purchasebyvendor(request):
 
 
 def customize_vendor_report(request):
-    return render(request,'customize_report_vendor.html')
+    vendor=vendor_table.objects.all()
+    
+    return render(request,'customize_report_vendor.html',{'vendors':vendor})

@@ -1,14 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
 <style>
     .item-list {
     padding: 0;
@@ -210,12 +202,12 @@
 }
 
 #filter-space{
-    padding-right: 9px;
+    padding-right: 5px;
 }
 
 
     .filter-section {
-        margin-top: 40px;
+        margin-top: 20px;
     }
 
     .filter-row {
@@ -247,14 +239,13 @@
         
     }
 
-
 </style>
 
 <div class="container main-content">
     <div class="row">
         <div class="col-md-12">
             <!-- Place the close button here -->
-            <a href="{% url 'purchasebyvendor' %}" class="btn btn-light" id="close-button" style="color:  rgb(1, 1, 1);">
+            <a href="{% url 'purchasebyitem' %}" class="btn btn-light" id="close-button" style="color:  rgb(1, 1, 1);">
                 <i class="fa fa-times-circle"></i>
             </a>
         </div>
@@ -279,94 +270,48 @@
                     <label for="dateRangePicker" class="pb-3" style="color: beige;">Date Range:</label>
                     <input type="text" id="dateRangePicker" class="form-control">
                 </div>
-                <label class="pt-5 mb-3" style="color: beige;">Filter:</label>
-                <label class="pt-5 mb-3" style="color: beige; margin-left: 205px;" >Expense Status:</label>
-                <label class="pt-5 mb-3" style="color: beige;margin-left: 155px;">Bill Status:</label>
-                <div class="d-flex " >
+                <label class="pt-5 mb-3" style="color: beige;">Group By:</label>
+                <label class="pt-5 mb-3" style="color: beige;margin-left:190px;">Account:</label>
+                <div class="d-flex flex-grow-1 px-1" >
                     
-                    <select class="form-select" id="filter-space" aria-label="Default select example" style=" background-color: #070707; margin-right: 10px;">
-                        <option selected value="All">All</option>
-                        <option value="Bill">Bill</option>
-                        <option value="Expense">Expenses</option>
-                        <option value="MJournal">Manual Journals</option>
-
+                    <select class="form-control" style=" background-color: #070707;">
+                        <option value="##" style="color: #ffffff;" selected>None</option>
+                        {% for items in vendors %}
+                        <option value="##" style="color: #ffffff;">{{ items.vendor_display_name }}</option>
+                        {% endfor %}
                     </select>
 
-<!--                    
-                        <div class="dropdown ">
-                            <button class="btn btn-dark  dropdown-toggle form-select" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                select
-                            </button>
-
-                            <div class="dropdown-menu form-select" aria-labelledby="dropdownMenuButton">
-                                <label class="dropdown-item form-select">
-                                    <input type="checkbox" class="select-all form-select"> Select All
-                                </label>
-                               
-                                <label class="dropdown-item">
-                                    <input type="checkbox"> Option 1
-                                </label>
-                                <label class="dropdown-item">
-                                    <input type="checkbox"> Option 2
-                                </label>
-                                <label class="dropdown-item">
-                                    <input type="checkbox"> Option 3
-                                </label>
-                                
-                            </div>
-                        </div> -->
-                    
-                 
-                     <select  id="Select" class="form-select" aria-label="Default select example" style=" background-color: #070707;margin-right: 10px;">
-                        <option value="All" type="checkbox" ></option>
-                        <option value="Bill"></option>
-                        <option value="Expense"></option>
-                        <option value="MJournal"></option>
-                    </select> 
-
-                    
-                    <select class="form-select" aria-label="Default select example" style=" background-color: #070707;margin-right: 10px;">
-                        <option selected value="All"></option>
-                        <option value="Bill"></option>
-                        <option value="Expense"></option>
-                        <option value="MJournal"> </option>
-                    </select> 
-                
+                    <select class="form-control" style=" background-color: #070707;margin-left: 40px;">
+                        <option value="##" style="color: #ffffff;" selected>All</option>
+            
+                    </select>
+      
                 </div>
 
                 
-            <div class="filter-section" >
-                <h6 style="color:  beige;"  >Advanced Filters</h6>
+            <div class="filter-section mt-5" >
+                <h6 style="color:  beige;" >Advanced Filters</h6>
                 <div id="filterContainer"> <!-- Added a container div -->
                     <!-- The first filter row -->
                     <div class="filter-row">
                         <div class="filter-field">
                             <label for="filterSelectField"></label>
                             <select class="form-control" style=" background-color: #070707;">
-                                {% for items in vendors %}
-                                <option value="{{ items.vendor_display_name }}" style="color: #ffffff;">{{ items.vendor_display_name }}</option>
-                                {% endfor %}
+                                
+                                <option value="#" style="color: #ffffff;">Select a field</option>
+                                
                             </select>
                         </div>
                         <div class="filter-field">
                             <label for="filterSelectColumn"></label>
-                            <select class="form-control" style="background-color: rgb(7, 7, 7); color: #ffffff;">
+                            <select class="form-control" style="background-color: rgb(7, 7, 7); color: #ffffff;margin-left: 69px;">
                                 <option  selected>Select a comparator</option>
-                                <option >is</option>
-                                <option >isn't</option>
-                                <option >starts with</option>
-                                <option >ends with</option>
-                                <option >contains</option>
-                                <option >doesn't contains</option>
+                                
+                                <option disabled >no results found</option>
                             </select>
-                        </div>
-                        <div class="filter-field">
-                            <label for="filterSelectColumn"></label>
-                            <input type="text" style="background-color: rgb(7, 7, 7);color: #ffffff;font-size: 16pt; ">
-
                         </div>
                         <div class="filter-action">
-                            <button class="btn btn-light">-</button>
+                            <button class="btn btn-light" style="margin-left: 80px;background-color: rgb(7, 7, 7);">-</button>
                         </div>
                     </div>
                 </div>
@@ -375,7 +320,7 @@
                 </div>
             </div>
         </div>
-    
+            
 
                  
                 
@@ -384,7 +329,6 @@
                
 
            
-
             <div id="columns" class="custom-content" style="display: none;">
                 <div class="row column-transfer">
                 <!-- Show/Hide Columns section -->
@@ -396,16 +340,24 @@
                             <span class="search-icon">&#128269;</span>
                         </div>
                         <ul class="item-list" style="color: #eeebeb;">
-                            <li class="items"><span class="item-text">Website</span><span class="add">+</span></li>
-                            <li class="items"><span class="item-text">Amount</span><span class="add">+</span></li>
-                            <li class="items"><span class="item-text">Amount with Tax</span><span class="add">+</span></li>
-                            <li class="items"><span class="item-text">Expense Count</span><span class="add">+</span></li>
-                            <li class="items"><span class="item-text">Mobile Phone</span><span class="add">+</span></li>
-                            <li class="items"><span class="item-text">WorkPhone</span><span class="add">+</span></li>
-                            <li class="items"><span class="item-text">Department</span><span class="add">+</span></li>
-                            <li class="items"><span class="item-text">Designation</span><span class="add">+</span></li>
-                            <li class="items"><span class="item-text">Vendor Email</span><span class="add">+</span></li>
-                            <li class="items"><span class="item-text">Journal Count</span><span class="add">+</span></li>
+                            
+                            <!-- <li class="items"><span class="item-text">Company Name</span> <span class="add">+</span></li>
+                            <li class="items"><span class="item-text">First Name</span> <span class="add">+</span></li>
+                            <li class="items"><span class="item-text">Last Name</span> <span class="add">+</span></li> -->
+                            <li class="items"><span class="item-text">SKU</span><span class="add">+</span></li>
+                            <li class="items"><span class="item-text">Item Type</span><span class="add">+</span></li>
+                            <li class="items"><span class="item-text">Product Type</span><span class="add">+</span></li>
+                            <li class="items"><span class="item-text">Usage Unit</span><span class="add">+</span></li>
+                            <li class="items"><span class="item-text">Sales Description</span><span class="add">+</span></li>
+                            <li class="items"><span class="item-text">Purchase Description</span><span class="add">+</span></li>
+                            <li class="items"><span class="item-text">Purchase price</span><span class="add">+</span></li>
+                            <li class="items"><span class="item-text">Breadth</span><span class="add">+</span></li>
+                            <li class="items"><span class="item-text">Length</span><span class="add">+</span></li>
+                            <li class="items"><span class="item-text">we</span><span class="add">+</span></li>
+                            <li class="items"><span class="item-text">Date CF</span><span class="add">+</span></li>
+                            <li class="items"><span class="item-text">Dropdown</span><span class="add">+</span></li>
+                            <li class="items"><span class="item-text">Mandatory customfield</span><span class="add">+</span></li>
+                            <li class="items"><span class="item-text">4</span><span class="add">+</span></li>
                         </ul>
                     </div>
                     <!-- <div class="col-md-6" id="addedColumn" style="height: auto; max-height:70vh; width:25vw; overflow-y:auto ;border: 1px solid #ccc; padding-left: 15px;">
@@ -415,9 +367,10 @@
                     <div class="col-md-6" id="addedColumn" style="height: 70vh; width:25vw; overflow-y:auto; border: 1px solid #ccc; position: relative; padding-right: 15px;">
                         <h2 style="color: white;">Selected Column</h2>
                         <ul class="item-list" style="color: #eeebeb;">
-                            <li class="items"><span class="item-text ">First Name</span><span class="remove">-</span>
-                                <li class="items"><span class="item-text">Last Name</span><span class="remove">-</span>
-                                    <li class="items"><span class="item-text">Company Name</span><span class="remove">-</span>
+                            <li class="items"><span class="item-text ">Item Name</span><span class="remove">-</span>
+                                <li class="items"><span class="item-text">Quantity Purchased</span><span class="remove">-</span>
+                                    <li class="items"><span class="item-text">Amount</span><span class="remove">-</span>
+                                        <li class="items"><span class="item-text">Average Price</span><span class="remove">-</span>
                             <!-- <li class="items"><span class="item-text">sales with Tax</span><span class="remove">-</span>  -->
                         </ul>
                     </div>
@@ -425,33 +378,12 @@
             </div>
                 <!-- End Show/Hide Columns section -->
             </div>
+        </div>
        
     </div>
 </div>
-</div>
-</div>
+</div>  
 <script>
-
-
-$(document).ready(function() {
-            // Handle the "Select All" checkbox
-            $('.select-all').change(function() {
-                const isChecked = $(this).prop('checked');
-                $('.dropdown-item input[type="checkbox"]').prop('checked', isChecked);
-            });
-
-            // Handle individual checkbox changes
-            $('.dropdown-item input[type="checkbox"]').change(function() {
-                const allCheckboxes = $('.dropdown-item input[type="checkbox"]');
-                const selectAllCheckbox = $('.select-all');
-                selectAllCheckbox.prop('checked', allCheckboxes.length === allCheckboxes.filter(':checked').length);
-            });
-        });
-
-
-
-
-
 
 document.addEventListener("DOMContentLoaded", () => {
     const links = document.querySelectorAll(".custom-list-item");
@@ -586,6 +518,12 @@ const originalAvailableItems = document.querySelectorAll("#originalColumn .items
         const filterRowContainer = document.querySelector(".filter-row");
         const filterContainer = document.querySelector("#filterContainer");
        
+
+
+
+
+
+        
         addFilterButton.addEventListener("click", () => {
             console.log("Add more button clicked");
 
@@ -595,14 +533,14 @@ const originalAvailableItems = document.querySelectorAll("#originalColumn .items
             <div class="filter-field">
                             <label for="filterSelectField"></label>
                             <select class="form-control" style=" background-color: #070707;">
-                                {% for items in vendors %}
-                                <option value="{{ items.vendor_display_name }}" style="color: #ffffff;">{{ items.vendor_display_name }}</option>
-                                {% endfor %}
+                                
+                                <option value="#" style="color: #ffffff;">Select a field</option>
+                                
                             </select>
                         </div>
                         <div class="filter-field">
                             <label for="filterSelectColumn"></label>
-                            <select class="form-control" style="background-color: rgb(7, 7, 7); color: #ffffff;">
+                            <select class="form-control" style="background-color: rgb(7, 7, 7); color: #ffffff;margin-left: 69px;">
                                 <option  selected>Select a comparator</option>
                                 <option >is</option>
                                 <option >isn't</option>
@@ -612,13 +550,8 @@ const originalAvailableItems = document.querySelectorAll("#originalColumn .items
                                 <option >doesn't contains</option>
                             </select>
                         </div>
-                        <div class="filter-field">
-                            <label for="filterSelectColumn"></label>
-                            <input type="text" style="background-color: rgb(7, 7, 7);color: #ffffff;font-size: 16pt; ">
-
-                        </div>
                         <div class="filter-action">
-                            <button class="btn btn-light">-</button>
+                            <button class="btn btn-light" style="margin-left: 80px;background-color: rgb(7, 7, 7);">-</button>
                         </div>
     `;
 
