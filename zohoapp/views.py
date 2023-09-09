@@ -10906,10 +10906,12 @@ def customize_report_purchasebyitem(request):
 def purchasebyvendor(request):
     customer1 = customer.objects.all()
     company_data = company_details.objects.get(user=request.user)
-    return render(request,'purchases_by_vendor.html',{'cust': customer1, 'company_data': company_data})
+    vendor=vendor_table.objects.all()
+    return render(request,'purchases_by_vendor.html',{'cust': customer1, 'company': company_data,'vendors':vendor})
 
 
 def customize_vendor_report(request):
     vendor=vendor_table.objects.all()
+    company_data = company_details.objects.get(user=request.user)
     
-    return render(request,'customize_report_vendor.html',{'vendors':vendor})
+    return render(request,'customize_report_vendor.html',{'vendors':vendor,'company': company_data})
