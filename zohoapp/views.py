@@ -10893,13 +10893,20 @@ def vendor_credit_vendor(request):
     
 
 def purchasebyitem(request):
-    customer1 = customer.objects.all()
+    user=request.user
+    customer1 = customer.objects.filter(user=user)
     company_data = company_details.objects.get(user=request.user)
-    return render(request,'purchases_by_item.html',{'cust': customer1, 'company_data': company_data})
+    bills = PurchaseBillItems.objects.filter(purchase_bill_id=user.id)
+    return render(request,'purchases_by_item.html',{'cust': customer1, 'company': company_data,'bills':bills})
+
+
 
 def customize_report_purchasebyitem(request):
     vendor=vendor_table.objects.all()
-    return render(request,'customize_report_purchasebyitem.html',{'vendors':vendor})
+    company_data = company_details.objects.get(user=request.user)
+    return render(request,'customize_report_purchasebyitem.html',{'vendors':vendor,'company': company_data})
+
+
 
     
 

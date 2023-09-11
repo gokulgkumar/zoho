@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+
+
 <style>
     .item-list {
     padding: 0;
@@ -239,6 +241,111 @@
         
     }
 
+  
+/* checkbox dropdown */
+
+    * {
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+  color: #379937;
+}
+
+
+
+.dropdown2 {
+  position: relative;
+  font-size: 15px;
+  color: #333;
+  width: 260px;
+  
+
+  
+
+  .dropdown2-list {
+    padding: 12px;
+    background-color: rgb(7, 7, 7);
+    position: absolute;
+    top: 30px;
+    left: 0px;
+    right: 2px;
+    width: 228px;
+    box-shadow: 0 1px 2px 1px rgba(0, 0, 0, .15);
+    transform-origin: 50% 0;
+    transform: scale(1, 0);
+    transition: transform .15s ease-in-out .15s;
+    max-height: 66vh;
+    overflow-y: scroll;
+    
+  }
+  .dropdown2-list {
+    transition: none !important;
+}
+  
+  .dropdown2-option {
+    display: block;
+    padding: 3px 12px;
+    opacity: 0;
+    transition: opacity .15s ease-in-out;
+    
+  }
+  
+  .dropdown2-label {
+    display: block;
+    height: 38px;
+    background-color: rgb(7, 7, 7);
+    padding: 12px 12px;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: 4px;
+    
+    &:before {
+      content: '▼';
+      float: right;
+    }
+  }
+  
+  &.on {
+   .dropdown2-list {
+      transform: scale(1, 1);
+      transition-delay: 0s;
+      
+      .dropdown2-option {
+        opacity: 1;
+        transition-delay: none;
+      }
+    }
+    
+    .dropdown2-label:before {
+      content: '▲';
+    }
+  }
+  
+  [type="checkbox"] {
+    position: relative;
+    top: -1px;
+    margin-right: 4px;
+  }
+}
+ /* checkbox dropdown */  
+
+ #dropdown2-third{
+    width: 228px;
+
+ }
+
+
+
+
+
+
+
+
+
+
+
 </style>
 
 <div class="container main-content">
@@ -271,22 +378,28 @@
                     <input type="text" id="dateRangePicker" class="form-control">
                 </div>
                 <label class="pt-5 mb-3" style="color: beige;">Group By:</label>
-                <label class="pt-5 mb-3" style="color: beige;margin-left:190px;">Account:</label>
+                <label class="pt-5 mb-3" style="color: beige;margin-left:305px;">Account:</label>
+                
+
                 <div class="d-flex flex-grow-1 px-1" >
-                    
-                    <select class="form-control" style=" background-color: #070707;">
-                        <option value="##" style="color: #ffffff;" selected>None</option>
+
+
+                    <select class="form-control" style=" background-color: #070707;border: 1px solid beige;">
+                        <option value="##" style="color: #ffffff;" disabled selected hidden>None</option>
                         {% for items in vendors %}
                         <option value="##" style="color: #ffffff;">{{ items.vendor_display_name }}</option>
                         {% endfor %}
                     </select>
 
-                    <select class="form-control" style=" background-color: #070707;margin-left: 40px;">
-                        <option value="##" style="color: #ffffff;" selected>All</option>
+                    <select class="form-control" style=" background-color: #070707;margin-left: 40px;border: 1px solid beige;">
+                        <option value="##" style="color: #ffffff;" disabled selected hidden>All</option>
+                        
             
                     </select>
-      
+
+                     
                 </div>
+            
 
                 
             <div class="filter-section mt-5" >
@@ -296,22 +409,55 @@
                     <div class="filter-row">
                         <div class="filter-field">
                             <label for="filterSelectField"></label>
-                            <select class="form-control" style=" background-color: #070707;">
+                            <select class="form-control custom-select " style="background-color: rgb(7, 7, 7); color: #ffffff;  margin-left: 4px; transform: translateY(0);border: 1px solid beige;">
+                                <option value="" disabled selected hidden>Select a field</option>
+                                <optgroup  inputmode="">
+                                </optgroup>
+                                <optgroup label="Reports"  >
+                                    
+                        
+                                    <option value="">Item Name</option>
+
+                                </optgroup>
+                                <optgroup></optgroup>
+            
+                                <optgroup label="Item"  >
+                                    
+                                    <option value="">SKU</option>
+                                    <option value="">Breadth</option>
+                                    <option value="">Show in PDF</option>
+                                    <option value="">we</option>
+                                    <option value="">Date CF</option>
+                                    <option value="">Dropdown</option>
+                                    <option value="">Mandatory customfield</option>
+                                    <option value="">4</option>  
+
+                                </optgroup>
                                 
-                                <option value="#" style="color: #ffffff;">Select a field</option>
-                                
-                            </select>
+                               
+                            </select> 
+
+                         
+
+                          
+
+
+
                         </div>
+
+
+
                         <div class="filter-field">
                             <label for="filterSelectColumn"></label>
-                            <select class="form-control" style="background-color: rgb(7, 7, 7); color: #ffffff;margin-left: 69px;">
-                                <option  selected>Select a comparator</option>
+                            <select class="form-control" style="background-color: rgb(7, 7, 7); color: #ffffff;width:300px;border: 1px solid beige;margin-left: 69px;">
+                                <option  disabled selected hidden>Select a comparator</option>
                                 
                                 <option disabled >no results found</option>
                             </select>
                         </div>
+                        
                         <div class="filter-action">
-                            <button class="btn btn-light" style="margin-left: 80px;background-color: rgb(7, 7, 7);">-</button>
+                            <button class="btn btn-light" style="margin-left: 80px;">-</button>
                         </div>
                     </div>
                 </div>
@@ -334,16 +480,14 @@
                 <!-- Show/Hide Columns section -->
                 <div class="row">
                     <div class="col-md-6" id="originalColumn" style="height: 70vh; width:25vw; overflow-y:auto; border: 1px solid #ccc; position: relative; padding-right: 15px;">
-                        <h2 style="color: white; position: sticky; top: 0;">Show / Hide Column</h2>
+                        <h2 style="color: white; position: sticky; top: 0;">Available Column</h2>
                         <div class="search-bar" style="position: sticky; top: 40px;">
                             <input type="text" id="searchInput" class="search-input" placeholder="Search items">
                             <span class="search-icon">&#128269;</span>
                         </div>
                         <ul class="item-list" style="color: #eeebeb;">
                             
-                            <!-- <li class="items"><span class="item-text">Company Name</span> <span class="add">+</span></li>
-                            <li class="items"><span class="item-text">First Name</span> <span class="add">+</span></li>
-                            <li class="items"><span class="item-text">Last Name</span> <span class="add">+</span></li> -->
+                            
                             <li class="items"><span class="item-text">SKU</span><span class="add">+</span></li>
                             <li class="items"><span class="item-text">Item Type</span><span class="add">+</span></li>
                             <li class="items"><span class="item-text">Product Type</span><span class="add">+</span></li>
@@ -383,14 +527,128 @@
     </div>
 </div>
 </div>  
+
+    
 <script>
+
+
+
+
+
+ 
+
+
+
+
+
+
+// checkbox
+
+(function($) {
+  var CheckboxDropdown = function(el) {
+    var _this = this;
+    this.isOpen = false;
+    this.areAllChecked = false;
+    this.$el = $(el);
+    this.$label = this.$el.find('.dropdown2-label');
+    this.$checkAll = this.$el.find('[data-toggle="check-all"]').first();
+    this.$inputs = this.$el.find('[type="checkbox"]');
+    
+    this.onCheckBox();
+    
+    this.$label.on('click', function(e) {
+      e.preventDefault();
+      _this.toggleOpen();
+    });
+    
+    this.$checkAll.on('click', function(e) {
+      e.preventDefault();
+      _this.onCheckAll();
+    });
+    
+    this.$inputs.on('change', function(e) {
+      _this.onCheckBox();
+    });
+  };
+  
+  CheckboxDropdown.prototype.onCheckBox = function() {
+    this.updateStatus();
+  };
+  
+  CheckboxDropdown.prototype.updateStatus = function() {
+    var checked = this.$el.find(':checked');
+    
+    this.areAllChecked = false;
+    this.$checkAll.html('All');
+    
+    if(checked.length <= 0) {
+      this.$label.html();
+    }
+    else if(checked.length === 1) {
+      this.$label.html(checked.parent('label').text());
+    }
+    else if(checked.length === this.$inputs.length) {
+      this.$label.html('All Selected');
+      this.areAllChecked = true;
+      this.$checkAll.html('Uncheck All');
+    }
+    else {
+      this.$label.html(checked.length + ' Selected');
+    }
+  };
+  
+  CheckboxDropdown.prototype.onCheckAll = function(checkAll) {
+    if(!this.areAllChecked || checkAll) {
+      this.areAllChecked = true;
+      this.$checkAll.html('Uncheck All');
+      this.$inputs.prop('checked', true);
+    }
+    else {
+      this.areAllChecked = false;
+      this.$checkAll.html('Check All');
+      this.$inputs.prop('checked', false);
+    }
+    
+    this.updateStatus();
+  };
+  
+  CheckboxDropdown.prototype.toggleOpen = function(forceOpen) {
+    var _this = this;
+    
+    if(!this.isOpen || forceOpen) {
+       this.isOpen = true;
+       this.$el.addClass('on');
+      $(document).on('click', function(e) {
+        if(!$(e.target).closest('[data-control]').length) {
+         _this.toggleOpen();
+        }
+      });
+    }
+    else {
+      this.isOpen = false;
+      this.$el.removeClass('on');
+      $(document).off('click');
+    }
+  };
+  
+  var checkboxesDropdowns = document.querySelectorAll('[data-control="checkbox-dropdown2"]');
+  for(var i = 0, length = checkboxesDropdowns.length; i < length; i++) {
+    new CheckboxDropdown(checkboxesDropdowns[i]);
+  }
+})(jQuery);
+
+// checkbox
+
+
+
+
 
 document.addEventListener("DOMContentLoaded", () => {
     const links = document.querySelectorAll(".custom-list-item");
     const contents = document.querySelectorAll(".custom-content");
     
       
-    $('.dropdown-toggle').dropdown();
+    $('.dropdown2-toggle').dropdown();
         links.forEach((link, index) => {
             link.addEventListener("click", () => {
                 links.forEach(link => {
@@ -551,7 +809,7 @@ const originalAvailableItems = document.querySelectorAll("#originalColumn .items
                             </select>
                         </div>
                         <div class="filter-action">
-                            <button class="btn btn-light" style="margin-left: 80px;background-color: rgb(7, 7, 7);">-</button>
+                            <button class="btn btn-light" style="margin-left: 80px;">-</button>
                         </div>
     `;
 

@@ -82,8 +82,8 @@
         <!-- <p class="text" style="color: white;">From 21 Jan 2023 To 21 Jan 2024</p> -->
     </center>
         <table class="table table-bordered table-striped mt-4">
-            <thead>
-                <tr>
+            <thead style="border: 1px solid beige;">
+                <tr style="border: 1px solid beige;">
                     <th>Item Name</th>
                     <th>Quantity Purchased</th>
                     <th>Amount</th>
@@ -92,14 +92,21 @@
                 </tr>
             </thead>
             <tbody>
-                {% for i in cust %}
-                <tr>
+                {% for i in bills %}
+                <tr style="border: 1px solid beige;">
                    
-                    <!-- <td style="color: #ccc;">{{ i.customerName }}</td>
-                    <td style="color: #ccc;">10</td>
-                    <td style="color: #ccc;">1000</td>
-                    <td style="color: #ccc;">1200</td> -->
+                    <td style="color: #ccc;">{{ i.item_name }}</td>
+                    <td style="color: #ccc;">{{ i.quantity }}</td>
+                    <td style="color: #ccc;">{{ i.amount }}</td>
+                    <td style="color: #ccc;">0</td>
                     {% endfor %}
+                </tr>
+                <tr  style="border: 1px solid beige;">
+                    <td style="color: #ccc;"><h4>Total</h4></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    
                 </tr>
 
             </tbody>
