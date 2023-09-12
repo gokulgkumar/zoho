@@ -29,12 +29,20 @@
             align-items: center;
             width: 92vw;
     }
+
+   
+
+
 }
     .daterangepicker  {
         background-color: #f0f0f0; 
         color: #000; 
        
     }
+
+#thclr{
+    color: beige;
+}
     
 
 
@@ -83,22 +91,22 @@
 
         <!-- <p class="text" style="color: white;">From 21 Jan 2023 To 21 Jan 2024</p> -->
     </center>
-        <table class="table table-bordered table-striped mt-4">
-            <thead>
-                <tr>
-                    <th>Vendor Name</th>
-                    <th>Expense Count</th>
-                    <th>Bill Count</th>
-                    <th>Journal Count</th>
-                    <th>Amount</th>
-                    <th>Amount with Tax</th>
+        <table class="table table-bordered table-striped mt-4" style="border: 1px solid beige;">
+            <thead style="border: 1px solid beige;">
+                <tr style="border: 1px solid beige;">
+                    <th id="thclr">Vendor Name</th>
+                    <th id="thclr">Expense Count</th>
+                    <th id="thclr">Bill Count</th>
+                    <th id="thclr">Journal Count</th>
+                    <th id="thclr">Amount</th>
+                    <th id="thclr">Amount with Tax</th>
                 </tr>
             </thead>
             <tbody>
 
                 
                  {% for i in vendors %}
-                <tr>
+                <tr style="border: 1px solid beige;">
                    
                     <td style="color: #ccc;">{{ i.vendor_display_name }}</td>
                     <td style="color: #ccc;">0</td>
@@ -108,7 +116,7 @@
                     <td style="color: #ccc;">0</td>
                 </tr>
                 {% endfor %}
-                <tr>
+                <tr style="border: 1px solid beige;">
                     <td style="color: #ccc;"><h4>Total</h4></td>
                     <td></td>
                     <td></td>

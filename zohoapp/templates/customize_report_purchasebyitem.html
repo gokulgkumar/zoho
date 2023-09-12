@@ -71,12 +71,12 @@
     }
 
     #dateRangePicker {
-        background-color: rgb(5, 5, 5);
+        
         border: 1px solid #ccc;
         padding: 10px;
         width: 100%;
         font-size: 14px;
-        color: black;
+        color:black !important;
         /* Set the text color to black */
     }
 
@@ -262,8 +262,6 @@ a {
   width: 260px;
   
 
-  
-
   .dropdown2-list {
     padding: 12px;
     background-color: rgb(7, 7, 7);
@@ -360,7 +358,7 @@ a {
     <div class="row row-container">
         <div class="col-md-3 left-column">
             <div class="custom-list-group">
-                <a class="custom-list-item active" data-target="general">
+                <a class="custom-list-item active" data-target="general" >
                     General
                 </a>
                 <br>
@@ -375,29 +373,30 @@ a {
             <div id="general" class="custom-content">
                 <div>
                     <label for="dateRangePicker" class="pb-3" style="color: beige;">Date Range:</label>
-                    <input type="text" id="dateRangePicker" class="form-control">
+                    <input type="text" id="dateRangePicker" class="form-control" style="color: #060606;" >
                 </div>
                 <label class="pt-5 mb-3" style="color: beige;">Group By:</label>
                 <label class="pt-5 mb-3" style="color: beige;margin-left:305px;">Account:</label>
                 
 
                 <div class="d-flex flex-grow-1 px-1" >
-
-
-                    <select class="form-control" style=" background-color: #070707;border: 1px solid beige;">
+                    <select class="form-control" style=" color: black!important;">
                         <option value="##" style="color: #ffffff;" disabled selected hidden>None</option>
                         {% for items in vendors %}
-                        <option value="##" style="color: #ffffff;">{{ items.vendor_display_name }}</option>
+                        <option value="##"  style=" color: black;">{{ items.vendor_display_name }}</option>
+
+                       <!-- Add options -->
+
                         {% endfor %}
                     </select>
 
-                    <select class="form-control" style=" background-color: #070707;margin-left: 40px;border: 1px solid beige;">
-                        <option value="##" style="color: #ffffff;" disabled selected hidden>All</option>
-                        
-            
-                    </select>
+                    <select class="form-control" style=" color: black!important;margin-left: 40px;">
+                        <option value="##"  disabled selected hidden>All</option>
+                        <option value="##"  disabled >no results found</option>
 
-                     
+                        <!-- Add options -->
+
+                    </select>              
                 </div>
             
 
@@ -409,20 +408,20 @@ a {
                     <div class="filter-row">
                         <div class="filter-field">
                             <label for="filterSelectField"></label>
-                            <select class="form-control custom-select " style="background-color: rgb(7, 7, 7); color: #ffffff;  margin-left: 4px; transform: translateY(0);border: 1px solid beige;">
+                            <select class="form-control custom-select " style=" color: black!important;margin-left: 4px; transform: translateY(0);">
                                 <option value="" disabled selected hidden>Select a field</option>
                                 <optgroup  inputmode="">
                                 </optgroup>
                                 <optgroup label="Reports"  >
                                     
-                        
-                                    <option value="">Item Name</option>
+                                    {% for i in bills %}
+                                    <option value="">{{ i.item_name }}</option>
+                                    {% endfor %}
 
                                 </optgroup>
                                 <optgroup></optgroup>
             
                                 <optgroup label="Item"  >
-                                    
                                     <option value="">SKU</option>
                                     <option value="">Breadth</option>
                                     <option value="">Show in PDF</option>
@@ -432,37 +431,30 @@ a {
                                     <option value="">Mandatory customfield</option>
                                     <option value="">4</option>  
 
-                                </optgroup>
-                                
-                               
+                                </optgroup>                               
                             </select> 
-
-                         
-
-                          
-
-
-
                         </div>
 
 
 
                         <div class="filter-field">
                             <label for="filterSelectColumn"></label>
-                            <select class="form-control" style="background-color: rgb(7, 7, 7); color: #ffffff;width:300px;border: 1px solid beige;margin-left: 69px;">
+                            <select class="form-control" style=" color: black!important;width:300px;margin-left: 69px;">
                                 <option  disabled selected hidden>Select a comparator</option>
-                                
                                 <option disabled >no results found</option>
+
+                                 <!-- Add options -->
+
                             </select>
                         </div>
                         
-                        <div class="filter-action">
+                        <div class="filter-action ">
                             <button class="btn btn-light" style="margin-left: 80px;">-</button>
                         </div>
                     </div>
                 </div>
                 <div class="filter-action">
-                    <button id="addFilter" style="color: blue;" class="btn">+ Add more</button>
+                    <button id="addFilter" style="color: rgb(255, 0, 0);" class="btn">+ Add more</button>
                 </div>
             </div>
         </div>
@@ -472,8 +464,7 @@ a {
                 
     
 
-               
-
+            
            
             <div id="columns" class="custom-content" style="display: none;">
                 <div class="row column-transfer">
@@ -531,11 +522,6 @@ a {
     
 <script>
 
-
-
-
-
- 
 
 
 
@@ -790,22 +776,51 @@ const originalAvailableItems = document.querySelectorAll("#originalColumn .items
             filterRow.innerHTML = `
             <div class="filter-field">
                             <label for="filterSelectField"></label>
-                            <select class="form-control" style=" background-color: #070707;">
+                            <select class="form-control custom-select " style=" color: black!important;margin-left: 4px; transform: translateY(0);">
+                                <option value="" disabled selected hidden>Select a field</option>
+                                <optgroup  inputmode="">
+                                </optgroup>
+                                <optgroup label="Reports"  >
+                                    
+                                    {% for i in bills %}
+                                    <option value="">{{ i.item_name }}</option>
+                                    {% endfor %}
+
+                                </optgroup>
+                                <optgroup></optgroup>
+            
+                                <optgroup label="Item"  >
+                                    
+                                    <option value="">SKU</option>
+                                    <option value="">Breadth</option>
+                                    <option value="">Show in PDF</option>
+                                    <option value="">we</option>
+                                    <option value="">Date CF</option>
+                                    <option value="">Dropdown</option>
+                                    <option value="">Mandatory customfield</option>
+                                    <option value="">4</option>  
+
+                                </optgroup>
                                 
-                                <option value="#" style="color: #ffffff;">Select a field</option>
-                                
-                            </select>
+                               
+                            </select> 
+
+                         
+
+                          
+
+
+
                         </div>
+
+
+
                         <div class="filter-field">
                             <label for="filterSelectColumn"></label>
-                            <select class="form-control" style="background-color: rgb(7, 7, 7); color: #ffffff;margin-left: 69px;">
-                                <option  selected>Select a comparator</option>
-                                <option >is</option>
-                                <option >isn't</option>
-                                <option >starts with</option>
-                                <option >ends with</option>
-                                <option >contains</option>
-                                <option >doesn't contains</option>
+                            <select class="form-control" style=" color: black!important;width:300px;margin-left: 69px;">
+                                <option  disabled selected hidden>Select a comparator</option>
+                                
+                                <option disabled >no results found</option>
                             </select>
                         </div>
                         <div class="filter-action">

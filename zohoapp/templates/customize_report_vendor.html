@@ -48,7 +48,7 @@
     /* Custom styles for left column */
      .left-column {
         background-color: rgba(rgb(235, 221, 221));
-        color: white;
+        color: white!important;
         padding: 20px;
         height: 50vh;
         overflow-y: auto;
@@ -71,12 +71,12 @@
     }
 
     #dateRangePicker {
-        background-color: rgb(5, 5, 5);
+        color: black !important;
         border: 1px solid #ccc;
         padding: 10px;
         width: 100%;
         font-size: 14px;
-        color: black;
+        
         
         /* Set the text color to black */
     }
@@ -251,14 +251,17 @@
 
 a {
   text-decoration: none;
-  color: #379937;
+
+    color: black !important;
+
 }
+
 
 
 
 .dropdown2 {
   position: relative;
-  font-size: 15px;
+  
   color: #333;
   width: 260px;
   
@@ -267,7 +270,8 @@ a {
 
   .dropdown2-list {
     padding: 12px;
-    background-color: rgb(7, 7, 7);
+    background-color: white;
+    color: black;
     position: absolute;
     top: 30px;
     left: 0px;
@@ -296,11 +300,12 @@ a {
   .dropdown2-label {
     display: block;
     height: 38px;
-    background-color: rgb(7, 7, 7);
+    background-color: white;
     padding: 12px 12px;
     line-height: 1;
     cursor: pointer;
     border-radius: 4px;
+    color: black !important;
     
     &:before {
       content: '▼';
@@ -325,6 +330,7 @@ a {
   }
   
   [type="checkbox"] {
+
     position: relative;
     top: -1px;
     margin-right: 4px;
@@ -351,13 +357,13 @@ a {
     <div class="row row-container">
         <div class="col-md-3 left-column">
             <div class="custom-list-group">
-                <a class="custom-list-item active" data-target="general">
+                <a class="custom-list-item active" data-target="general" style="color: white!important;">
                     General
                 </a>
                 <br>
                 <br>
                 <br>
-                <a class="custom-list-item" data-target="columns">
+                <a class="custom-list-item" data-target="columns" style="color: white!important;">
                     Show/Hide Columns
                 </a>
             </div>
@@ -374,7 +380,7 @@ a {
 
                 <div class="d-flex " >
                     
-                    <select class="form-control" style=" background-color:rgb(5, 5, 5);width: 260px;margin-right: 30px;border: 1px solid beige;">
+                    <select class="form-control" style=" color: black !important;width: 260px;margin-right: 30px;border: 1px solid beige;">
                         <option selected value="All">All</option>
                         <option value="Bill">Bill</option>
                         <option value="Expense">Expenses</option>
@@ -422,7 +428,7 @@ a {
     <label class="dropdown2-label"></label>
     
     <div class="dropdown2-list" id="dropdown2-third">
-      <a href="#" data-toggle="check-all" class="dropdown2-option">All</a>
+      <a href="#" data-toggle="check-all" class="dropdown2-option ">All</a>
       
       <label class="dropdown2-option">
         <input type="checkbox" name="dropdown2-group" value="Selection 1" />Open
@@ -460,9 +466,9 @@ a {
                     <div class="filter-row">
                         <div class="filter-field">
                             <label for="filterSelectField"></label>
-                            <select class="form-control" style=" background-color: #070707;width:250px;border: 1px solid beige;">
+                            <select class="form-control" style=" color: black !important;width:250px;border: 1px solid beige;">
                                 {% for items in vendors %}
-                                <option value="{{ items.vendor_display_name }}" style="color: #ffffff;">{{ items.vendor_display_name }}</option>
+                                <option value="{{ items.vendor_display_name }}">{{ items.vendor_display_name }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -471,7 +477,7 @@ a {
 
                         <div class="filter-field">
                             <label for="filterSelectColumn"></label>
-                            <select class="form-control" style="background-color: rgb(7, 7, 7); color: #ffffff;width:300px;border: 1px solid beige;">
+                            <select class="form-control" style="color: black !important;width:300px;">
                                 <option  selected>Select a comparator</option>
                                 <option >is</option>
                                 <option >isn't</option>
@@ -484,7 +490,7 @@ a {
 
                         <div class="filter-field">
                             <label for="filterSelectColumn"></label>
-                            <input type="text" style="background-color: rgb(7, 7, 7);color: #ffffff;font-size: 17pt;width:400px;border: 1px solid beige;border-radius: 3px; ">
+                            <input type="text" style="color: black !important;width:400px;height: 38px;border: 1px;border-radius: 3px; ">
 
                         </div>
 
@@ -496,7 +502,7 @@ a {
                     </div>
                 </div>
                 <div class="filter-action">
-                    <button id="addFilter" style="color: blue;" class="btn">+ Add more</button>
+                    <button id="addFilter" style="color: rgb(255, 17, 0);" class="btn">+ Add more</button>
                 </div>
             </div>
         </div>
@@ -814,11 +820,11 @@ const originalAvailableItems = document.querySelectorAll("#originalColumn .items
             const filterRow = document.createElement("div");
             filterRow.className = "filter-row";
             filterRow.innerHTML = `
-                        <div class="filter-field">
+                          <div class="filter-field">
                             <label for="filterSelectField"></label>
-                            <select class="form-control" style=" background-color: #070707;width:250px;">
+                            <select class="form-control" style=" color: black !important;width:250px;border: 1px solid beige;">
                                 {% for items in vendors %}
-                                <option value="{{ items.vendor_display_name }}" style="color: #ffffff;">{{ items.vendor_display_name }}</option>
+                                <option value="{{ items.vendor_display_name }}">{{ items.vendor_display_name }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -827,7 +833,7 @@ const originalAvailableItems = document.querySelectorAll("#originalColumn .items
 
                         <div class="filter-field">
                             <label for="filterSelectColumn"></label>
-                            <select class="form-control" style="background-color: rgb(7, 7, 7); color: #ffffff;width:300px;">
+                            <select class="form-control" style="color: black !important;width:300px;">
                                 <option  selected>Select a comparator</option>
                                 <option >is</option>
                                 <option >isn't</option>
@@ -840,13 +846,15 @@ const originalAvailableItems = document.querySelectorAll("#originalColumn .items
 
                         <div class="filter-field">
                             <label for="filterSelectColumn"></label>
-                            <input type="text" style="background-color: rgb(7, 7, 7);color: #ffffff;font-size: 16pt;width:400px; ">
+                            <input type="text" style="color: black !important;width:400px;height: 38px;border: 1px;border-radius: 3px; ">
 
                         </div>
+
 
                         <div class="filter-action" style="margin-left: 80px;">
                             <button class="btn btn-light">-</button>
                         </div>
+                      </div>
     `;
 
 

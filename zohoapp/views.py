@@ -10896,20 +10896,16 @@ def purchasebyitem(request):
     user=request.user
     customer1 = customer.objects.filter(user=user)
     company_data = company_details.objects.get(user=request.user)
-    bills = PurchaseBillItems.objects.filter(purchase_bill_id=user.id)
+    bills = PurchaseBillItems.objects.all()
     return render(request,'purchases_by_item.html',{'cust': customer1, 'company': company_data,'bills':bills})
 
-
-
 def customize_report_purchasebyitem(request):
+    user=request.user
     vendor=vendor_table.objects.all()
     company_data = company_details.objects.get(user=request.user)
-    return render(request,'customize_report_purchasebyitem.html',{'vendors':vendor,'company': company_data})
-
-
-
-    
-
+    bills = PurchaseBillItems.objects.all()
+    return render(request,'customize_report_purchasebyitem.html',{'vendors':vendor,'company': company_data,'bills':bills})
+   
 def purchasebyvendor(request):
     customer1 = customer.objects.all()
     company_data = company_details.objects.get(user=request.user)
@@ -10920,5 +10916,4 @@ def purchasebyvendor(request):
 def customize_vendor_report(request):
     vendor=vendor_table.objects.all()
     company_data = company_details.objects.get(user=request.user)
-    
     return render(request,'customize_report_vendor.html',{'vendors':vendor,'company': company_data})
