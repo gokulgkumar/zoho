@@ -510,6 +510,8 @@ urlpatterns = [
     path('customize_vendor_report',views.customize_vendor_report,name='customize_vendor_report'),
     path('purchasebyitem',views.purchasebyitem,name='purchasebyitem'),
     path('customize_report_purchasebyitem',views.customize_report_purchasebyitem,name='customize_report_purchasebyitem'),
+    path('inventory_adjustment',views.inventory_adjustment,name='inventory_adjustment'),
+    path('new_adjustment',views.new_adjustment,name='new_adjustment'),
     
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
     

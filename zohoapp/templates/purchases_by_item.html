@@ -7,18 +7,23 @@
         body * {
             visibility: hidden;
         }
-        
+
+        table, th, td, tr {
+      border: 1px solid black; /* Ensure black borders when printing */
+        }
     
     .printable-content table {
         margin: 0 auto;
     }
         .printable-content, .printable-content * {
             visibility: visible;
+            color:black!important;
         }
         .printable-content {
             width: 200%;
             max-width: 100%;
             padding: 60px;
+            color:black!important;
            
         }
         .printable-wrapper {
@@ -30,7 +35,7 @@
 }
     .daterangepicker  {
         background-color: #f0f0f0; 
-        color: #000; 
+        color: #000!important; 
        
     }
     
@@ -46,7 +51,7 @@
             <!-- Date range calendar input -->
 
             <div id="reportrange"
-                style="cursor: pointer; padding: 5px 10px;  width: 40;  color: #010101; background-color: white;">
+                style="cursor: pointer; padding: 5px 10px;  width: 40;  color: #010101!important; background-color: white;">
                 <i class="fa fa-calendar"></i>&nbsp;
                 <span></span> <i class="fa fa-caret-down"></i>
             </div>
@@ -63,9 +68,10 @@
                 Export
             </button>
             <div class="dropdown-menu" aria-labelledby="exportDropdown">
-                <a class="dropdown-item"  href="#" onclick="exportAsPDF()">PDF</a>
                 <a class="dropdown-item" href="#" onclick="exportToExcel()">XLS (Excel)</a>
             </div>
+
+            <a class="btn btn-light"  href="#" onclick="exportAsPDF()">PDF</a>
            
             <a href="{% url 'reports' %}" class="btn btn-light" style=" color: rgb(1, 1, 1);">
                 <i class="fa fa-times-circle"></i>
@@ -84,8 +90,8 @@
         <!-- <p class="text" style="color: white;">From 21 Jan 2023 To 21 Jan 2024</p> -->
     </center>
         <table class="table table-bordered table-striped mt-4">
-            <thead style="border: 1px solid beige;">
-                <tr style="border: 1px solid beige;">
+            <thead >
+                <tr >
                     <th id="thclr">Item Name</th>
                     <th id="thclr">Quantity Purchased</th>
                     <th id="thclr">Amount</th>
@@ -95,7 +101,7 @@
             </thead>
             <tbody>
                 {% for i in bills %}
-                <tr style="border: 1px solid beige;">
+                <tr >
                    
                     <td style="color: #ccc;">{{ i.item_name }}</td>
                     <td style="color: #ccc;">{{ i.quantity }}</td>
@@ -103,7 +109,7 @@
                     <td style="color: #ccc;">0</td>
                     {% endfor %}
                 </tr>
-                <tr  style="border: 1px solid beige;">
+                <tr  >
                     <td style="color: #ccc;"><h4>Total</h4></td>
                     <td></td>
                     <td></td>
@@ -170,7 +176,7 @@ function exportAsPDF() {
     
       const pdfOptions = {
         margin: 0,
-        filename: '{{company_data.company_name}}purchaseItembyVendor.pdf',
+        filename: '{{company_data.company_name}}purchasesbyItem.pdf',
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2 },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' },

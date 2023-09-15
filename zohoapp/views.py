@@ -10917,3 +10917,15 @@ def customize_vendor_report(request):
     vendor=vendor_table.objects.all()
     company_data = company_details.objects.get(user=request.user)
     return render(request,'customize_report_vendor.html',{'vendors':vendor,'company': company_data})
+
+@login_required(login_url='login')
+def inventory_adjustment(request):
+    company_data = company_details.objects.get(user=request.user)
+    return render(request,'inventory_adjustment.html',{'company': company_data})
+
+
+def new_adjustment(request):
+    accounts=Chart_of_Account.objects.all()
+    company_data = company_details.objects.get(user=request.user)
+    return render(request,'new_adjustment.html',{'company': company_data,'accounts':accounts})
+    
