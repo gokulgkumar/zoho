@@ -10925,7 +10925,12 @@ def inventory_adjustment(request):
 
 
 def new_adjustment(request):
+    user = request.user
     accounts=Chart_of_Account.objects.all()
     company_data = company_details.objects.get(user=request.user)
-    return render(request,'new_adjustment.html',{'company': company_data,'accounts':accounts})
+    items = AddItem.objects.filter(user_id=user.id)
+    sales=Sales.objects.all()
+    purchase=Purchase.objects.all()
+    unit=Unit.objects.all()
+    return render(request,'new_adjustment.html',{'company': company_data,'accounts':accounts,'items':items,'sales':sales,'purchase':purchase,'units':unit})
     

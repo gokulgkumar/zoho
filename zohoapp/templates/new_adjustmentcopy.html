@@ -1,0 +1,1251 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+
+<style>
+  .open-button {
+    background-color: #ccc;
+    color: black;
+    padding: 5px 5px;
+    border: none;
+    cursor: pointer;
+    opacity: 0.8;
+    position: relative;
+    /* {% comment %} right: 250px;
+    bottom: 450px; {% endcomment %}
+    width: 180px; */
+  }
+
+  /* The popup form - hidden by default */
+  .form-popup {
+    display: none;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #f1f1f1;
+    border: 3px solid black;
+    z-index: 9999;
+    padding: 20px;
+    max-width: 300px;
+  }
+
+  /* Full-width input fields */
+  .form-popup input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0 20px 0;
+    border: none;
+    background: #f1f1f1;
+  }
+
+  /* Set a style for the submit button */
+  .form-popup .btn {
+    background-color: #04aa6d;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  /* Set a style for the close button */
+  .form-popup .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  /* Change the color of the close button on hover */
+  .form-popup .close:hover {
+    color: black;
+  }
+
+  .openbutton {
+    background-color: #ccc;
+    color: black;
+    padding: 5px 5px;
+    border: none;
+    cursor: pointer;
+    opacity: 0.8;
+    position: relative;
+
+    /* {% comment %} right: 80px;
+    bottom: 180px; {% endcomment %}
+    width: 180px; */
+
+    z-index:9;
+  }
+
+  /* The popup form - hidden by default */
+  .form-popup1 {
+    display: none;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #f1f1f1;
+    border: 3px solid black;
+    z-index: 9999;
+    padding: 20px;
+    max-width: 300px;
+  }
+
+  /* Full-width input fields */
+  .form-popup1 input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0 20px 0;
+    border: none;
+    background: #f1f1f1;
+  }
+
+  /* Set a style for the submit button */
+  .form-popup1 .btn.add-button {
+    background-color: #04aa6d;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  /* Set a style for the close button */
+  .form-popup1 .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .form-popup1 .close:hover {
+    color: black;
+  }
+
+  /* Style for the highlighted account type options */
+  option.highlight-account-type {
+    background-color: #f3f3f3; /* Example background color */
+    color: #666; /* Example text color */
+    font-weight: bold; /* Example font weight */
+    /* Add any other styles you want to customize the look of the highlighted account type options */
+  }
+  
+  /* Additional style for hovering over the highlighted account type options (optional) */
+  option.highlight-account-type:hover {
+    background-color: #f5f5f5; /* Example hover background color */
+    /* Add any other styles you want for the hover state */
+  }
+  .highlight-account-type {
+    text-align: left;
+    padding-left: 10px;
+  }
+
+  .modal{
+      z-index: 9999;
+      overflow: scroll;
+    }
+
+
+
+
+    
+  
+  
+</style>
+
+
+<section >
+  <div class="row fixed-top  " style="top: 6rem; margin-left: 20rem;" >
+    
+    <div class="col-md-12 " style="width: 100%;">
+        <h3  class="mb-3  text-white  " style="font-size: 2rem;">New Adjustment</h3>     
+    
+        <div  >
+          <form action="{% url 'add' %}" method="post" id="Form">
+            {% csrf_token %}
+            <fieldset class="form-group">
+              <div class="row">
+                <label class="col-form-label col-sm-2 pt-3">Mode of Adjustment</label>
+                <div class="col-sm-10">
+                  <div class="col-sm-10 form-inline">
+                    <div class="form-check ">
+                      <input required class="form-check-input " type="radio" name="type" id="gridRadios1" value="Goods" style="margin-left:5px;">
+                      <label class="form-check-label" for="gridRadios1" style="color: white;">Quantity Adjustment</label>
+                    </div>
+                    <div class="form-check ml-5">
+                      <input required class="form-check-input " type="radio" name="type" id="gridRadios2" value="Services" style="margin-left:50px;">
+                      <label class="form-check-label" for="gridRadios2" style="color: white;">Value Adjustment</label>
+                    </div>
+                          
+                  </div>
+                        
+                </div>
+              </div>
+            </fieldset>
+            <div class="form-group row">
+              <label  class="col-sm-2 col-form-label ">Reference Number</label>
+              <div class="col-sm-6 col-md-5 col-6" style="margin-left: -2.2rem;">
+                <input required type="text" class="form-control bg-white text-dark" name="name" id="nameInput" oninput="validateInput(this)">
+                <div id="validationResult"></div>
+                
+              </div>
+            </div>
+
+            <script>
+              function validateInput(input) {
+                  var inputValue = input.value;
+                  var hasCharacter = /[a-zA-Z]/.test(inputValue);
+                  var hasNumber = /\d/.test(inputValue);
+
+                  var validationResultDiv = document.getElementById("validationResult");
+            
+                  if (hasCharacter && hasNumber) {
+                      // input.setCustomValidity('');
+                      validationResultDiv.textContent = " ";
+                  } else {
+                      validationResultDiv.textContent = "Invalid: The field should contain atleast a number and a character.";
+                      // input.setCustomValidity('Input must contain at least one character and one number.');
+                  }
+              }
+            </script>
+
+
+
+            <div class="form-group row">
+              <label class="col-sm-2 col-form-label">Date *</label>
+              <div class="col-sm-6 col-md-5 col-6" style="margin-left: -2.2rem;">
+                  <input required type="date" class="form-control bg-white text-dark" name="date" id="dateInput">
+              </div>
+          </div>
+
+
+            <div class="form-group row">
+              <label class="col-sm-2 col-form-label">Account *</label>
+              <div class="col-sm-6 col-md-5 col-6" style="margin-left: -2.2rem;">
+                  <select name="unit" class="form-control bg-white text-dark" id="unit">
+                      {% for a in accounts %}
+                      <option value="{{u.id}}">{{a.account_name}}</option>
+                      
+                      {% endfor %}
+                  </select>
+              </div>
+          </div>
+
+          
+
+
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Reason *</label>
+            <div class="col-sm-6 col-md-5 col-6" style="margin-left: -2.2rem;">
+                <select name="unit" class="form-control bg-white text-dark" id="unit">
+                  <option value="{{u.id}}" selected hidden disabled>Select a reason</option>
+                    <option value="{{u.id}}">Stock on fire</option>
+                    <option value="{{u.id}}">Stolen goods</option>
+                    <option value="{{u.id}}">Damaged goods</option>
+                    <option value="{{u.id}}">Stock Written off</option>
+                    <option value="{{u.id}}">Stocktaking results</option>
+                    <option value="{{u.id}}">Inventory Revaluation</option>
+
+
+                </select>
+            </div>
+            <div class="col-2">
+
+              <!-- onclick="openForm()" -->
+              <button href="#" class=" open-button" style="padding: 7px; background-color: white; color: black; border-radius:4px;" >Add Reason</button>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label">Account *</label>
+          <div class="col-sm-6 col-md-5 col-6" style="margin-left: -2.2rem;">
+              <textarea name="" id="" cols="69" rows="3" style=" border:1px white solid;border-radius:5px;" placeholder="Max 500 characters"></textarea>
+          </div>
+      </div>
+
+
+
+      
+        <!-- table -->
+        <div class="form-group row" style="width: 80%;">
+            <table class="table  text-black" id="item_table" style="background-color: rgba(250, 227, 198, 0.8);"
+                onchange="calc()">
+                <thead >
+                    <tr>
+                        <th colspan="2">Item Details <a href="" data-toggle="modal" data-target="#newitem"><i class="fas fa-plus p-2 rounded"
+                          style="color: white; background-color: rgb(210, 132, 30);"></i></a></th>
+
+                        <th style="width: 250px;text-align: right;" >Quantity Available<a href="" data-toggle="modal" data-target="#create_account" style="text-decoration: none;">
+                        </a></th>
+
+                        <th style="text-align: right;">New Quantity on hand</th>
+                        <th style="text-align: right;">Quantity Adjusted</th>
+                        
+                    </tr>
+                </thead>
+                <tbody >
+
+                    <tr id='row1' class="text-center" style="border:1px solid black;">
+                      <td></td>
+                        <td>
+                            <div class='form-group text-center'>
+                                <select class='form-control bg-transparent text-black border-0 account '
+                                    name='account[]' id='account1'>
+                                    
+                                    <option class='text-dark text-center'>Select Item</option>
+                                    {% for i in items %}
+                                    <option class="text-dark" value="{{i.Name}}">{{i.Name}}</option>
+                                    {% endfor %}
+                                    <option id="crt_acc" ></option>
+                                    
+                                    <optgroup class=""label="">
+                                      
+                                    </optgroup>
+
+                                </select>
+                            </div>
+                        </td>
+
+                        
+                        <td><input type='text' id='qty1' style="width: 80px; text-align: right;"
+                                class='bg-transparent border-0 text-black qty' name='quantity[]' value='0'>
+
+                        </td>
+                        <td class='text-right'><input type='text' id='rate1'  style="width: 100px;text-align: right;"
+                                class='bg-transparent border-0 text-black text-right rate' name='rate[]' value='0'>
+                        </td>
+
+                        <td></td>
+                        <td class='text-center'><button type='button' id='del_btn1'
+                                class='btn btn-transparent text-danger btn-sm   delete-row' data-toggle='tooltip'
+                                data-placement='top' title='delete-row' style='width:30px'><i
+                                    class='fa fa-times'></i></button></td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+
+            <!-- item modal -->
+
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#mymodal">open modal</button>
+<div class="modal" id="mymodal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">modal heading</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                modal body
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">close</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- item modal -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <div>
+            <button type="button" class="btn btn-sm text-white" style="background-color: rgb(210, 132, 30) ;"
+                id="add-row">Add another line</button>
+              </div>
+            </div>
+
+
+            <div class="row">
+              <div class="-sm-12 col-md-6 col-lg-6">
+                  <input type="submit" class="btn text-white mt-5" style="background-color: rgb(210, 132, 30) ; " 
+                   onclick="saveAsDraftDialog()" value="Save As Draft">
+                <input type="submit" class="btn text-white mt-5" style="background-color: rgb(210, 132, 30) ; "
+                  onclick="saveAndSendDialog()" value="Convert to Adjusted">
+               <input type="submit" class="btn text-white mt-5" style="background-color:  rgb(59, 59, 58) ; "
+                  onclick="cancelDialog()" value="Cancel">
+                </div>
+              <div class="-sm-12 col-md-6 col-lg-6"></div>
+          </div>
+        </form>
+
+          <script>
+
+            function cancelDialog() {
+        
+                var frm = document.getElementById("forms");
+                let customMsg = "Do you want to cancel?";
+        
+                if (confirm(customMsg)) {
+                    alert("Estimate cancelled!")
+                }
+            }
+        
+            function saveAsDraftDialog() {
+        
+                var frm = document.getElementById("forms");
+                frm.action = ("{% url 'createestimate'%}")
+            }
+        
+            // function get_customer_email() {
+        
+            //  var eml = document.getElementById("customer_sel");
+            //  eml.action = ("{% url 'newestimate'%}")
+            // }
+        
+            function saveAndSendDialog() {
+        
+                var frm = document.getElementById("forms");
+                frm.action = ("{% url 'create_and_send_estimate'%}")
+            }
+            $(document).ready(function () {
+                $('[data-toggle="tooltip"]').tooltip();
+            });
+        
+        
+        
+        </script>
+
+
+
+
+
+
+
+           
+           
+
+      
+
+
+
+          
+<!-- ============================ modal for account adding  -->
+
+<div class="form-popup" id="myForm">
+  <form onsubmit="event.preventDefault(); addUnit();" class="form-container" id="unitForm">
+      {% csrf_token %}
+      <span class="close" onclick="closeForm()">&times;</span><br>
+      <h1 class="text-dark">Add Unit</h1>
+
+      <label class="text-dark" for="unit"><b>Unit</b></label>
+      <input type="text" placeholder="Enter unit" id="unitName" name="unit_name" required>
+      <p class="text-dark">eg:KL,PCS,BOX,LTR</p>
+
+      <button type="submit" class="btn add-button">Add</button>
+  </form>
+</div>
+
+
+
+
+
+
+
+
+
+<!-- Add row, copy row, delete row -->
+<script>
+
+  // set todays date on estimate date field
+  var today = new Date().toISOString().substr(0, 10);
+  document.getElementById("bill_date").value = today;
+
+  // Get the bill date and due date elements
+  var billDateInput = document.getElementById("bill_date");
+  var dueDateInput = document.getElementById("due_date");
+
+  // Add an event listener to the payment terms select element
+  var paymentTermsSelect = document.getElementById("p_terms");
+  paymentTermsSelect.addEventListener("change", function () {
+      var selectedOption = paymentTermsSelect.options[paymentTermsSelect.selectedIndex];
+      var paymentTermsValue = selectedOption.value;
+
+      var billDate = new Date(billDateInput.value);
+      var dueDate = new Date(billDate.getTime() + (paymentTermsValue * 24 * 60 * 60 * 1000));
+      dueDateInput.value = dueDate.toISOString().split("T")[0];
+  });
+
+
+
+  // Add new row
+  $(document).ready(function () {
+      $('#add-row').click(function () {
+          var table = document.getElementById("item_table");
+          var RowCount = table.rows.length;
+          // console.log(RowCount);
+          var newRow = $(`
+          <tr id='row${RowCount}' >
+              <td>
+                  <div class='form-group'>
+                      <select
+                          class='form-control bg-transparent text-black border-0 item_select' name='item[]'
+                          id='item${RowCount}'>
+                          <option class='text-dark'>Select Items</option>
+                          <option class='text-dark' id='items_nms1' ></option>
+                          {% for i in items %}
+                          <option class="text-dark" value="{{i.Name}}">{{i.Name}}</option>
+                          {% endfor %}
+                      </select></div>
+              </td>
+              <td>
+                  <div class='form-group'>
+                      <select class='form-control bg-transparent text-black border-0 account '
+                          name='account[]' id='account${RowCount}>
+                          <option id="crt_acc1"></option>
+                        
+                        <optgroup class=""label="Accounts Payable">
+                          <option value='Accounts Payable' selected>Accounts Payable</option>
+                          {% for ac in acc %}
+                          {% if ac.account_type == "Accounts Payable" %}
+                          <option value="{{ac.account_name}}">{{ac.account_name}}</option>
+                          {% endif %}
+                          {% endfor %}
+                        </optgroup>
+    
+                        <optgroup class="" label="Accounts Receivable">
+                          <option value='Accounts Receivable'>Accounts Receivable</option>
+                          {% for ac in acc %}
+                          {% if ac.account_type == "Accounts Receivable" %}
+                          <option value="{{ac.account_name}}">{{ac.account_name}}</option>
+                          {% endif %}
+                          {% endfor %}
+                        </optgroup>
+  
+                        <optgroup class="" label="Other Current Asset">
+                          <option value='Advance Tax'>Advance Tax</option>
+                          {% for ac in acc %}
+                          {% if ac.account_type == "Other Current Asset" %}
+                          <option value="{{ac.account_name}}">{{ac.account_name}}</option>
+                          {% endif %}
+                          {% endfor %}
+                          <option value='Employee Advance'>Employee Advance</option>
+                          <option value='Prepaid Expences'>Prepaid Expences</option>
+                          <option value='GST TCS Receivable'>GST TCS Receivable</option>
+                          <option value='GST TDS Receivable'>GST TDS Receivable</option>
+                          <option value='Input Tax Credits'>Input Tax Credits</option>
+                          <option value='Input CGST'>Input CGST</option>
+                          <option value='Input IGST'>Input IGST</option>
+                          <option value='Input SGST'>Input SGST</option>
+                          <option value='Reverse Charge Input Tax but not Due'>Reverse Charge Input Tax but not Due</option>
+                          <option value='Sales to Customers(Cash)'>Sales to Customers(Cash)</option>
+                          <option value='TDS Receivable'>TDS Receivable</option>
+                        </optgroup>
+  
+                        <optgroup class="" label="Expence">
+                          {% for ac in acc %}
+                          {% if ac.account_type == "Expence" %}
+                          <option value="{{ac.account_name}}">{{ac.account_name}}</option>
+                          {% endif %}
+                          {% endfor %}
+                          <option value='Advertising and Marketing'>Advertising and Marketing</option>
+                          <option value='Automobile Expense'>Automobile Expense</option>
+                          <option value='Bad Debt'>Bad Debt</option>
+                          <option value='Bank Fees and Charges'>Bank Fees and Charges</option>
+                          <option value='Consultant Expense'>Consultant Expense</option>
+                          <option value='Credit Card Expense'>Credit Card Expense</option>
+                          <option value='IT and Internet Expenses'>IT and Internet Expenses</option>
+                          <option value='Janitorial Expences'>Janitorial Expences</option>
+                          <option value='Lodging'>Lodging</option>
+                          <option value='Meals and Entertainment'>Meals and Entertainment</option>
+                          <option value='Office Supplies'>Office Supplies</option>
+                          <option value=0>Other Expenses</option>
+                          <option value='Other Expenses'>Postage</option>
+                          <option value='Printing and Stationery'>Printing and Stationery</option>
+                          <option value='Rent Expense'>Rent Expense</option>
+                          <option value='Repair and Maintenance'>Repair and Maintenance</option>
+                          <option value='Salaries and Employee Wages'>Salaries and Employee Wages</option>
+                          <option value='Telephone Expense'>Telephone Expense</option>
+                          <option value='Travel Expense'>Travel Expense</option>
+                          <option value='Uncategorized'>Uncategorized</option>
+                          <option value='Contract Assets'>Contract Assets</option>
+                          <option value='Depreciation and Amortisation'>Depreciation and Amortisation</option>
+                          <option value='Merchandise'>Merchandise</option>
+                          <option value='Raw Materials and Consumables'>Raw Materials and Consumables</option>
+                          <option value='Transpotaion Expense'>Transpotaion Expense</option>
+                        </optgroup>
+  
+                        <optgroup class="" label="Cost of Goods Sold">
+                          {% for ac in acc %}
+                          {% if ac.account_type == "Cost of Goods Sold" %}
+                          <option value="{{ac.account_name}}">{{ac.account_name}}</option>
+                          {% endif %}
+                          {% endfor %}
+                          <option value='Cost of Goods Sold'>Cost of Goods Sold</option>
+                          <option value='Job Costing'>Job Costing</option>
+                          <option value='Labor'>Labor</option>
+                          <option value='Materials'>Materials</option>
+                          <option value='Subcontractor'>Subcontractor</option>
+                        </optgroup>
+  
+                        <optgroup class="" label="Income">
+                          {% for ac in acc %}
+                          {% if ac.account_type == "Income" %}
+                          <option value="{{ac.account_name}}">{{ac.account_name}}</option>
+                          {% endif %}
+                          {% endfor %}
+                          <option value='Discount'>Discount</option>
+                          <option value='General Income'>General Income</option>
+                          <option value='Interest Income'>Interest Income</option>
+                          <option value='Late Fee Income'>Late Fee Income</option>
+                          <option value='Other Charges'>Other Charges</option>
+                          <option value='Sales'>Sales</option>
+                          <option value='Shipping Charge'>Shipping Charge</option>
+                        </optgroup>
+  
+                        <optgroup class="" label="Equity">
+                          {% for ac in acc %}
+                          {% if ac.account_type == "Equity" %}
+                          <option value="{{ac.account_name}}">{{ac.account_name}}</option>
+                          {% endif %}
+                          {% endfor %}
+                          <option value='Drawings'>Drawings</option>
+                          <option value='Opening Balance Offset'>Opening Balance Offset</option>
+                          <option value="Owner's Equity">Owner's Equity</option>
+                          <option value='Retained Earnings'>Retained Earnings</option>
+                          <option value='Capital Stock'>Capital Stock</option>
+                          <option value='Distributions'>Distributions</option>
+                          <option value='Dividends Paid'>Dividends Paid</option>
+                          <option value='Investments'>Investments</option>
+                        </optgroup>
+  
+                        <optgroup class="" label="Other Current Liability">
+                          {% for ac in acc %}
+                          {% if ac.account_type == "Other Current Liability" %}
+                          <option value="{{ac.account_name}}">{{ac.account_name}}</option>
+                          {% endif %}
+                          {% endfor %}
+                          <option value='Employee Reimbursements'>Employee Reimbursements</option>
+                          <option value='Opening Balance Adjustments'>Opening Balance Adjustments</option>
+                          <option value='Tax Payable'>Tax Payable</option>
+                          <option value='Unearned Revenue'>Unearned Revenue</option>
+                          <option value='GST Payable'>GST Payable</option>
+                          <option value='Output CGST'>Output CGST</option>
+                          <option value='Output IGST'>Output IGST</option>
+                          <option value='Output SGST'>Output SGST</option>
+                          <option value='TDS Payable'>TDS Payable</option>
+                        </optgroup>
+  
+                        <optgroup class="" label="Other Expense">
+                          {% for ac in acc %}
+                          {% if ac.account_type == "Other Expense" %}
+                          <option value="{{ac.account_name}}">{{ac.account_name}}</option>
+                          {% endif %}
+                          {% endfor %}
+                          <option value='Exchange Gain or Loss'>Exchange Gain or Loss</option>
+                        </optgroup>
+  
+                        <optgroup class="" label="Fixed Asset">
+                          {% for ac in acc %}
+                          {% if ac.account_type == "Fixed Asset" %}
+                          <option value="{{ac.account_name}}">{{ac.account_name}}</option>
+                          {% endif %}
+                          {% endfor %}
+                          <option value='Furniture and Equipment'>Furniture and Equipment</option>
+                        </optgroup>
+  
+                        <optgroup class="" label="Stock">
+                          {% for ac in acc %}
+                          {% if ac.account_type == "Stock" %}
+                          <option value="{{ac.account_name}}">{{ac.account_name}}</option>
+                          {% endif %}
+                          {% endfor %}
+                          <option value='Inventory Asset'>Inventory Asset</option>
+                        </optgroup>
+  
+                        <optgroup class="" label="Cash">
+                          {% for ac in acc %}
+                          {% if ac.account_type == "Cash" %}
+                          <option value="{{ac.account_name}}">{{ac.account_name}}</option>
+                          {% endif %}
+                          {% endfor %}
+                          <option value='Petty Cash'>Petty Cash</option>
+                          <option value='Undeposited Funds'>Undeposited Funds</option>
+                        </optgroup>
+  
+                        <optgroup class="" label="Other Liability">
+                          {% for ac in acc %}
+                          {% if ac.account_type == "Other Liability" %}
+                          <option value="{{ac.account_name}}">{{ac.account_name}}</option>
+                          {% endif %}
+                          {% endfor %}
+                          <option value='Tag Adjustments'>Tag Adjustments</option>
+                        </optgroup>
+  
+                        <optgroup class="" label="Long Term Liability">
+                          {% for ac in acc %}
+                          {% if ac.account_type == "Long Term Liability" %}
+                          <option value="{{ac.account_name}}">{{ac.account_name}}</option>
+                          {% endif %}
+                          {% endfor %}
+                          <option value='Construction Loans'>Construction Loans</option>
+                          <option value='Mortgages'>Mortgages</option>
+                        </optgroup>
+
+                      </select>
+                  </div>
+              </td>
+              <td class='text-right'><input type='number' id='qty${RowCount}' style="width: 80px;"
+                      class='bg-transparent border-0 text-black text-right qty' name='quantity[]' value='0.00' >
+              </td>
+              <td class='text-right'><input type='number' id='rate${RowCount}' style="width: 100px;"
+                      class='bg-transparent border-0 text-black text-right rate' name='rate[]' value='0.00'
+                      ></td>
+             
+              <td class='text-right'> <select name='tax[]' id='tax${RowCount}'
+                      class="form-control bg-transparent text-black text-right border-0 tax"
+                      onclick='handleTaxChange(${RowCount})'>
+                      <optgroup label="GST" >
+                              <option value=0>0% GST</option>
+                              <option value=3>3% GST</option>
+                              <option value=5>5% GST</option>
+                              <option value=12>12% GST</option>
+                              <option value=18>18% GST</option>
+                              <option value=28>28% GST</option>
+                          </optgroup>
+                          <optgroup label="IGST" >
+                              <option value=0>0% IGST</option>
+                              <option value=3>3% IGST</option>
+                              <option value=5>5% IGST</option>
+                              <option value=12>12% IGST</option>
+                              <option value=18>18% IGST</option>
+                              <option value=28>28% IGST</option>
+                          </optgroup>
+                     
+                  </select></td>
+              <td style="display: none;">
+                  <input type="text" name='taxamount[]' id="taxamount${RowCount}" class="form-control taxamount" />
+                          </td>
+              <td class='text-right'><input type='number' id='amount${RowCount}'
+                      class='bg-transparent border-0 text-black text-right amount' name='amount[]' value='0.00'></td>
+              <td class='text-center'><button type='button' id='copy_btn${RowCount}'
+                      class='btn btn-transparent text-secondary btn-sm   copy_row' data-toggle='tooltip'
+                      data-placement='top' title='Clone' style='width:30px'><i
+                          class="fas fa-copy"></i></button>
+              </td>
+              <td class='text-center'><button type='button' id='del_btn${RowCount}'
+                      class='btn btn-transparent text-danger btn-sm  delete-row'
+                      style='width:30px'><i class='fa fa-times'></i></button></td>
+          </tr>`);
+          $('#item_table').append(newRow);
+      });
+
+      //Duplicate row function
+      $('#item_table').on('click', '.copy_row', function () {
+          // console.log('hi');
+          var table = document.getElementById("item_table");
+          var RowCount = table.rows.length;
+          // console.log(RowCount);
+
+          // Get the values from the current row
+          var currentItem = $(this).closest('tr').find("select[name='item[]']").val();
+          var currentAccount = $(this).closest('tr').find("select[name='account[]']").val();
+          var currentQuantity = $(this).closest('tr').find("input[name='quantity[]']").val();
+          var currentRate = $(this).closest('tr').find("input[name='rate[]']").val();
+          var currentTax = $(this).closest('tr').find("select[name='tax[]']").val();
+          var currentTaxText = $(this).closest('tr').find("select[name='tax[]'] option:selected").text();
+          var currentTaxAmount = $(this).closest('tr').find("input[name='taxamount[]']").val();
+          var currentAmount = $(this).closest('tr').find("input[name='amount[]']").val();
+          // console.log(currentItem);
+          console.log(currentAccount);
+          // console.log(currentQuantity);
+          // console.log(currentRate);
+          // console.log(currentTax);
+          // console.log(currentTaxAmount);
+          // console.log(currentAmount);
+
+          var newRow = $(`
+          <tr id='row${RowCount}' >
+              <td>
+                  <div class='form-group'>
+                      <select
+                          class='form-control bg-transparent text-black border-0 item_select' name='item[]'
+                          id='item${RowCount}'>
+                          <option class='text-dark ' value='${currentItem}'>${currentItem}</option>
+                          {% for i in items %}
+                          <option class="text-dark" value="{{i.Name}}">{{i.Name}}</option>
+                          {% endfor %}
+                      </select></div>
+              </td>
+              <td>
+                  <div class='form-group'>
+                      <select class='form-control bg-transparent text-black border-0 account '
+                          name='account[]' id='account${RowCount}>
+                            <option class='text-dark ' value='${currentAccount}' selected>${currentAccount}</option>
+                            
+                            <optgroup class=""label="Accounts Payable">
+                              <option value='Accounts Payable' selected>Accounts Payable</option>
+                              {% for ac in acc %}
+                              {% if ac.account_type == "Accounts Payable" %}
+                              <option value="{{ac.account_name}}">{{ac.account_name}}</option>
+                              {% endif %}
+                              {% endfor %}
+                            </optgroup>
+        
+                            <optgroup class="" label="Accounts Receivable">
+                              <option value='Accounts Receivable'>Accounts Receivable</option>
+                              {% for ac in acc %}
+                              {% if ac.account_type == "Accounts Receivable" %}
+                              <option value="{{ac.account_name}}">{{ac.account_name}}</option>
+                              {% endif %}
+                              {% endfor %}
+                            </optgroup>
+      
+                            <optgroup class="" label="Other Current Asset">
+                              <option value='Advance Tax'>Advance Tax</option>
+                              {% for ac in acc %}
+                              {% if ac.account_type == "Other Current Asset" %}
+                              <option value="{{ac.account_name}}">{{ac.account_name}}</option>
+                              {% endif %}
+                              {% endfor %}
+                              <option value='Employee Advance'>Employee Advance</option>
+                              <option value='Prepaid Expences'>Prepaid Expences</option>
+                              <option value='GST TCS Receivable'>GST TCS Receivable</option>
+                              <option value='GST TDS Receivable'>GST TDS Receivable</option>
+                              <option value='Input Tax Credits'>Input Tax Credits</option>
+                              <option value='Input CGST'>Input CGST</option>
+                              <option value='Input IGST'>Input IGST</option>
+                              <option value='Input SGST'>Input SGST</option>
+                              <option value='Reverse Charge Input Tax but not Due'>Reverse Charge Input Tax but not Due</option>
+                              <option value='Sales to Customers(Cash)'>Sales to Customers(Cash)</option>
+                              <option value='TDS Receivable'>TDS Receivable</option>
+                            </optgroup>
+      
+                            <optgroup class="" label="Expence">
+                              {% for ac in acc %}
+                              {% if ac.account_type == "Expence" %}
+                              <option value="{{ac.account_name}}">{{ac.account_name}}</option>
+                              {% endif %}
+                              {% endfor %}
+                              <option value='Advertising and Marketing'>Advertising and Marketing</option>
+                              <option value='Automobile Expense'>Automobile Expense</option>
+                              <option value='Bad Debt'>Bad Debt</option>
+                              <option value='Bank Fees and Charges'>Bank Fees and Charges</option>
+                              <option value='Consultant Expense'>Consultant Expense</option>
+                              <option value='Credit Card Expense'>Credit Card Expense</option>
+                              <option value='IT and Internet Expenses'>IT and Internet Expenses</option>
+                              <option value='Janitorial Expences'>Janitorial Expences</option>
+                              <option value='Lodging'>Lodging</option>
+                              <option value='Meals and Entertainment'>Meals and Entertainment</option>
+                              <option value='Office Supplies'>Office Supplies</option>
+                              <option value=0>Other Expenses</option>
+                              <option value='Other Expenses'>Postage</option>
+                              <option value='Printing and Stationery'>Printing and Stationery</option>
+                              <option value='Rent Expense'>Rent Expense</option>
+                              <option value='Repair and Maintenance'>Repair and Maintenance</option>
+                              <option value='Salaries and Employee Wages'>Salaries and Employee Wages</option>
+                              <option value='Telephone Expense'>Telephone Expense</option>
+                              <option value='Travel Expense'>Travel Expense</option>
+                              <option value='Uncategorized'>Uncategorized</option>
+                              <option value='Contract Assets'>Contract Assets</option>
+                              <option value='Depreciation and Amortisation'>Depreciation and Amortisation</option>
+                              <option value='Merchandise'>Merchandise</option>
+                              <option value='Raw Materials and Consumables'>Raw Materials and Consumables</option>
+                              <option value='Transpotaion Expense'>Transpotaion Expense</option>
+                            </optgroup>
+      
+                            <optgroup class="" label="Cost of Goods Sold">
+                              {% for ac in acc %}
+                              {% if ac.account_type == "Cost of Goods Sold" %}
+                              <option value="{{ac.account_name}}">{{ac.account_name}}</option>
+                              {% endif %}
+                              {% endfor %}
+                              <option value='Cost of Goods Sold'>Cost of Goods Sold</option>
+                              <option value='Job Costing'>Job Costing</option>
+                              <option value='Labor'>Labor</option>
+                              <option value='Materials'>Materials</option>
+                              <option value='Subcontractor'>Subcontractor</option>
+                            </optgroup>
+      
+                            <optgroup class="" label="Income">
+                              {% for ac in acc %}
+                              {% if ac.account_type == "Income" %}
+                              <option value="{{ac.account_name}}">{{ac.account_name}}</option>
+                              {% endif %}
+                              {% endfor %}
+                              <option value='Discount'>Discount</option>
+                              <option value='General Income'>General Income</option>
+                              <option value='Interest Income'>Interest Income</option>
+                              <option value='Late Fee Income'>Late Fee Income</option>
+                              <option value='Other Charges'>Other Charges</option>
+                              <option value='Sales'>Sales</option>
+                              <option value='Shipping Charge'>Shipping Charge</option>
+                            </optgroup>
+      
+                            <optgroup class="" label="Equity">
+                              {% for ac in acc %}
+                              {% if ac.account_type == "Equity" %}
+                              <option value="{{ac.account_name}}">{{ac.account_name}}</option>
+                              {% endif %}
+                              {% endfor %}
+                              <option value='Drawings'>Drawings</option>
+                              <option value='Opening Balance Offset'>Opening Balance Offset</option>
+                              <option value="Owner's Equity">Owner's Equity</option>
+                              <option value='Retained Earnings'>Retained Earnings</option>
+                              <option value='Capital Stock'>Capital Stock</option>
+                              <option value='Distributions'>Distributions</option>
+                              <option value='Dividends Paid'>Dividends Paid</option>
+                              <option value='Investments'>Investments</option>
+                            </optgroup>
+      
+                            <optgroup class="" label="Other Current Liability">
+                              {% for ac in acc %}
+                              {% if ac.account_type == "Other Current Liability" %}
+                              <option value="{{ac.account_name}}">{{ac.account_name}}</option>
+                              {% endif %}
+                              {% endfor %}
+                              <option value='Employee Reimbursements'>Employee Reimbursements</option>
+                              <option value='Opening Balance Adjustments'>Opening Balance Adjustments</option>
+                              <option value='Tax Payable'>Tax Payable</option>
+                              <option value='Unearned Revenue'>Unearned Revenue</option>
+                              <option value='GST Payable'>GST Payable</option>
+                              <option value='Output CGST'>Output CGST</option>
+                              <option value='Output IGST'>Output IGST</option>
+                              <option value='Output SGST'>Output SGST</option>
+                              <option value='TDS Payable'>TDS Payable</option>
+                            </optgroup>
+      
+                            <optgroup class="" label="Other Expense">
+                              {% for ac in acc %}
+                              {% if ac.account_type == "Other Expense" %}
+                              <option value="{{ac.account_name}}">{{ac.account_name}}</option>
+                              {% endif %}
+                              {% endfor %}
+                              <option value='Exchange Gain or Loss'>Exchange Gain or Loss</option>
+                            </optgroup>
+      
+                            <optgroup class="" label="Fixed Asset">
+                              {% for ac in acc %}
+                              {% if ac.account_type == "Fixed Asset" %}
+                              <option value="{{ac.account_name}}">{{ac.account_name}}</option>
+                              {% endif %}
+                              {% endfor %}
+                              <option value='Furniture and Equipment'>Furniture and Equipment</option>
+                            </optgroup>
+      
+                            <optgroup class="" label="Stock">
+                              {% for ac in acc %}
+                              {% if ac.account_type == "Stock" %}
+                              <option value="{{ac.account_name}}">{{ac.account_name}}</option>
+                              {% endif %}
+                              {% endfor %}
+                              <option value='Inventory Asset'>Inventory Asset</option>
+                            </optgroup>
+      
+                            <optgroup class="" label="Cash">
+                              {% for ac in acc %}
+                              {% if ac.account_type == "Cash" %}
+                              <option value="{{ac.account_name}}">{{ac.account_name}}</option>
+                              {% endif %}
+                              {% endfor %}
+                              <option value='Petty Cash'>Petty Cash</option>
+                              <option value='Undeposited Funds'>Undeposited Funds</option>
+                            </optgroup>
+      
+                            <optgroup class="" label="Other Liability">
+                              {% for ac in acc %}
+                              {% if ac.account_type == "Other Liability" %}
+                              <option value="{{ac.account_name}}">{{ac.account_name}}</option>
+                              {% endif %}
+                              {% endfor %}
+                              <option value='Tag Adjustments'>Tag Adjustments</option>
+                            </optgroup>
+      
+                            <optgroup class="" label="Long Term Liability">
+                              {% for ac in acc %}
+                              {% if ac.account_type == "Long Term Liability" %}
+                              <option value="{{ac.account_name}}">{{ac.account_name}}</option>
+                              {% endif %}
+                              {% endfor %}
+                              <option value='Construction Loans'>Construction Loans</option>
+                              <option value='Mortgages'>Mortgages</option>
+                            </optgroup>
+
+                      </select>
+                  </div>
+              </td>
+              <td class='text-right'><input type='number' id='qty${RowCount}' value="${currentQuantity}" style="width: 80px;"
+                      class='bg-transparent border-0 text-black text-right qty' name='quantity[]' value='0.00' >
+              </td>
+              <td class='text-right'><input type='number' id='rate${RowCount}' value="${currentRate}"  style="width: 100px;"
+                      class='bg-transparent border-0 text-black text-right rate' name='rate[]' value='0.00'
+                      ></td>
+             
+              <td class='text-right'> <select name='tax[]' id='tax${RowCount}'
+                      class="form-control bg-transparent text-black text-right border-0 tax"
+                      onclick='handleTaxChange(${RowCount})'>
+                      <option  value='${currentTax}'>${currentTaxText}</option>
+                      <optgroup label="GST" >
+                              <option value=0>0% GST</option>
+                              <option value=3>3% GST</option>
+                              <option value=5>5% GST</option>
+                              <option value=12>12% GST</option>
+                              <option value=18>18% GST</option>
+                              <option value=28>28% GST</option>
+                          </optgroup>
+                          <optgroup label="IGST" >
+                              <option value=0>0% IGST</option>
+                              <option value=3>3% IGST</option>
+                              <option value=5>5% IGST</option>
+                              <option value=12>12% IGST</option>
+                              <option value=18>18% IGST</option>
+                              <option value=28>28% IGST</option>
+                          </optgroup>
+                     
+                  </select></td>
+              <td style="display: none;">
+                  <input type="text" name='taxamount[]' id="taxamount${RowCount}" class="form-control taxamount" value="${currentTaxAmount}"/>
+                          </td>
+              <td class='text-right'><input type='number' id='amount${RowCount}' value="${currentAmount}"
+                      class='bg-transparent border-0 text-black text-right amount' name='amount[]' value='0.00'></td>
+              <td class='text-center'><button type='button' id='copy_btn${RowCount}'
+                      class='btn btn-transparent text-secondary btn-sm   copy_row' data-toggle='tooltip'
+                      data-placement='top' title='Clone' style='width:30px'><i
+                          class="fas fa-copy"></i></button>
+              </td>
+              <td class='text-center'><button type='button' id='del_btn${RowCount}'
+                      class='btn btn-transparent text-danger btn-sm  delete-row'
+                      style='width:30px'><i class='fa fa-times'></i></button></td>
+          </tr>`);
+
+          $('#item_table').append(newRow);
+          calc_total();
+      });
+
+      // Delete row
+      $('#item_table').on('click', '.delete-row', function () {
+          $(this).closest('tr').remove();
+          calc();
+      });
+
+  });
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+function addUnit() {
+    // Get the form and form data
+    let unitForm = document.getElementById("unitForm");
+    let formData = new FormData(unitForm);
+
+    // Send the form data through AJAX
+    $.ajax({
+        url: "{% url 'add_unit' %}",
+        type: "POST",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            const unitName = response.unit_name;
+            const unitId = response.unit_id; // Assume the server returns the unit ID
+
+            // Handle the success response
+            console.log(response);
+
+            // Get the dropdown element
+            const dropdown = document.getElementById("unit");
+
+            // Create and add the new unit option
+            const newUnitOption = document.createElement("option");
+            newUnitOption.value = unitId;
+            newUnitOption.text = unitName;
+
+            // Add the new unit option to the dropdown
+            dropdown.add(newUnitOption);
+
+            // Select the newly added unit option to display it as the current selection
+            newUnitOption.selected = true;
+
+            // Close the form and perform any other actions
+            closeForm();
+        },
+        error: function (error) {
+            // Handle the error response
+            console.log(error);
+        }
+    });
+}
+
+function openForm() {
+    let formContainer = document.getElementById("myForm");
+    formContainer.style.display = "block";
+}
+
+function closeForm() {
+    let formContainer = document.getElementById("myForm");
+    formContainer.style.display = "none";
+}
+</script>
+
+<div class="form-popup1" id="myForm1" >
+  <form style="margin-top: 2rem;" onsubmit="event.preventDefault(); addAccount();" class="form-container" id="accountForm">
+    {% csrf_token %}
+    <span class="close" onclick="closeForm1()">&times;</span><br>
+    <h1 class="text-dark" >Add Account</h1><br>
+    
+    <label class="text-dark"><b>Account type</b></label>
+    <select class="form-select" aria-label="Default select example" name="acc_type">
+      <option selected></option>
+      <option value="EXPENCES">EXPENCES</option>
+      <option value="Cost Of Goods Sold">Cost Of Goods Sold</option>
+      <option value="Fixed Asset">Fixed Asset</option>
+    </select>
+    <label class="text-dark"><b>Account Name</b></label>
+    
+    <input type="text" placeholder="Enter account Name" id="unit" name="acc_name" required>
+    <label class="text-dark"><b>Description</b></label>
+    <input type="text" placeholder="Description"name="acc_desc">
+    <button type="submit" class="btn add-button" >Add</button>
+  
+  </form>
+</div>
+
+
+
+<script>
+  function addAccount() {
+    // Get the form and form data
+    let accountForm = document.getElementById("accountForm");
+    let formData = new FormData(accountForm);
+  
+    // Send the form data through AJAX
+    $.ajax({
+      url: "{% url 'add_account' %}",
+      type: "POST",
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        const accountType = response.Account_type;
+        const accountName = response.Account_name;
+        const accountId = response.account_id; // Assume the server returns the account ID
+  
+        // Handle the success response
+        console.log(response);
+  
+        // Get the dropdown element
+        const dropdown = document.getElementById("myaccount");
+  
+        // Create and add the new account option
+        const newAccountOption = document.createElement("option");
+        newAccountOption.value = accountId;
+        newAccountOption.text = accountName;
+  
+        // Find the correct position to insert the new account option
+        let foundAccountType = false;
+        for (let i = 0; i < dropdown.options.length; i++) {
+          const option = dropdown.options[i];
+          if (option.disabled && option.innerText === accountType)   {
+            foundAccountType = true;
+            // Move to the next option to find the correct position within the account type
+            continue;
+          }
+          if (foundAccountType) {
+            if (!option.disabled) {
+              // Insert the new account option before the first non-disabled option within the account type
+              dropdown.add(newAccountOption, i);
+              break;
+            }
+          }
+        }
+  
+        // If the account type option doesn't exist, create and add it along with the new account option
+        if (!foundAccountType) {
+          const accountTypeOption = document.createElement("option");
+          accountTypeOption.text = accountType;
+          accountTypeOption.disabled = true;
+          accountTypeOption.className = "btn btn-dark text-light highlight-account-type";
+          dropdown.add(accountTypeOption);
+          dropdown.add(newAccountOption);
+        }
+  
+        // Select the newly added account option to display it as the current selection
+        newAccountOption.selected = true;
+  
+        // Close the form and perform any other actions
+        closeForm1();
+      },
+      error: function (error) {
+        // Handle the error response
+        console.log(error);
+      }
+    });
+  }
+  const dropdown = document.getElementById("myaccount");
+  dropdown.addEventListener("change", function () {
+  // Get the selected option from the dropdown
+  const selectedOption = dropdown.selectedOptions[0];
+  // Get the account ID from the selected option's value attribute
+  const selectedAccountId = selectedOption.value;
+
+  // Now you can use selectedAccountId for further processing or display
+  console.log("Selected Account ID:", selectedAccountId);
+});
+  
+function showForm() {
+  let formContainer = document.getElementById("myForm1");
+  formContainer.style.display = "block";
+}
+
+function closeForm1() {
+  let formContainer = document.getElementById("myForm1");
+  formContainer.style.display = "none";
+}
+
+</script>
+
+
+  
+
+  
+
+  
+
+  
+</section>
+{% endblock %}
