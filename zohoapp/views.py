@@ -10932,5 +10932,14 @@ def new_adjustment(request):
     sales=Sales.objects.all()
     purchase=Purchase.objects.all()
     unit=Unit.objects.all()
-    return render(request,'new_adjustment.html',{'company': company_data,'accounts':accounts,'items':items,'sales':sales,'purchase':purchase,'units':unit})
+    reason=Reason.objects.all()
+    return render(request,'new_adjustment.html',{'company': company_data,'accounts':accounts,'items':items,'sales':sales,'purchase':purchase,'units':unit,'reason':reason})
     
+
+
+def newreasons(request):
+    if request.method == 'POST':
+        newreason= request.POST['newReason']
+        reasons=Reason(reason=newreason)
+        reasons.save()
+    return redirect("new_adjustment")

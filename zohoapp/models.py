@@ -1133,3 +1133,8 @@ class transactions(models.Model):
     adjacname=models.CharField(max_length=220,default='', null=True, blank=True)
     
     
+class Reason(models.Model):
+    reason=models.TextField(max_length=255)
+
+    def __str__(self):
+        return self.reason
