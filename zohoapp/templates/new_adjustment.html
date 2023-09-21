@@ -53,6 +53,9 @@
       z-index: 9999;
       overflow: scroll;
     }
+
+
+
 </style>
 
 
@@ -170,7 +173,7 @@
             <div class="col-sm-6 col-md-5 col-6" style="margin-left: -2.2rem;">
                 <select name="unit" class="form-control bg-white text-dark" id="unit">
                     {% for a in accounts %}
-                    <option value="{{u.id}}">{{a.account_name}}</option>
+                    <option value="{{a.id}}">{{a.account_name}}</option>
                     
                     {% endfor %}
                 </select>
@@ -214,7 +217,7 @@
     <div class="col-sm-12 col-lg-12 col-md-12 ">
         <label for="" id="label_tab1" class="tab1"></label><br>
         <div style="width: 100%;">
-            <table class="table  text-black table-bordered tab1" id="item_table" style="background-color: rgba(250, 227, 198, 0.8);table-layout: fixed;width: 100%;background-color: #b6b3b36b;"
+            <table class="table  text-black table-bordered tab1" id="item_table" style="background-color: rgba(250, 227, 198, 0.8);width: 100%;background-color: #b6b3b36b;"
             onchange="calc()">
             <thead>
                 <tr>
@@ -228,9 +231,9 @@
             <tbody>
 
                 <tr id='row1'>
-                    <td class="bg-transparent text-light"></td>
+                    <td class="bg-transparent text-light rownum" id="" value=""></td>
                     <td>
-                        <div class='form-group'><select class=' bg-transparent text-light border-0 item_select itm' name='' id='item1'>
+                        <div class='form-group'><select class=' bg-transparent text-light border-0 item_select itm' name='item[]' id='item1'>
                                 <option class='text-dark' hidden>Select Items</option>
                                 {% for i in items %}
                                 <option class="text-dark" value="{{i.Name}}" data-stock="{{i.stock}}">{{i.Name}}</option>
@@ -240,13 +243,13 @@
                     </td>
 
                     
-                    <td class='text-right' ><input type='number' class='form-control bg-transparent border-0 text-light text-right qty' value='' >
+                    <td class='text-right' ><input type='number' class='form-control bg-transparent border-1 border-light text-light text-right qty' value='' name="qtyav[]" >
                     </td>
                     
-                    <td class='text-right'><input type='number' id='rates' class='form-control bg-transparent border-0 text-light text-right rate' name='' value=''>
+                    <td class='text-right'><input type='number' id='rates' class='form-control bg-transparent border-1 border-light text-light text-right rate' name='newqty[]' value=''>
                     </td>
                     
-                    <td class='text-right'><input type='text' id='diff' class='form-control bg-transparent border-0 text-light text-right discount' name='' value=''>
+                    <td class='text-right'><input type='text' id='diff' class='form-control bg-transparent border-1 border-light text-light text-right discount' name='qtyadj[]' value=''>
                     </td>
                     
 
@@ -274,6 +277,9 @@
 <script>
 
 //#### FIRST ROW ####
+let rowNum = 1;
+const rownumber =document.querySelector('.rownum');
+rownumber.innerHTML = rowNum;
 
 document.addEventListener('DOMContentLoaded', function() {
     const itemSelect = document.querySelector('.item_select');
@@ -298,7 +304,7 @@ const discountInput = document.getElementById('diff');
         const qtyInput = document.querySelector('.qty'); 
         const rateValue = parseFloat(rateInput.value) || 0;
         const qtyValue = parseFloat(qtyInput.value) || 0; 
-        const difference = qtyValue - rateValue ;
+        const difference = rateValue - qtyValue ;
 
         
         discountInput.value = difference.toFixed(2);
@@ -316,10 +322,12 @@ document.addEventListener('DOMContentLoaded', function() {
         // Create a new row element
         const newRow = document.createElement('tr');
 
+        rowNum++;
+
         newRow.innerHTML = `
-            <td class="bg-transparent text-light"></td>
+            <td class="bg-transparent text-light">${rowNum}</td>
             <td>
-                <div class='form-group'><select class='bg-transparent text-light border-0 item_select itm' name='' id='item1'>
+                <div class='form-group'><select class='bg-transparent text-light border-0 item_select itm' name='item[]' id='item1'>
                         <option class='text-dark' hidden>Select Items</option>
                         {% for i in items %}
                         <option class="text-dark" value="{{i.Name}}" data-stock="{{i.stock}}">{{i.Name}}</option>
@@ -328,9 +336,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             </td>
 
-            <td class='text-right'><input type='number' class='form-control bg-transparent border-0 text-light text-right qty' value=''></td>
-            <td class='text-right'><input type='number' id='rates' class='form-control bg-transparent border-0 text-light text-right rate' name='' value=''></td>
-            <td class='text-right'><input type='text' id='diff' class='form-control bg-transparent border-0 text-light text-right discount' name='' value=''></td>
+            <td class='text-right'><input type='number' class='form-control bg-transparent border-1 border-light text-light text-right qty' name="qtyav[]" value=''></td>
+            <td class='text-right'><input type='number' id='rates' class='form-control bg-transparent border-1 border-light text-light text-right rate' name="newqtyav[]" value=''></td>
+            <td class='text-right'><input type='text' id='diff' class='form-control bg-transparent border-1 border-light text-light text-right discount' name="qtyadj[]" value=''></td>
             <td class='text-center'>
                 <button type='button' class='btn btn-transparent text-danger btn-sm btn-outline-danger rounded-circle delete-row' style='width:30px'><i class='fa fa-times'></i></button>
             </td>
@@ -355,7 +363,7 @@ document.addEventListener('DOMContentLoaded', function() {
         ratesInput.addEventListener('input', function() {
             const qtyValue = parseFloat(qtyInput.value) || 0; 
             const ratesValue = parseFloat(ratesInput.value) || 0; 
-            const difference = qtyValue - ratesValue;
+            const difference =ratesValue - qtyValue ;
 
            
             diffInput.value = difference.toFixed(2); 
@@ -365,6 +373,8 @@ document.addEventListener('DOMContentLoaded', function() {
         deleteButton.addEventListener('click', function() {
             const parentRow = deleteButton.closest('tr');
             parentRow.remove();
+
+            rowNum--;
         });
     });
 });
@@ -388,7 +398,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="col-sm-12 col-lg-12 col-md-12 ">
                         <label for="" id="label_tab2" class="tab2"></label><br>
                         <div style="width: 100%;">
-                            <table class="table  text-black table-bordered tab2" id="item_table2" style="background-color: rgba(250, 227, 198, 0.8);table-layout: fixed;width: 100%;background-color: #b6b3b36b;"
+                            <table class="table  text-black table-bordered tab2" id="item_table2" style="background-color: rgba(250, 227, 198, 0.8);width: 100%;background-color: #b6b3b36b;"
                             onchange="calc()">
                             <thead>
                                 <tr>
@@ -402,9 +412,9 @@ document.addEventListener('DOMContentLoaded', function() {
                             <tbody>
         
                                 <tr id='row2'>
-                                    <td class="bg-transparent text-light"></td>
+                                    <td class="bg-transparent text-light rownum2"  ></td>
                                     <td>
-                                        <div class='form-group'><select class=' bg-transparent text-light border-0 item_select2 itm' name='' id=''>
+                                        <div class='form-group'><select class=' bg-transparent text-light border-0 item_select2 itm' name='item2[]' id=''>
                                                 <option class='text-dark'>Select Items</option>
                                                 {% for i in items %}
                                                 <option class="text-dark" value="{{i.Name}}" data-stock="{{i.stock}}" data-rate="{{i.rate}}">{{i.Name}}</option>
@@ -412,13 +422,13 @@ document.addEventListener('DOMContentLoaded', function() {
                                             </select>
                                         </div>
                                     </td>
-                                    <td class='text-right'><input type='number' id='rate1' class='form-control bg-transparent border-0 text-light text-right values' name=''
+                                    <td class='text-right'><input type='number' id='rate1' class='form-control bg-transparent border-1 border-light text-light text-right values' name='cuval[]'
                                             value=''>
                                     </td>
-                                    <td class='text-right'><input type='number' id='rate2' class='form-control bg-transparent border-0 text-light text-right rate' name=''
+                                    <td class='text-right'><input type='number' id='rate2' class='form-control bg-transparent border-1 border-light text-light text-right rate' name='chval[]'
                                             value=''>
                                     </td>
-                                    <td class='text-right'><input type='text' id='discount1' class='form-control bg-transparent border-0 text-light text-right discount' name=''
+                                    <td class='text-right'><input type='text' id='discount1' class='form-control bg-transparent border-1 border-light text-light text-right discount' name='adjval[]'
                                             value=''>
                                     </td>
                                     
@@ -448,6 +458,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <script>
 
+let rowNum2 = 1;
+const rownumber2 =document.querySelector('.rownum2');
+rownumber2.innerHTML = rowNum2;
+
 //#### NEW ROW ####
 document.addEventListener('DOMContentLoaded', function() {
     
@@ -456,11 +470,12 @@ document.addEventListener('DOMContentLoaded', function() {
     addRowButton.addEventListener('click', function() {
        
         const newRow = document.createElement('tr');
+        rowNum2++;
 
         newRow.innerHTML = `
-            <td class="bg-transparent text-light"></td>
+            <td class="bg-transparent text-light" style="width:50px;">${rowNum2}</td>
             <td>
-                <div class='form-group'><select class='bg-transparent text-light border-0 item_select2 itm' name='' id='item1'>
+                <div class='form-group'><select class='bg-transparent text-light border-0 item_select2 itm'  name='item2[]' id='item1'>
                         <option class='text-dark' hidden>Select Items</option>
                         {% for i in items %}
                         <option class="text-dark" value="{{i.Name}}" data-stock="{{i.stock}}" data-rate="{{i.rate}}">{{i.Name}}</option>
@@ -468,9 +483,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     </select>
                 </div>
             </td>
-            <td class='text-right'><input type='number' class='form-control bg-transparent border-0 text-light text-right values' value=''></td>
-            <td class='text-right'><input type='number' id='' class='form-control bg-transparent border-0 text-light text-right rate' name='' value=''></td>
-            <td class='text-right'><input type='text' id='' class='form-control bg-transparent border-0 text-light text-right discount' name='' value=''></td>
+            <td class='text-right'><input type='number' id='ratee1' class='form-control bg-transparent border-1 border-light text-light text-right values' value=''  name='cuval[]'></td>
+            <td class='text-right'><input type='number' id='ratee2' class='form-control bg-transparent border-1 border-light text-light text-right rate' name='chval[]' value=''></td>
+            <td class='text-right'><input type='text' id='discount2' class='form-control bg-transparent border-1 border-light text-light text-right discount' name='adjval[]' value=''></td>
             <td class='text-center'>
                 <button type='button' class='btn btn-transparent text-danger btn-sm btn-outline-danger rounded-circle delete-row' style='width:30px'><i class='fa fa-times'></i></button>
             </td>
@@ -489,14 +504,38 @@ document.addEventListener('DOMContentLoaded', function() {
             const rate = selectedOption.getAttribute('data-rate');
             const fvalue = stock * rate;
             qtyInput.value = fvalue;
+
         });
+
+
+        
+const rateInp1 = document.getElementById('ratee1');
+const rateInp2 = document.getElementById('ratee2');
+const discInput = document.getElementById('discount2');
+
+rateInp1.addEventListener('input', calculateDiscount);
+rateInp2.addEventListener('input', calculateDiscount);
+
+// Function to calculate the discount
+function calculateDiscount() {
+    const rates1 = parseFloat(rateInp1.value) || 0;
+    const rates2 = parseFloat(rateInp2.value) || 0;
+
+    // Calculate the difference
+    const difference = rates1 - rates2;
+
+    // Update the discount input field with the difference
+    discInput.value = difference.toFixed(2); // Adjust the number of decimal places as needed
+}
 
         const deleteButton = newRow.querySelector('.delete-row');
         deleteButton.addEventListener('click', function() {
             const parentRow = deleteButton.closest('tr');
             parentRow.remove();
-        });
+
+           rowNum2--;
     });
+  });
 
 
     
@@ -534,6 +573,7 @@ function calculateDiscount() {
 }
 
 });
+
 
 
 
@@ -583,13 +623,18 @@ function calculateDiscount() {
           
                     <div class="row">
                         <div class="-sm-12 col-md-6 col-lg-6">
-                            <input type="submit" class="btn text-white mt-5" style="background-color:  rgb(59, 59, 58) ; " 
-                onclick="saveAsDraftDialog()" value="Save As Draft">
-                <input type="submit" class="btn text-white mt-5" style="background-color: rgb(210, 132, 30) ; "
-                    onclick="saveAndSendDialog()" value="Convert to Adjusted">
-                    <input type="submit" class="btn text-white mt-5" style="background-color:  rgb(59, 59, 58) ; "
+                            <!-- <input type="submit" class="btn text-white mt-5" style="background-color:  rgb(59, 59, 58) ; " 
+                onclick="saveAsDraftDialog()" value="Save As Draft"> -->
+
+                <input type="submit" class="btn text-white mt-5" style="background-color:  rgb(59, 59, 58) ;  " value="Save As Draft">
+                <input type="submit" class="btn text-white mt-5" style="background-color: rgb(210, 132, 30) ; " value="Convert to Adjusted"> 
+                <input type="submit" class="btn text-white mt-5" style="background-color:  rgb(59, 59, 58) ; " onclick="cancelDialog()" value="Cancel">
+                <!-- <input type="submit" class="btn text-white mt-5" style="background-color: rgb(210, 132, 30) ; "
+                    onclick="saveAndSendDialog()" value="Convert to Adjusted"> -->
+
+                    <!-- <input type="submit" class="btn text-white mt-5" style="background-color:  rgb(59, 59, 58) ; "
                             onclick="cancelDialog()" value="Cancel">
-                        </div>
+                        </div> -->
                         <div class="-sm-12 col-md-6 col-lg-6"></div>
                     </div>
             <!-- #### FORM ####  -->

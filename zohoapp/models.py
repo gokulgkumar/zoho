@@ -1138,3 +1138,31 @@ class Reason(models.Model):
 
     def __str__(self):
         return self.reason
+    
+
+# class new_adjustement(models.Model):
+#     user=models.ForeignKey(User,on_delete=models.CASCADE)
+#     date = models.DateField(null=True)
+#     mode_of_adjustment=models.CharField(max_length=255)
+#     reference_no=models.CharField(max_length=255)
+#     account=models.ForeignKey(Chart_of_Account,on_delete=models.CASCADE,null=True,blank=True)
+#     reason=models.CharField(max_length=255)
+#     description=models.CharField(max_length=255)
+    
+
+class Adjustment(models.Model):
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    type = models.CharField(max_length=255)
+    adjustment_type= models.CharField(max_length=255)
+    reference_number = models.CharField(max_length=255)
+    date = models.DateField()
+    account = models.ForeignKey(Chart_of_Account, on_delete=models.CASCADE,null=True,blank=True)  
+    description = models.TextField()
+    
+
+class ItemAdjustment(models.Model):
+    adjustment = models.ForeignKey(Adjustment, on_delete=models.CASCADE)
+    item = models.CharField(max_length=255)
+    quantity_available = models.DecimalField(max_digits=10, decimal_places=2)
+    new_quantity_on_hand = models.DecimalField(max_digits=10, decimal_places=2)
+    quantity_adjusted = models.DecimalField(max_digits=10, decimal_places=2)

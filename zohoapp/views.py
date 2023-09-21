@@ -3032,7 +3032,7 @@ def add_sales_order(request):
                     created =sales_item(sale=sale_id,product=element[0],
                                         quantity=element[1],tax=element[2],total=element[3],rate=element[4],desc=element[5])
                     created.save()
-                    print(created)    
+                    print(created,"created issss")    
                 
             return redirect('view_sales_order')          
     
@@ -10923,7 +10923,7 @@ def inventory_adjustment(request):
     company_data = company_details.objects.get(user=request.user)
     return render(request,'inventory_adjustment.html',{'company': company_data})
 
-
+@login_required(login_url='login')
 def new_adjustment(request):
     user = request.user
     accounts=Chart_of_Account.objects.all()
@@ -10943,3 +10943,9 @@ def newreasons(request):
         reasons=Reason(reason=newreason)
         reasons.save()
     return redirect("new_adjustment")
+
+
+def save_adjustment(request):
+    if request.method=='POST':
+        
+        
