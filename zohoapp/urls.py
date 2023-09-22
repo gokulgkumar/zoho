@@ -513,6 +513,7 @@ urlpatterns = [
     path('inventory_adjustment',views.inventory_adjustment,name='inventory_adjustment'),
     path('new_adjustment',views.new_adjustment,name='new_adjustment'),
     path('newreasons',views.newreasons,name='newreasons'),
+    path('save_adjustment',views.save_adjustment,name='save_adjustment'),
     
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
     

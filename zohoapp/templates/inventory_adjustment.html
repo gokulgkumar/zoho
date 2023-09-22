@@ -3,7 +3,37 @@
 {% block content %}
 
 
+<style>
 
+.tooltip-container {
+  position: relative;
+  cursor: pointer;
+}
+
+.tooltip-text {
+  visibility: hidden;
+  width: 200px;
+  background-color: #f8f8f8;
+  color: #0e0d0d;
+  text-align: center;
+  border-radius: 5px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  top: 70%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.tooltip-container:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+
+</style>
 
 <section class="container" sryle="position:fixed;z-index:99;" > 
   <div class="row mt-3 " style="margin-top: -3rem; margin-left:1rem;" >
@@ -18,12 +48,12 @@
           </button>
           <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
             <a class="dropdown-item" href="#"  data-sort="all"></a>
-            <a class="dropdown-item" href="#"  data-sort="name">Reason</a>
-            <a class="dropdown-item" href="#"  data-sort="HSN">Reference Number</a>
-            <a class="dropdown-item" href="#"  data-sort="usage"></a>
+            <a class="dropdown-item" href="#"  data-sort="reason" style="color: white!important;">Reason</a>
+            <a class="dropdown-item" href="#"  data-sort="referencenumber" style="color: white!important;">Reference Number</a>
+            <!-- <a class="dropdown-item" href="#"  data-sort="usage"></a>
             {% comment %} <a class="dropdown-item" href="#" id="sortByName"></a>
-            <a class="dropdown-item" href="#" id="sortByHSN"></a>
-            <a class="dropdown-item" href="#" id="sortByUsageUnit"></a> {% endcomment %}
+            <a class="dropdown-item" href="#" id="sortByreferencenumber"></a>
+            <a class="dropdown-item" href="#" id="sortByUsageUnit"></a> {% endcomment %} -->
           </div>
           
         </div>
@@ -32,9 +62,9 @@
             Filter
           </button>
           <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-            <a class="dropdown-item" href="#" id="filterAllButton">All</a>
-            <a class="dropdown-item" href="#" id="filterActiveButton">Adjusted</a>
-            <a class="dropdown-item" href="#" id="filterInactiveButton">Draft</a>
+            <a class="dropdown-item" href="#" id="filterAllButton" style="color: white!important;">All</a>
+            <a class="dropdown-item" href="#" id="filterActiveButton"style="color: white!important;">Adjusted</a>
+            <a class="dropdown-item" href="#" id="filterInactiveButton"style="color: white!important;">Draft</a>
           </div>
           
         </div>
@@ -44,35 +74,38 @@
       </div>
     </div>
   </div>  
-  <div id="tableContainer" style="max-height: 500px; overflow-y: auto;">
-    <table id="dataTable" class="table text-white mt-2" style="width: 100%; margin-top: 40px;">
+  <div id="tableContainer" style="max-height: 500px; ">
+    <table id="dataTable" class="table text-white mt-2 table-border border-1" style="width: 100%; margin-top: 40px;">
       <thead>
-        <tr>
+        <tr style="color: beige;" class="text-center">
             <!-- id="nameHeader" -->
-          <th class="col" >Date</th> 
+          <th class="col" style="color: beige;">Date</th> 
 
-          <th class="col">Reason</th>
-          <th class="col">Description</th>
-          <th class="col">Status</th>
-          <th class="col">Reference Number</th>
+          <th class="col"style="color: beige;">Reason</th>
+          <th class="col"style="color: beige;">Description</th>
+          <th class="col"style="color: beige;">Status</th>
+          <th class="col"style="color: beige;">Reference Number</th>
 
           <!-- id="stockHeader" -->
-          <th class="col" >Type</th>
+          <th class="col"style="color: beige;" >Type</th>
 
-          <th class="col">Adjusted by</th>
+          <th class="col"style="color: beige;">Adjusted by</th>
         </tr>
       </thead>
       <tbody>
-        {% for v in view %}
-        <tr class="{% if v.satus == 'active' or v.satus == 'Active' %}active{% elif v.satus == 'inactive' or v.satus == 'Inactive' %}inactive{% endif %}">
-          <td class="item-name-cell" onclick="location.href ='#'">{{ v.Name }}</td>
-          <td>{{ v.s_desc }}</td>
-          <td>{{ v.s_price }}</td>
-          <td>{{ v.p_price }}</td>
-          <td>{{ v.hsn }}</td>
-          <td>{{ v.stock }}</td>
-          <td>{{ v.unit.unit }}</td>
-          <td>{{ v.satus }}</td>
+        {% for a in adjustment %}
+        <!-- <tr class="{% if v.satus == 'active' or v.satus == 'Active' %}active{% elif v.satus == 'inactive' or v.satus == 'Inactive' %}inactive{% endif %} text-center"  data-status="{{ a.status }}"></tr> -->
+        <tr class="text-center"  data-status="{{ a.status }}">
+          <td class="item-name-cell" onclick="location.href ='#'">{{ a.date }}</td>
+          <td>{{ a.reason }}</td>
+          <td class="tooltip-container">
+            <span class="tooltip-trigger"><i class="fas fa-comment-alt"></i></span>
+          <span class="tooltip-text">{{ a.description }}</span>
+          </td>
+          <td>{{ a.status }}</td>
+          <td>{{ a.reference_number }}</td>
+          <td>{{ a.adjustment_type }}</td>
+          <td>{{ a.company.company_name }}</td>
         </tr>
         {% endfor %}
       </tbody>
@@ -81,6 +114,105 @@
 </section>
 
 
+
+
+
+
+
+<script>
+
+
+// Function to filter items based on status
+function filterItems(status) {
+  if (status === 'active' || status === 'Active') {
+    $('tbody tr').hide();
+    $('tbody tr.active, tbody tr.Active').show();
+  } else if (status === 'inactive' || status === 'Inactive') {
+    $('tbody tr').hide();
+    $('tbody tr.inactive, tbody tr.Inactive').show();
+  } else if (status === 'adjusted') {
+    $('tbody tr').hide();
+    $('tbody tr[data-status="Adjusted"]').show();
+  } else if (status === 'draft') {
+    $('tbody tr').hide();
+    $('tbody tr[data-status="Draft"]').show();
+  } else {
+    $('tbody tr').show(); // Show all items
+  }
+}
+
+// Attach the filter function to the filter buttons
+$('#filterActiveButton').on('click', function() {
+  filterItems('adjusted');
+});
+
+$('#filterInactiveButton').on('click', function() {
+  filterItems('draft');
+});
+
+$('#filterAllButton').on('click', function() {
+  filterItems('all');
+});
+
+</script>
+
+
+<script>
+
+function sortByReason() {
+  var rows = $('#dataTable tbody tr').get();
+  rows.sort(function(a, b) {
+    var keyA = $(a).children('td').eq(1).text().toUpperCase(); // Column index 1 for Reason
+    var keyB = $(b).children('td').eq(1).text().toUpperCase();
+    if (keyA < keyB) return -1;
+    if (keyA > keyB) return 1;
+    return 0;
+  });
+  $.each(rows, function(index, row) {
+    $('#dataTable').children('tbody').append(row);
+  });
+}
+
+// Function to sort items by reference number
+function sortByReferenceNumber() {
+  var rows = $('#dataTable tbody tr').get();
+  rows.sort(function(a, b) {
+    var keyA = $(a).children('td').eq(4).text(); // Column index 4 for Reference Number
+    var keyB = $(b).children('td').eq(4).text();
+    return keyA.localeCompare(keyB);
+  });
+  $.each(rows, function(index, row) {
+    $('#dataTable').children('tbody').append(row);
+  });
+}
+
+// Modify the event handler for the "Sort" dropdown
+$('[data-sort]').on('click', function() {
+  var sortType = $(this).data('sort');
+  if (sortType === 'name') {
+    sortByName();
+  } else if (sortType === 'referencenumber') {
+    sortByReferenceNumber(); // Sort by Reference Number
+  } else if (sortType === 'reason') {
+    sortByReason(); // Sort by Reason
+  } else if (sortType === 'all') {
+    restoreOriginalTable();
+  }
+});
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+<!-- 
 <script>
   $(document).ready(function() {
     var originalTable = $('#dataTable').clone(); // Clone the original table on page load
@@ -101,7 +233,7 @@
     }
 
     // Function to sort items by HSN/SAC
-    function sortByHSN() {
+    function sortByreferencenumber() {
       var rows = $('#dataTable tbody tr').get();
       rows.sort(function(a, b) {
         var keyA = $(a).children('td').eq(4).text();
@@ -137,8 +269,8 @@
       var sortType = $(this).data('sort');
       if (sortType === 'name') {
         sortByName();
-      } else if (sortType === 'HSN') {
-        sortByHSN();
+      } else if (sortType === 'referencenumber') {
+        sortByreferencenumber();
       } else if (sortType === 'usage') {
         sortByUsageUnit();
       } else if (sortType === 'all') {
@@ -147,12 +279,12 @@
     });
   });
 </script>
+ -->
 
 
 
-
-<script>
-  // Function to filter items based on status
+<!-- <script>
+ 
   function filterItems(status) {
     
     if (status === 'active' || status === 'Active') {
@@ -162,11 +294,11 @@
       $('tbody tr').hide();
       $('tbody tr.inactive, tbody tr.Inactive').show();
     } else {
-      $('tbody tr').show(); // Show all items
+      $('tbody tr').show(); 
     }
   }
 
-  // Attach the filter function to the filter buttons
+ 
   $('#filterActiveButton').on('click', function() {
     filterItems('active');
   });
@@ -180,7 +312,7 @@
   });
 </script>
 
-
+ -->
 
 
 
@@ -222,7 +354,7 @@
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> 
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 {% endblock %}
 
