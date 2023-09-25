@@ -11030,8 +11030,16 @@ def save_adjustment(request):
              
              
    
-         
-        
+def inv_overview(request,id):
+    users1=request.user.id
+    user=request.user
+
+    alladj=Adjustment.objects.filter(user=user)
+    adj=Adjustment.objects.get(id=id)
+    adjItems=ItemAdjustment.objects.filter(adjustment=adj)
+
+    company_data = company_details.objects.get(user=users1)
+    return render(request,'inventory_overview.html',{'alladj':alladj,'company':company_data,'adj':adj,'adjItems':adjItems})
         
 
 

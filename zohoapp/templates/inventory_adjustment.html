@@ -5,6 +5,11 @@
 
 <style>
 
+tr:hover{
+        cursor: pointer;
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+
 .tooltip-container {
   position: relative;
   cursor: pointer;
@@ -20,7 +25,7 @@
   padding: 5px;
   position: absolute;
   z-index: 1;
-  top: 70%;
+  top: 90%;
   left: 50%;
   transform: translateX(-50%);
   opacity: 0;
@@ -96,16 +101,16 @@
         {% for a in adjustment %}
         <!-- <tr class="{% if v.satus == 'active' or v.satus == 'Active' %}active{% elif v.satus == 'inactive' or v.satus == 'Inactive' %}inactive{% endif %} text-center"  data-status="{{ a.status }}"></tr> -->
         <tr class="text-center"  data-status="{{ a.status }}">
-          <td class="item-name-cell" onclick="location.href ='#'">{{ a.date }}</td>
-          <td>{{ a.reason }}</td>
+          <td class="item-name-cell" onclick="location.href ='#'"> <a href="{% url 'inv_overview' a.id %}" style="text-decoration: none;color: white;">{{ a.date }}</a> </td>
+          <td> <a href="{% url 'inv_overview' a.id %}" style="text-decoration: none;color: white;" >{{ a.reason }}</a></td>
           <td class="tooltip-container">
             <span class="tooltip-trigger"><i class="fas fa-comment-alt"></i></span>
-          <span class="tooltip-text">{{ a.description }}</span>
+          <span class="tooltip-text"> <a href="{% url 'inv_overview' a.id %}" style="text-decoration: none;color: white;" class="text-dark">{{ a.description }}</a> </span>
           </td>
-          <td>{{ a.status }}</td>
-          <td>{{ a.reference_number }}</td>
-          <td>{{ a.adjustment_type }}</td>
-          <td>{{ a.company.company_name }}</td>
+          <td> <a href="{% url 'inv_overview' a.id %}" style="text-decoration: none;color: white;">{{ a.status }}</a> </td>
+          <td> <a href="{% url 'inv_overview' a.id %}" style="text-decoration: none;color: white;">{{ a.reference_number }}</a> </td>
+          <td> <a href="{% url 'inv_overview' a.id %}" style="text-decoration: none;color: white;">{{ a.adjustment_type }}</a> </td>
+          <td> <a href="{% url 'inv_overview' a.id %}" style="text-decoration: none;color: white;">{{ a.company.company_name }}</a> </td>
         </tr>
         {% endfor %}
       </tbody>

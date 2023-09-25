@@ -514,6 +514,7 @@ urlpatterns = [
     path('new_adjustment',views.new_adjustment,name='new_adjustment'),
     path('newreasons',views.newreasons,name='newreasons'),
     path('save_adjustment',views.save_adjustment,name='save_adjustment'),
+    path('inv_overview/<int:id>/',views.inv_overview,name='inv_overview'),
     
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
     
