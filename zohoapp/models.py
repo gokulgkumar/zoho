@@ -1174,3 +1174,10 @@ class ItemAdjustment(models.Model):
     current_value=models.DecimalField(max_digits=10, decimal_places=2,null=True,blank=True)
     changed_value=models.DecimalField(max_digits=10, decimal_places=2,null=True,blank=True)
     adjusted_value=models.DecimalField(max_digits=10, decimal_places=2,null=True,blank=True)
+
+
+class Inventory_adj_comments(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
+    adjustment=models.ForeignKey(Adjustment,on_delete=models.CASCADE,null=True,blank=True)
+    comments=models.CharField(max_length=500,null=True,blank=True)
+    

@@ -515,6 +515,11 @@ urlpatterns = [
     path('newreasons',views.newreasons,name='newreasons'),
     path('save_adjustment',views.save_adjustment,name='save_adjustment'),
     path('inv_overview/<int:id>/',views.inv_overview,name='inv_overview'),
+    path('add_inv_comment/<int:id>/',views.add_inv_comment,name='add_inv_comment'),
+    path('change_inventory_status/<int:id>/',views.change_inventory_status,name='change_inventory_status'),
+    path('delete_inventory/<int:id>/',views.delete_inventory,name='delete_inventory'),
+    path('filterby_draft/<int:id>/',views.filterby_draft,name='filterby_draft'),
+    path('filterby_adjusted/<int:id>/',views.filterby_adjusted,name='filterby_adjusted'),
     
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
     

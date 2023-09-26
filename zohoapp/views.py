@@ -10918,6 +10918,10 @@ def customize_vendor_report(request):
     company_data = company_details.objects.get(user=request.user)
     return render(request,'customize_report_vendor.html',{'vendors':vendor,'company': company_data})
 
+
+
+
+
 @login_required(login_url='login')
 def inventory_adjustment(request):
     user=request.user.id
@@ -11034,15 +11038,74 @@ def inv_overview(request,id):
     users1=request.user.id
     user=request.user
 
+    
     alladj=Adjustment.objects.filter(user=user)
     adj=Adjustment.objects.get(id=id)
     adjItems=ItemAdjustment.objects.filter(adjustment=adj)
 
     company_data = company_details.objects.get(user=users1)
-    return render(request,'inventory_overview.html',{'alladj':alladj,'company':company_data,'adj':adj,'adjItems':adjItems})
+    inv_comments=Inventory_adj_comments.objects.filter(adjustment=adj.id,user=user)
+
+    return render(request,'inventory_overview.html',{'alladj':alladj,'company':company_data,'adj':adj,'adjItems':adjItems,'inv_comments':inv_comments})
         
 
 
+def add_inv_comment(request,id):
+    if request.method=='POST':
+        user=request.user
+        adj=Adjustment.objects.get(id=id)
+        comment=Inventory_adj_comments()
+        comment.user=user
+        comment.adjustment=adj
+        comment.comments=request.POST.get('comments')
+        comment.save()
+        return redirect('inv_overview',adj.id)
+
+
+
+def change_inventory_status(request,id):
+    adj=Adjustment.objects.get(id=id)
+    if adj.status == 'Draft':
+        adj.status = 'Adjusted'
+        adj.save()
+    else:
+        adj.status = 'Adjusted'
+        adj.save()
+    return redirect(inv_overview,adj.id)
+
+def delete_inventory(request,id):
+    adj=Adjustment.objects.get(id=id)
+    adjItems=ItemAdjustment.objects.filter(adjustment=adj)
+    adjItems.delete()
+    adj.delete()
+    return redirect('inventory_adjustment')
+
+    
+def filterby_draft(request,id):
+    user=request.user
+    alladj=Adjustment.objects.filter(user=user,status='Draft')
+    adj=Adjustment.objects.get(id=id)
+    adjItems=ItemAdjustment.objects.filter(adjustment=adj)
+    company = company_details.objects.get(user=request.user)
+    return render(request,'inventory_overview.html',{'alladj':alladj,'adj':adj,'adjItems':adjItems,'company':company})
+
+
+  
+def filterby_adjusted(request,id):
+    user=request.user
+    alladj=Adjustment.objects.filter(user=user,status='Adjusted')
+    adj=Adjustment.objects.get(id=id)
+    adjItems=ItemAdjustment.objects.filter(adjustment=adj)
+    company = company_details.objects.get(user=request.user)
+    return render(request,'inventory_overview.html',{'alladj':alladj,'adj':adj,'adjItems':adjItems,'company':company})
+
+
+
+
+# def edit_inventory(request,eid):
+#     user=request.user
+#     company=company_details.objects.get(user=user)
+    
 
 
 
