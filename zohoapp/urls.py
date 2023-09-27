@@ -520,6 +520,9 @@ urlpatterns = [
     path('delete_inventory/<int:id>/',views.delete_inventory,name='delete_inventory'),
     path('filterby_draft/<int:id>/',views.filterby_draft,name='filterby_draft'),
     path('filterby_adjusted/<int:id>/',views.filterby_adjusted,name='filterby_adjusted'),
+    path('edit_inventory/<int:id>/',views.edit_inventory,name='edit_inventory'),
+    path('purchase_unit_eway',views.purchase_unit_eway,name='purchase_unit_eway'),
+    path('purchase_unit_dropdown_eway',views.purchase_unit_dropdown_eway,name='purchase_unit_dropdown_eway'),
     
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
     

@@ -45,7 +45,7 @@ tr:hover{
     <div class="col-md-10 form-inline ">
       <div class="row">
         <div class="col-md-9"><a class="text-white" style="font-size: 2rem;">Inventory Adjustments</a></div>
-        <input type="text"  id="searchInput" class="form-control bg-dark" placeholder="Search Items..." style="margin-top: 25px; width: 30%;">
+        <input type="text"  id="searchInput" class="form-control bg-dark" placeholder="Search Items..." style="margin-top: 25px; width: 30%;margin-left: 20px;">
         
         <div class="btn-group" role="group"  style="margin-left: 1rem;margin-top:1.7rem;display:inline-flex;width:4rem;height:2rem;">
           <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -210,118 +210,6 @@ $('[data-sort]').on('click', function() {
 
 
 
-
-
-
-
-
-
-
-<!-- 
-<script>
-  $(document).ready(function() {
-    var originalTable = $('#dataTable').clone(); // Clone the original table on page load
-
-    // Function to sort items by name
-    function sortByName() {
-      var rows = $('#dataTable tbody tr').get();
-      rows.sort(function(a, b) {
-        var keyA = $(a).children('td').eq(0).text().toUpperCase();
-        var keyB = $(b).children('td').eq(0).text().toUpperCase();
-        if (keyA < keyB) return -1;
-        if (keyA > keyB) return 1;
-        return 0;
-      });
-      $.each(rows, function(index, row) {
-        $('#dataTable').children('tbody').append(row);
-      });
-    }
-
-    // Function to sort items by HSN/SAC
-    function sortByreferencenumber() {
-      var rows = $('#dataTable tbody tr').get();
-      rows.sort(function(a, b) {
-        var keyA = $(a).children('td').eq(4).text();
-        var keyB = $(b).children('td').eq(4).text();
-        return keyA.localeCompare(keyB);
-      });
-      $.each(rows, function(index, row) {
-        $('#dataTable').children('tbody').append(row);
-      });
-    }
-
-    // Function to sort items by Usage Unit
-    function sortByUsageUnit() {
-      var rows = $('#dataTable tbody tr').get();
-      rows.sort(function(a, b) {
-        var keyA = $(a).children('td').eq(6).text(); // Adjust the column index for Usage Unit
-        var keyB = $(b).children('td').eq(6).text(); // Adjust the column index for Usage Unit
-        return keyA.localeCompare(keyB);
-      });
-      $.each(rows, function(index, row) {
-        $('#dataTable').children('tbody').append(row);
-      });
-    }
-
-    // Function to restore the table to its original state
-    function restoreOriginalTable() {
-      $('#dataTable').replaceWith(originalTable.clone()); // Replace the current table with the original table clone
-    }
-
-
-    // Handle sorting based on data-sort attribute
-    $('[data-sort]').on('click', function() {
-      var sortType = $(this).data('sort');
-      if (sortType === 'name') {
-        sortByName();
-      } else if (sortType === 'referencenumber') {
-        sortByreferencenumber();
-      } else if (sortType === 'usage') {
-        sortByUsageUnit();
-      } else if (sortType === 'all') {
-        restoreOriginalTable();
-      }
-    });
-  });
-</script>
- -->
-
-
-
-<!-- <script>
- 
-  function filterItems(status) {
-    
-    if (status === 'active' || status === 'Active') {
-      $('tbody tr').hide();
-      $('tbody tr.active, tbody tr.Active').show();
-    } else if (status === 'inactive' || status === 'Inactive') {
-      $('tbody tr').hide();
-      $('tbody tr.inactive, tbody tr.Inactive').show();
-    } else {
-      $('tbody tr').show(); 
-    }
-  }
-
- 
-  $('#filterActiveButton').on('click', function() {
-    filterItems('active');
-  });
-
-  $('#filterInactiveButton').on('click', function() {
-    filterItems('inactive');
-  });
-
-  $('#filterAllButton').on('click', function() {
-    filterItems('all');
-  });
-</script>
-
- -->
-
-
-
-
 <script>
   // Function to handle the search
   function searchTable() {
@@ -365,58 +253,4 @@ $('[data-sort]').on('click', function() {
 
 
 
-
-
-
-
-
-
-
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-$(document).ready(function() {
-  var originalTable = $('#dataTable').clone(); // Clone the original table on page load
-
-  // Function to sort items by name
-  function sortByName() {
-    var rows = $('#dataTable tbody tr').get();
-    rows.sort(function(a, b) {
-      var keyA = $(a).children('td').eq(0).text().toUpperCase();
-      var keyB = $(b).children('td').eq(0).text().toUpperCase();
-      if (keyA < keyB) return -1;
-      if (keyA > keyB) return 1;
-      return 0;
-    });
-    $.each(rows, function(index, row) {
-      $('#dataTable').children('tbody').append(row);
-    });
-  }
-
-  // Function to sort items by stock on inventory
-  function sortByStock() {
-    var rows = $('#dataTable tbody tr').get();
-    rows.sort(function(a, b) {
-      var keyA = parseInt($(a).children('td').eq(5).text());
-      var keyB = parseInt($(b).children('td').eq(5).text());
-      return keyA - keyB;
-    });
-    $.each(rows, function(index, row) {
-      $('#dataTable').children('tbody').append(row);
-    });
-  }
-
-  // Event handler for the "Filter" dropdown
-  $('.dropdown-item').on('click', function() {
-    var sortType = $(this).data('sort');
-    if (sortType === 'name') {
-      sortByName();
-    } else if (sortType === 'stock') {
-      sortByStock();
-    } else if (sortType === 'all') {
-      $('#dataTable').replaceWith(originalTable.clone());
-    }
-  });
-});
-
-</script>

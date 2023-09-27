@@ -10921,7 +10921,6 @@ def customize_vendor_report(request):
 
 
 
-
 @login_required(login_url='login')
 def inventory_adjustment(request):
     user=request.user.id
@@ -10941,15 +10940,50 @@ def new_adjustment(request):
     unit=Unit.objects.all()
     reason=Reason.objects.all()
     return render(request,'new_adjustment.html',{'company': company_data,'accounts':accounts,'items':items,'sales':sales,'purchase':purchase,'units':unit,'reason':reason})
+
+
+
+@login_required(login_url='login')
+def purchase_unit_eway(request):
     
+    company = company_details.objects.get(user = request.user)
+
+    if request.method=='POST':
+
+        unit =request.POST.get('unit')
+        print(unit)
+        
+        u = User.objects.get(id = request.user.id)
+
+        unit = Unit(unit= unit)
+
+        unit.save()
+     
+        return JsonResponse({"message": "success"})
 
 
+
+@login_required(login_url='login')        
+def purchase_unit_dropdown_eway(request):
+
+    user = User.objects.get(id=request.user.id)
+
+    options = {}
+    option_objects = Unit.objects.all()
+    for option in option_objects:
+        options[option.id] = option.unit
+    
+    return JsonResponse(options)
+
+
+
+@login_required(login_url='login')
 def newreasons(request):
     if request.method == 'POST':
-        newreason= request.POST['newReason']
+        newreason= request.POST.get('newReason')
         reasons=Reason(reason=newreason)
         reasons.save()
-    return redirect("new_adjustment")
+        return JsonResponse({"message": "success"})
 
 
 
@@ -11102,9 +11136,21 @@ def filterby_adjusted(request,id):
 
 
 
-# def edit_inventory(request,eid):
-#     user=request.user
-#     company=company_details.objects.get(user=user)
+def edit_inventory(request,id):
+    user=request.user
+    company=company_details.objects.get(user=user)
+    items = AddItem.objects.filter(user_id=user.id)
+    adj=Adjustment.objects.get(id=id)
+    print(adj.description,'date')
+    items = AddItem.objects.filter(user_id=user.id)
+    accounts=Chart_of_Account.objects.all()
+    adj_items=ItemAdjustment.objects.filter(adjustment=adj)
+    print(adj_items,'items')
+    
+    return render(request,'edit_adjustment.html',{'company':company,'adj':adj,'accounts':accounts,'items':items,'adj_items':adj_items})
+
+  
+
     
 
 

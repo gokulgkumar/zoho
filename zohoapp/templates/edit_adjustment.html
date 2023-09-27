@@ -109,7 +109,7 @@
     
         </div>
          <div></div>
-            <form method="POST" action="{% url 'save_adjustment' %}" class="p-5" enctype="multipart/form-data" novalidate id="forms" onreset="return confirm('Are you sure you want to cancel the data?');">
+            <form method="POST" action="" class="p-5" enctype="multipart/form-data" novalidate id="forms">
                 {% csrf_token %}
                 <fieldset class="form-group">
                   <div class="row">
@@ -136,7 +136,7 @@
                 <div class="form-group row">
                   <label  class="col-sm-2 col-form-label ">Reference Number</label>
                   <div class="col-sm-6 col-md-5 col-6" style="margin-left: -2.2rem;">
-                    <input required type="text" class="form-control bg-white text-dark" name="refno" id="nameInput" oninput="validateInput(this)">
+                    <input required type="text" class="form-control bg-white text-dark" name="refno" id="nameInput" oninput="validateInput(this)" value="{{ adj.reference_number }}">
                     <div id="validationResult"></div>
                     
                   </div>
@@ -164,14 +164,14 @@
              <div class="form-group row">
               <label class="col-sm-2 col-form-label">Date *</label>
               <div class="col-sm-6 col-md-5 col-6" style="margin-left: -2.2rem;">
-                  <input required type="date" class="form-control bg-white text-dark" name="date" id="dateInput">
+                  <input required type="date" class="form-control bg-white text-dark" name="date" id="dateInput" value="{{ adj.date|date:'Y-m-d' }}">
               </div>
           </div>
 
           <div class="form-group row">
             <label class="col-sm-2 col-form-label">Account *</label>
             <div class="col-sm-6 col-md-5 col-6" style="margin-left: -2.2rem;">
-                <select name="account" class="form-control bg-white text-dark" id="unit">
+                <select name="account" class="form-control bg-white text-dark" id="unit" value="{{ account_selected.account_name }}">
                     {% for a in accounts %}
                     <option value="{{a.id}}">{{a.account_name}}</option>
                     
@@ -203,7 +203,7 @@
       <div class="form-group row">
         <label class="col-sm-2 col-form-label">Description</label>
         <div class="col-sm-6 col-md-5 col-6" style="margin-left: -2.2rem;">
-            <textarea name="description" id="" cols="66" rows="3" style=" border:1px white solid;border-radius:5px;" placeholder="&nbsp;Max 500 characters"></textarea>
+            <textarea name="description" id="" cols="66" rows="3" style=" border:1px white solid;border-radius:5px;" placeholder="&nbsp;Max 500 characters" >{{ adj.description }}</textarea>
         </div>
     </div>
 
@@ -230,14 +230,17 @@
             </thead>
             <tbody>
 
+              
+
                 <tr id='row1'>
                     <td class="bg-transparent text-light rownum" id="" value=""></td>
                     <td>
                         <div class='form-group'><select class=' bg-transparent text-light border-0 item_select itm' name='item[]' id='item1'>
-                                <option class='text-dark' hidden>Select Items</option>
-                                {% for i in items %}
+                          
+                               <option class='text-dark' value="{{items.item_name}}">{{items.item_name}}</option>
+                               {% for i in items %}
                                 <option class="text-dark" value="{{i.Name}}" data-stock="{{i.stock}}">{{i.Name}}</option>
-                                {% endfor %}
+                               {% endfor %}
                             </select>
                         </div>
                     </td>
@@ -258,6 +261,8 @@
                           style='width:30px'><i class='fa fa-times'></i></button> 
                     </td>
                 </tr>
+                
+                
             </tbody>
         </table>
 
@@ -628,8 +633,7 @@ function calculateDiscount() {
 
                 <input type="submit" class="btn text-white mt-5" style="background-color:  rgb(59, 59, 58) ;  " name="save_draft" value="Save As Draft">
                 <input type="submit" class="btn text-white mt-5" style="background-color: rgb(210, 132, 30) ; " name="convert_adjusted" value="Convert to Adjusted"> 
-                <input type="reset" class="btn text-white mt-5" style="background-color: rgb(59, 59, 58);" value="Cancel">
-                <!-- <input type="submit" class="btn text-white mt-5" style="background-color:  rgb(59, 59, 58) ; " onclick="cancelDialog()" value="Cancel"> -->
+                <input type="submit" class="btn text-white mt-5" style="background-color:  rgb(59, 59, 58) ; " onclick="cancelDialog()" value="Cancel">
                 <!-- <input type="submit" class="btn text-white mt-5" style="background-color: rgb(210, 132, 30) ; "
                     onclick="saveAndSendDialog()" value="Convert to Adjusted"> -->
 
@@ -898,10 +902,10 @@ function calculateDiscount() {
                         <div style="margin-left: 50px; padding-bottom: 30px;">
                           <button class="btn-warning text-white" style="border-radius: 6px;" id="showReasonInput" >+ Add new Reason</button>
                           <div id="reasonInput" style="display: none;">
-                            <form action="" method="post" class="needs-validation" novalidate autocomplete="off" id="modalUnit">
-                    
+                            <form action="{% url 'newreasons' %}" method="post" class="needs-validation" novalidate autocomplete="off" id="modalUnit">
+                                {% csrf_token %}
                               <label for="" style="color: red;margin-bottom: 20px;">Reason *</label>
-                              <input type="text" class="form-control bg-light text-dark" style="width: 600px;" id="newReasons" name="newReason" required>
+                              <input type="text" class="form-control bg-light text-dark" style="width: 600px;" id="newReason" name="newReason" required>
                               <div class="d-flex">
                                 <button class="btn save_btn rounded-pill text-grey  my-4" style="width: 150px;" type="submit" id="saveReason">Save</button>
                                 &nbsp;&nbsp;
@@ -974,55 +978,53 @@ function calculateDiscount() {
 
 <!-- ............................................unit modal............................................ -->
 
-<!-- unit modal -->
-          
 <div class="modal fade" id="newunit">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
-      <div class="modal-header " style="background: rgb(32, 35, 37);">
-          <h3 class="m-3 text-uppercase">Add Unit</h3>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-          </button>
-      </div>
-      <div class="modal-body" style="background: rgb(32, 35, 37);">
-        <div class="card p-3 m-3">
-          <form action="" method="post" class="needs-validation" novalidate autocomplete="off" id="modalUnit">
-            <div class="row mt-2">
-              <div class="col-md-3 mt-2"></div>
-              <div class="col-md-1 mt-2">
-                <label for="unit" style="color: rgb(190, 88, 88);">Unit</label>
-              </div>
-
-              <div class="col-md-4 mt-2">
-                <input type="text" class="form-control bg-light text-dark" id="unitval" name="unit" required>
-              </div>
-              <div class="col-md-4 mt-2"></div>
-            </div>
-            
-            <div class="row mt-5">
-              <div class="col-md-4"></div>
-              <div class="col-md-4">
-                <div class="d-flex">
-                  <button class="btn save_btn rounded-pill text-grey w-50 my-4 mx-3"
-                  type="submit" data-dismiss="modal" id="unitSave">Save
-                  </button> 
-                  
-
-                  <button type="button" class="close btn save_btn rounded-pill text-grey w-50 my-4" 
-                    data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">Cancel</span>
-                  </button>
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
+        <div class="modal-header " style="background: rgb(32, 35, 37);">
+            <h3 class="m-3 text-uppercase">Add Unit</h3>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body" style="background: rgb(32, 35, 37);">
+          <div class="card p-3 m-3">
+            <form action="" method="post" class="needs-validation" novalidate autocomplete="off" id="modalUnit">
+              <div class="row mt-2">
+                <div class="col-md-3 mt-2"></div>
+                <div class="col-md-1 mt-2">
+                  <label for="unit" style="color: rgb(190, 88, 88);">Unit</label>
                 </div>
+
+                <div class="col-md-4 mt-2">
+                  <input type="text" class="form-control bg-light text-dark" id="unit" name="unit" required>
+                </div>
+                <div class="col-md-4 mt-2"></div>
               </div>
-              <div class="col-md-4"></div>
-            </div>
-          </form>
+              
+              <div class="row mt-5">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                  <div class="d-flex">
+                    <button class="btn save_btn rounded-pill text-grey w-50 my-4 mx-3"
+                    type="submit" data-dismiss="modal" id="unitSave">Save
+                    </button> 
+                    
+
+                    <button type="button" class="close btn save_btn rounded-pill text-grey w-50 my-4" 
+                      data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">Cancel</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="col-md-4"></div>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
+    </div>  
   </div>  
-</div>
 <!-- ............................................  END UNIT MODAL..................................................... -->
 
 
@@ -1243,92 +1245,45 @@ function reloadItem() {
   });
 }
 
+
 // unit modal
-          
-          
+
+
 $(document).on("click","#unitSave",function(){
-            $.ajax({
-              
-              type : 'POST',
-              url:"{% url 'purchase_unit_eway' %}",
-          
-              data:{
-                  unit : $("#unitval").val(),      
-                  csrfmiddlewaretoken: '{{ csrf_token }}'
-                  
-                },
-              
-                success: function(response) {
-                  document.getElementById("modalUnit").reset();
-                  reloadUnit();
-                },
-            });        
-          });
-          
-          
-          function reloadUnit() {
-          
-            $.ajax({
-              url: "{% url 'purchase_unit_dropdown_eway' %}",
-              type: "GET",
-              dataType: "json",
-              data: $(this).serialize(),
-              csrfmiddlewaretoken: '{{ csrf_token }}',
-          
-              success: function(data) {
-                var dropdown = $('#item_units');
-                dropdown.empty();
-          
-                $.each(data, function(key, value) {
-                    dropdown.append($('<option></option>').attr('value', key).text(value).val(value));
-                });
-              },
-              error: function(xhr, status, error) {
-              console.error(xhr.responseText);
-              }
-            });
-          }
-
-
-
-          // reason modal
-
-          $(document).on("click","#saveReason",function(){
-            $.ajax({
-              
-              type : 'POST',
-              url:"{% url 'newreasons' %}",
-              data:{
-                  unit : $("#newReason").val(),      
-                  csrfmiddlewaretoken: '{{ csrf_token }}'
-                  
-                },
-              
-                success: function(response) {
-                  document.getElementById("modalUnit").reset();
-                  reloadUnit();
-                },
-            });        
-          });
-          
-
-          
-function reloadItem() {
   $.ajax({
-    url: "",
+    
+    type : 'POST',
+    url:"{% url 'purchase_unit' %}",
+
+    data:{
+        unit : $("#unit").val(),      
+        csrfmiddlewaretoken: '{{ csrf_token }}'
+        
+      },
+    
+      success: function(response) {
+        document.getElementById("modalUnit").reset();
+        reloadUnit();
+      },
+  });        
+});
+
+
+function reloadUnit() {
+
+  $.ajax({
+    url: "{% url 'purchase_unit_dropdown' %}",
     type: "GET",
     dataType: "json",
     data: $(this).serialize(),
     csrfmiddlewaretoken: '{{ csrf_token }}',
 
     success: function(data) {
-      var dropdown = $('.itm');
-      var dropdown1 = $('.itmm');
+      var dropdown = $('#item_units');
       dropdown.empty();
-      dropdown1.empty();
+
       $.each(data, function(key, value) {
           dropdown.append($('<option></option>').attr('value', key).text(value).val(value));
-          dropdown1.append($('<option></option>').attr('value', key).text(value).val(value));
       });
     },
     error: function(xhr, status, error) {
@@ -1336,11 +1291,6 @@ function reloadItem() {
     }
   });
 }
-
-
-
-
-
 
 </script>
 
