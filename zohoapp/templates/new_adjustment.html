@@ -109,7 +109,7 @@
     
         </div>
          <div></div>
-            <form method="POST" action="{% url 'save_adjustment' %}" class="p-5" enctype="multipart/form-data" novalidate id="forms" onreset="return confirm('Are you sure you want to cancel the data?');">
+            <form method="POST" action="{% url 'save_adjustment' %}" class="p-5" enctype="multipart/form-data"  id="forms" onreset="return confirm('Are you sure you want to cancel the data?');">
                 {% csrf_token %}
                 <fieldset class="form-group">
                   <div class="row">
@@ -171,9 +171,9 @@
           <div class="form-group row">
             <label class="col-sm-2 col-form-label">Account *</label>
             <div class="col-sm-6 col-md-5 col-6" style="margin-left: -2.2rem;">
-                <select name="account" class="form-control bg-white text-dark" id="unit">
+                <select required name="account" class="form-control bg-white text-dark" id="unit">
                     {% for a in accounts %}
-                    <option value="{{a.id}}">{{a.account_name}}</option>
+                    <option required value="{{a.id}}">{{a.account_name}}</option>
                     
                     {% endfor %}
                 </select>
@@ -243,7 +243,7 @@
                     </td>
 
                     
-                    <td class='text-right' ><input type='number' class='form-control bg-transparent border-1 border-light text-light text-right qty' value='' name="qtyav[]" >
+                    <td class='text-right' ><input type='number' step="0.01" class='form-control bg-transparent border-1 border-light text-light text-right qty' value='' name="qtyav[]" >
                     </td>
                     
                     <td class='text-right'><input type='number' id='rates' class='form-control bg-transparent border-1 border-light text-light text-right rate' name='newqty[]' value=''>
@@ -874,99 +874,20 @@ function calculateDiscount() {
 
 
 
-          <!--.................................................... ADD REASON MODAL ....................................................-->
-          <div class="modal fade" id="newreason">
-            <div class="modal-dialog modal-xl">
-              <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
-                <div class="modal-header " style="background: rgb(32, 35, 37);">
-                    <h3 class="m-3 text-uppercase">New Adjustment</h3>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" style="background: rgb(32, 35, 37);">
-                  <div class="card p-3 m-3">
-                    
-                      
-                      <div class="row mt-2">
-                        <div class="col-md-3 mt-2"></div>
-                        <div class="col-md-1 mt-2">
-                          <!-- <label for="unit" style="color: rgb(190, 88, 88);">Reason</label> -->
-                        </div>
-                        
-
-                        <div style="margin-left: 50px; padding-bottom: 30px;">
-                          <button class="btn-warning text-white" style="border-radius: 6px;" id="showReasonInput" >+ Add new Reason</button>
-                          <div id="reasonInput" style="display: none;">
-                            <form action="" method="post" class="needs-validation" novalidate autocomplete="off" id="modalUnit">
-                    
-                              <label for="" style="color: red;margin-bottom: 20px;">Reason *</label>
-                              <input type="text" class="form-control bg-light text-dark" style="width: 600px;" id="newReasons" name="newReason" required>
-                              <div class="d-flex">
-                                <button class="btn save_btn rounded-pill text-grey  my-4" style="width: 150px;" type="submit" id="saveReason">Save</button>
-                                &nbsp;&nbsp;
-                                <button type="button" class="close btn save_btn rounded-pill text-grey  my-4" style="width: 150px;" id="cancelReason">Cancel</button>
-                              </div>
-                            </form>
-                          </div>
-                        </div>
-                        <div style="margin-left: 50px;">
-                          <hr width="950px;">
-                          <label for="unit">REASON</label>
-                          <hr width="950px;">
-
-                  
-                          <ul class="list-unstyled">
-
-                            {% for i in reason %}
-                            <li class="py-2">{{i.reason }}</li>
-                            {% endfor %}
-                          </ul>
-                        
-                        </div>
 
 
-                        <div class="col-md-4 mt-2"></div>
-                      </div>
-
-                    
-                  </div>
-                </div>
-              </div>
-            </div>  
-          </div>  
-       
+          <!------------------------------------ REASON MODAL ---------------------------------------------->
 
 
-<!-- add/cancel/save button -->
-       <script>
-        document.addEventListener('DOMContentLoaded', function() {
-          // Get references to the elements
-          var showReasonInputBtn = document.getElementById('showReasonInput');
-          var reasonInput = document.getElementById('reasonInput');
-          var newReasonInput = document.getElementById('newReason');
-        //   var saveReasonBtn = document.getElementById('saveReason');
-          var cancelReasonBtn = document.getElementById('cancelReason');
-        
-          // Add click event listener to the "+ Add new Reason" button
-          showReasonInputBtn.addEventListener('click', function(event) {
-            showReasonInputBtn.style.display = 'none';
-           // event.preventDefault();  Prevent form submission
-            reasonInput.style.display = 'block'; // Show the input box and buttons
-          });
 
-         
-        
-          // Add click event listener to the "Cancel" button
-          cancelReasonBtn.addEventListener('click', function() {
-            reasonInput.style.display = 'none'; // Hide the input box and buttons
-            newReasonInput.value = ''; // Clear the input field
-            showReasonInputBtn.style.display = '';
-          });
-        });
-      </script>
-      
-<!--END ADD REASON MODAL -->
+
+
+          
+          
+
+
+        <!------------------------------------ END REASON MODAL ---------------------------------------------->
+
 
 
     

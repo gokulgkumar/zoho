@@ -10989,7 +10989,7 @@ def newreasons(request):
 
 def save_adjustment(request):
      if request.method=='POST':
-         typeof_adjustment=request.POST['type']
+         typeof_adjustment=request.POST.get('type','')
          ref_no=request.POST['refno']
          date=request.POST['date']
          account=request.POST['account']
@@ -11030,7 +11030,7 @@ def save_adjustment(request):
                         quantity_available=qty_available[i],
                         new_quantity_on_hand=new_qty_on_hand[i],
                         adjusted_quantity=qty_adjusted[i],
-                        # type=typeof_adjustment,
+                        adjustment_type=typeof_adjustment,
                         adjustment=adjustment,
                         user=user_instance,
                     )
@@ -11145,9 +11145,18 @@ def edit_inventory(request,id):
     items = AddItem.objects.filter(user_id=user.id)
     accounts=Chart_of_Account.objects.all()
     adj_items=ItemAdjustment.objects.filter(adjustment=adj)
-    print(adj_items,'items')
+    reason=Reason.objects.all()
+
+    value =[]
+    for adjustment in adj_items:
+        print(adjustment.adjustment_type, 'item type')
+        value=adjustment.adjustment_type
+        
+        val=adjustment.current_value
+        print(val,'val')
+    print(value,'value is ')
     
-    return render(request,'edit_adjustment.html',{'company':company,'adj':adj,'accounts':accounts,'items':items,'adj_items':adj_items})
+    return render(request,'edit_adjustment.html',{'company':company,'adj':adj,'accounts':accounts,'items':items,'adj_items':adj_items,'value':value,'reason':reason})
 
   
 
