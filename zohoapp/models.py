@@ -1161,7 +1161,7 @@ class Adjustment(models.Model):
     description = models.TextField()
     status=models.CharField(max_length=100,null=True,blank=True)
     company = models.ForeignKey(company_details,on_delete=models.CASCADE,null=True,blank=True)
-    
+    itemtable=models.ForeignKey(AddItem,on_delete=models.CASCADE,null=True)
 
 class ItemAdjustment(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
@@ -1174,7 +1174,7 @@ class ItemAdjustment(models.Model):
     current_value=models.DecimalField(max_digits=10, decimal_places=2,null=True,blank=True)
     changed_value=models.DecimalField(max_digits=10, decimal_places=2,null=True,blank=True)
     adjusted_value=models.DecimalField(max_digits=10, decimal_places=2,null=True,blank=True)
-
+    itemtable=models.ForeignKey(AddItem,on_delete=models.CASCADE,null=True)
 
 class Inventory_adj_comments(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)

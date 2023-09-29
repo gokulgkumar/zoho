@@ -63,42 +63,6 @@
 
 
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-<script>
-
-    function cancelDialog() {
-
-        var frm = document.getElementById("forms");
-        let customMsg = "Are you sure you want to cancel?";
-
-        if (confirm(customMsg)) {
-            alert("adjustment cancelled!")
-        }
-    }
-
-    function saveAsDraftDialog() {
-
-        var frm = document.getElementById("forms");
-        frm.action = ("{% url 'createestimate'%}")
-    }
-
-    // function get_customer_email() {
-
-    //  var eml = document.getElementById("customer_sel");
-    //  eml.action = ("{% url 'newestimate'%}")
-    // }
-
-    function saveAndSendDialog() {
-
-        var frm = document.getElementById("forms");
-        frm.action = ("{% url 'create_and_send_estimate'%}")
-    }
-    $(document).ready(function () {
-        $('[data-toggle="tooltip"]').tooltip();
-    });
-
-
-
-</script>
 
 
 
@@ -110,7 +74,7 @@
         </div>
          <div></div>
          
-            <form method="POST" action="" class="p-5" enctype="multipart/form-data" novalidate id="forms">
+            <form method="POST" action="{% url 'update_adjustment' adj.id %}" class="p-5" enctype="multipart/form-data" novalidate id="forms" onreset="return confirm('Are you sure you want to cancel the data?');">
                 {% csrf_token %}
                 <fieldset class="form-group">
                   <div class="row">
@@ -173,7 +137,7 @@
             <label class="col-sm-2 col-form-label">Account *</label>
             <div class="col-sm-6 col-md-5 col-6" style="margin-left: -2.2rem;">
                 <select name="account" class="form-control bg-white text-dark" id="unit" value="">
-                  <option value="{{a.id}}" selected hidden >{{adj.account.account_name}}</option>
+                  <option value="{{adj.account.id}}" selected hidden >{{adj.account.account_name}}</option>
                     {% for a in accounts %}
                     <option value="{{a.id}}">{{a.account_name}}</option>
                     
@@ -187,7 +151,7 @@
           <div class="col-sm-6 col-md-5 col-6" style="margin-left: -2.2rem;">
               <select name="reason" class="form-control bg-white text-dark" id="unit">
                 
-                <option value="{{i.id}}" selected hidden >{{ adj.reason }}</option>
+                <option value="{{adj.reason.id}}" selected hidden >{{ adj.reason }}</option>
                  {% for i in reason %}
                   <option value="{{i.id}}">{{ i.reason }}</option>
                   {% endfor %}
@@ -293,6 +257,7 @@
 
 document.addEventListener("DOMContentLoaded", function() {
   function handleDeleteRow(event) {
+    console.log("Delete button clicked"); 
     const clickedButton = event.target;
     if (clickedButton.classList.contains('delete-row')) {
       const parentRow = clickedButton.closest('tr');
@@ -302,10 +267,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
   // Attach a delegate event listener to the table body
   const tableBody = document.querySelector('#item_table tbody');
-  tableBody.addEventListener('click', handleDeleteRow);
+  tableBody.addEventListener('click', handleDeleteRow, { once: true });
 });
-
-
 
 
 
@@ -346,10 +309,9 @@ rateInputs.forEach(function(rateInput) {
 
 //#### NEW ROW ####
 
-
 document.addEventListener('DOMContentLoaded', function() {
     const addRowButton = document.getElementById('add-row');
-    let rowNum = 1;
+    // let rowNum = 1;
 
     addRowButton.addEventListener('click', function() {
         const tableBody = document.querySelector('#item_table tbody');
@@ -410,18 +372,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-
-
-
-
-
 </script>
    
-
 <!--..................................... END OF TABLE 2 ..................................................-->
 
 
-               
+      
+
                 
 
                
@@ -429,199 +386,159 @@ document.addEventListener('DOMContentLoaded', function() {
                
 <!-- .............................................  TABLE 1  ..................................................... -->
 
-                  
-                <div class="row" id="tab_row2">
-                    <div class="col-sm-12 col-lg-12 col-md-12 ">
-                        <label for="" id="label_tab2" class="tab2"></label><br>
-                        <div style="width: 100%;">
-                            <table class="table  text-black table-bordered tab2" id="item_table2" style="background-color: rgba(250, 227, 198, 0.8);width: 100%;background-color: #b6b3b36b;"
-                            onchange="calc()">
-                            <thead>
-                                <tr>
-                                    <th class="" style="font-weight: bold;color: rgb(245, 154, 36);" colspan="2" >Item Details <a href="" data-toggle="modal" data-target="#newitem"><i class="fas fa-plus p-2 rounded"
-                                                style="color: white; background-color: rgb(210, 132, 30);"></i></a></th>
-                                    <th class="text-right" style="font-weight: bold;color: rgb(245, 154, 36);">Current Value</th>
-                                    <th class="text-right" style="font-weight: bold;color: rgb(245, 154, 36);">Changed Value</th>
-                                    <th class="text-right" style="font-weight: bold;color: rgb(245, 154, 36);">Adjusted Value</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                              {% for j in adj_items %}
-
-                                <tr id='row2'>
-                                    <td class="bg-transparent text-light rownum2"  ></td>
-                                    <td>
-                                        <div class='form-group'><select class=' bg-transparent text-light border-0 item_select2 itm' name='item2[]' id=''>
-                                                <option class='text-dark' value="{{j.item}}" selected hidden>{{j.item}}</option>
-                                                {% for i in items %}
-                                                <option class="text-dark" value="{{i.Name}}" data-stock="{{i.stock}}" data-rate="{{i.rate}}">{{i.Name}}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
-                                    </td>
-                                    <td class='text-right'><input type='number' id='rate1' class='form-control bg-transparent border-1 border-light text-light text-right values'  name='cuval[]'
-                                      value="{{ j.current_value }}"    >
-                                    </td>
-                                   
-                                    <td class='text-right'><input type='number' id='rate2' class='form-control bg-transparent border-1 border-light text-light text-right rate' name='chval[]'
-                                      value="{{ j.changed_value }}"     >
-                                    </td>
-                                    <td class='text-right'><input type='text' id='discount1' class='form-control bg-transparent border-1 border-light text-light text-right discount'  name='adjval[]'
-                                      value="{{ j.adjusted_value }}"     >
-                                    </td>
-                                    
-
-                                   
-                                    <td class='text-center'><button type='button' id='del_btn2'
-                                            class='btn btn-transparent text-danger btn-sm btn-outline-danger rounded-circle delete-row'
-                                            style='width:30px'><i class='fa fa-times'></i></button>
-                                                
-                                              </td>
-                                </tr>
+<div class="row" id="tab_row2">
+  <div class="col-sm-12 col-lg-12 col-md-12 ">
+      <label for="" id="label_tab2" class="tab2"></label><br>
+      <div style="width: 100%;">
+          <table class="table  text-black table-bordered tab2" id="item_table2" style="background-color: rgba(250, 227, 198, 0.8);width: 100%;background-color: #b6b3b36b;"
+          onchange="calc()">
+          <thead>
+              <tr>
+                  <th class="" style="font-weight: bold;color: rgb(245, 154, 36);" colspan="2" >Item Details <a href="" data-toggle="modal" data-target="#newitem"><i class="fas fa-plus p-2 rounded"
+                              style="color: white; background-color: rgb(210, 132, 30);"></i></a></th>
+                  <th class="text-right" style="font-weight: bold;color: rgb(245, 154, 36);">Current Value</th>
+                  <th class="text-right" style="font-weight: bold;color: rgb(245, 154, 36);">Changed Value</th>
+                  <th class="text-right" style="font-weight: bold;color: rgb(245, 154, 36);">Adjusted Value</th>
+              </tr>
+          </thead>
+          <tbody>
+            {% for j in adj_items %}
+              <tr id='row2'>
+                  <td class="bg-transparent text-light rownum2"  ></td>
+                  <td>
+                      <div class='form-group'><select class=' bg-transparent text-light border-0 item_select2 itm' name='item2[]' id=''>
+                              <option class='text-dark' value="{{j.item}}"  selected hidden>{{j.item}}</option>
+                              {% for i in items %}
+                              <!--  -->
+                              <option class="text-dark" value="{{i.Name}}" data-stock="{{i.stock}}" data-rate="{{i.rate}}">{{i.Name}}</option>
                               {% endfor %}
-                            </tbody>
-        
-                        </table>
-                        <button type="button" class="btn btn-sm text-white tab2" style="background-color: rgb(210, 132, 30) ;"
-                            id="add-row2"  title="add row"><i class="fa-solid  fa fa-plus rounded"
-                            style="color: white; background-color: rgb(210, 132, 30);height: 20px;"></i></button>
-                    </div>
-                    
- 
-                </div>
-            </div>
+                          </select>
+                      </div>
+                  </td>
+                  <!-- id='rate1' -->
+                  <td class='text-right'><input type='number'  class='form-control bg-transparent border-1 border-light text-light text-right values' name='cuval[]'
+                    value="{{ j.current_value }}"   >
+                  </td>
+                  <!-- id='rate2' -->
+                  <td class='text-right'><input type='number'  class='form-control bg-transparent border-1 border-light text-light text-right rate' name='chval[]'
+                    value="{{ j.changed_value }}"    >
+                  </td>
+                  <!-- id='discount1' -->
+                  <td class='text-right'><input type='text'  class='form-control bg-transparent border-1 border-light text-light text-right discount' name='adjval[]'
+                    value="{{ j.adjusted_value }}"    >
+                  </td>
+                  
+
+                 
+                  <td class='text-center'><button type='button' id='del_btn2'
+                          class='btn btn-transparent text-danger btn-sm btn-outline-danger rounded-circle delete-row'
+                          style='width:30px'><i class='fa fa-times'></i></button>
+                              
+                            </td>
+              </tr>
+              {% endfor %}
+          </tbody>
+
+      </table>
+      <button type="button" class="btn btn-sm text-white tab2" style="background-color: rgb(210, 132, 30) ;"
+          id="add-row2"  title="add row"><i class="fa-solid  fa fa-plus rounded"
+          style="color: white; background-color: rgb(210, 132, 30);height: 20px;"></i></button>
+  </div>
+  
+
+</div>
+</div>
 
 
 
 <!-- adding row for table 1 -->
 
+
 <script>
+<!-- Adding row for table 1 -->
 
 
-
-let rowNum2 = 1;
-const rownumber2 =document.querySelector('.rownum2');
-rownumber2.innerHTML = rowNum2;
-
-//#### NEW ROW ####
 document.addEventListener('DOMContentLoaded', function() {
-    
-    const addRowButton = document.getElementById('add-row2');
-    
-    addRowButton.addEventListener('click', function() {
-       
-        const newRow = document.createElement('tr');
-        rowNum2++;
+const addRowButton2 = document.getElementById('add-row2');
+let rowNum2 = 1; // Initialize the row number
 
-        newRow.innerHTML = `
-            <td class="bg-transparent text-light" style="width:50px;">${rowNum2}</td>
-            <td>
-                <div class='form-group'><select class='bg-transparent text-light border-0 item_select2 itm'  name='item2[]' id='item1'>
-                        <option class='text-dark' hidden>Select Items</option>
-                        {% for i in items %}
-                        <option class="text-dark" value="{{i.Name}}" data-stock="{{i.stock}}" data-rate="{{i.rate}}">{{i.Name}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </td>
-            <td class='text-right'><input type='number' id='ratee1' class='form-control bg-transparent border-1 border-light text-light text-right values' name='cuval[]'></td>
-            <td class='text-right'><input type='number' id='ratee2' class='form-control bg-transparent border-1 border-light text-light text-right rate' name='chval[]' value=''></td>
-            <td class='text-right'><input type='text' id='discount2' class='form-control bg-transparent border-1 border-light text-light text-right discount' name='adjval[]' value=''></td>
-            <td class='text-center'>
-                <button type='button' class='btn btn-transparent text-danger btn-sm btn-outline-danger rounded-circle delete-row' style='width:30px'><i class='fa fa-times'></i></button>
-            </td>
-        `;
+addRowButton2.addEventListener('click', function() {
+// Create a new row element
+const newRow2 = document.createElement('tr');
 
-        // Append the new row to the table body
-        const tableBody = document.querySelector('#item_table2 tbody');
-        tableBody.appendChild(newRow);
+rowNum2++; // Update the row number
 
-        const itemSelect = newRow.querySelector('.item_select2');
-        const qtyInput = newRow.querySelector('.values');
+newRow2.innerHTML = `
+<td class="bg-transparent text-light">${rowNum2}</td>
+<td>
+<div class='form-group'><select class='bg-transparent text-light border-0 item_select2 itm' name='item2[]'>
+        <option class='text-dark'>Select Items</option>
+        {% for i in items %}
+        <!-- data-rate="{{i.rate}}" -->
+        <option class="text-dark" value="{{i.Name}}" data-stock="{{i.stock}}" data-rate="{{i.rate}}">{{i.Name}}</option>
+        {% endfor %}
+    </select>
+</div>
+</td>
+<td class='text-right'><input type='number' class='form-control bg-transparent border-1 border-light text-light text-right values' name='cuval[]' value=''></td>
+<td class='text-right'><input type='number' class='form-control bg-transparent border-1 border-light text-light text-right rate' name='chval[]' value=''></td>
+<td class='text-right'><input type='text' class='form-control bg-transparent border-1 border-light text-light text-right discount' name='adjval[]' value=''></td>
+<td class='text-center'>
+<button type='button' class='btn btn-transparent text-danger btn-sm btn-outline-danger rounded-circle delete-row' style='width:30px'><i class='fa fa-times'></i></button>
+</td>
+`;
 
-        itemSelect.addEventListener('change', function() {
-            const selectedOption = itemSelect.options[itemSelect.selectedIndex];
-            const stock = selectedOption.getAttribute('data-stock');
-            const rate = selectedOption.getAttribute('data-rate');
-            const fvalue = stock * rate;
-            qtyInput.value = fvalue;
-
-        });
-
-
-        
-const rateInp1 = document.getElementById('ratee1');
-const rateInp2 = document.getElementById('ratee2');
-const discInput = document.getElementById('discount2');
-
-rateInp1.addEventListener('input', calculateDiscount);
-rateInp2.addEventListener('input', calculateDiscount);
-
-// Function to calculate the discount
-function calculateDiscount() {
-    const rates1 = parseFloat(rateInp1.value) || 0;
-    const rates2 = parseFloat(rateInp2.value) || 0;
-
-    // Calculate the difference
-    const difference = rates1 - rates2;
-
-    // Update the discount input field with the difference
-    discInput.value = difference.toFixed(2); // Adjust the number of decimal places as needed
-}
-
-        const deleteButton = newRow.querySelector('.delete-row');
-        deleteButton.addEventListener('click', function() {
-            const parentRow = deleteButton.closest('tr');
-            parentRow.remove();
-
-           rowNum2--;
-    });
-  });
-
-
-    
-    const itemSelect = document.querySelector('.item_select2');
-    const qtyInput = document.querySelector('.values');
-
-    itemSelect.addEventListener('change', function() {
-        const selectedOption = itemSelect.options[itemSelect.selectedIndex];
-        const stock = selectedOption.getAttribute('data-stock');
-        const rate = selectedOption.getAttribute('data-rate');
-        const fvalue = stock * rate;
-        qtyInput.value = fvalue;
-
-
-
-    });
-
-const rateInput1 = document.getElementById('rate1');
-const rateInput2 = document.getElementById('rate2');
-const discountInput = document.getElementById('discount1');
-
-rateInput1.addEventListener('input', calculateDiscount);
-rateInput2.addEventListener('input', calculateDiscount);
-
-// Function to calculate the discount
-function calculateDiscount() {
-    const rate1 = parseFloat(rateInput1.value) || 0;
-    const rate2 = parseFloat(rateInput2.value) || 0;
-
-    // Calculate the difference
-    const difference = rate1 - rate2;
-
-    // Update the discount input field with the difference
-    discountInput.value = difference.toFixed(2); // Adjust the number of decimal places as needed
-}
-
+const tableBody2 = document.querySelector('#item_table2 tbody');
+tableBody2.appendChild(newRow2);
 });
 
+// Manually set row number for the first row
+document.querySelector('#item_table2 tbody tr:first-child .bg-transparent').textContent = "1";
+
+// Event delegation for dynamic rows
+document.querySelector('#item_table2 tbody').addEventListener('change', function(e) {
+const target = e.target;
+if (target.classList.contains('item_select2')) {
+const selectedOption = target.options[target.selectedIndex];
+const stock = selectedOption.getAttribute('data-stock');
+const stockrate = selectedOption.getAttribute('data-rate');
+const row = target.closest('tr');
+
+row.querySelector('.values').value = stock * stockrate;
+
+// Recalculate adjusted value
+const valuesValue = parseFloat(row.querySelector('.values').value) || 0;
+const rateValue = parseFloat(row.querySelector('.rate').value) || 0;
+const difference2 = rateValue - valuesValue;
+row.querySelector('.discount').value = difference2.toFixed(2);
+}
+});
+
+document.querySelector('#item_table2 tbody').addEventListener('input', function(e) {
+const target = e.target;
+if (target.classList.contains('values') || target.classList.contains('rate')) {
+const row = target.closest('tr');
+const valuesValue = parseFloat(row.querySelector('.values').value) || 0;
+const rateValue = parseFloat(row.querySelector('.rate').value) || 0;
+const difference2 = rateValue - valuesValue;
+row.querySelector('.discount').value = difference2.toFixed(2);
+}
+});
+
+document.querySelector('#item_table2 tbody').addEventListener('click', function(e) {
+const target = e.target;
+if (target.classList.contains('delete-row')) {
+const row = target.closest('tr');
+row.remove();
+rowNum2--; // Update the row number
+}
+});
+});
+
+</script>
 
 
-
-    
-    </script>
-
-
+              
 
 
 
@@ -666,22 +583,43 @@ function calculateDiscount() {
           
                     <div class="row">
                         <div class="-sm-12 col-md-6 col-lg-6">
-                            <!-- <input type="submit" class="btn text-white mt-5" style="background-color:  rgb(59, 59, 58) ; " 
-                onclick="saveAsDraftDialog()" value="Save As Draft"> -->
-
                 <input type="submit" class="btn text-white mt-5" style="background-color:  rgb(59, 59, 58) ;  " name="save_draft" value="Save As Draft">
                 <input type="submit" class="btn text-white mt-5" style="background-color: rgb(210, 132, 30) ; " name="convert_adjusted" value="Convert to Adjusted"> 
-                <input type="submit" class="btn text-white mt-5" style="background-color:  rgb(59, 59, 58) ; " onclick="cancelDialog()" value="Cancel">
-                <!-- <input type="submit" class="btn text-white mt-5" style="background-color: rgb(210, 132, 30) ; "
-                    onclick="saveAndSendDialog()" value="Convert to Adjusted"> -->
-
-                    <!-- <input type="submit" class="btn text-white mt-5" style="background-color:  rgb(59, 59, 58) ; "
-                            onclick="cancelDialog()" value="Cancel">
-                        </div> -->
+                <input type="reset" class="btn text-white mt-5" style="background-color: rgb(59, 59, 58);" value="Cancel" id="cancelButton">
                         <div class="-sm-12 col-md-6 col-lg-6"></div>
                     </div>
-            <!-- #### FORM ####  -->
+            
         </form>
+<!-- #### FORM ####  -->
+
+<!-- CANCEL BUTTON -->
+        <script>
+         // CANCEL BUTTON
+document.addEventListener("DOMContentLoaded", function() {
+    // Get a reference to the Cancel button
+    const cancelButton = document.getElementById("cancelButton");
+
+    // Add an event listener to the Cancel button
+    cancelButton.addEventListener("click", function(event) {
+        event.preventDefault(); // Prevent the form from actually submitting
+
+        // Get a reference to the form
+        const form = document.getElementById("forms");
+
+        // Reset the form to its initial state
+        form.reset();
+
+        // Reset the table display to Quantity Adjustment by default
+        showQuantityAdjustmentTable();
+
+        // Optionally, you can reset any other elements or data on the page here
+    });
+});
+
+
+        </script>
+<!-- CANCEL BUTTON -->
+
 
 
             <!--..................................... item modal ..................................................-->
@@ -917,98 +855,11 @@ function calculateDiscount() {
 
 
           <!--.................................................... ADD REASON MODAL ....................................................-->
-          <div class="modal fade" id="newreason">
-            <div class="modal-dialog modal-xl">
-              <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
-                <div class="modal-header " style="background: rgb(32, 35, 37);">
-                    <h3 class="m-3 text-uppercase">New Adjustment</h3>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" style="background: rgb(32, 35, 37);">
-                  <div class="card p-3 m-3">
-                    
-                      
-                      <div class="row mt-2">
-                        <div class="col-md-3 mt-2"></div>
-                        <div class="col-md-1 mt-2">
-                          <!-- <label for="unit" style="color: rgb(190, 88, 88);">Reason</label> -->
-                        </div>
-                        
-
-                        <div style="margin-left: 50px; padding-bottom: 30px;">
-                          <button class="btn-warning text-white" style="border-radius: 6px;" id="showReasonInput" >+ Add new Reason</button>
-                          <div id="reasonInput" style="display: none;">
-                            <form action="{% url 'newreasons' %}" method="post" class="needs-validation" novalidate autocomplete="off" id="modalUnit">
-                                {% csrf_token %}
-                              <label for="" style="color: red;margin-bottom: 20px;">Reason *</label>
-                              <input type="text" class="form-control bg-light text-dark" style="width: 600px;" id="newReason" name="newReason" required>
-                              <div class="d-flex">
-                                <button class="btn save_btn rounded-pill text-grey  my-4" style="width: 150px;" type="submit" id="saveReason">Save</button>
-                                &nbsp;&nbsp;
-                                <button type="button" class="close btn save_btn rounded-pill text-grey  my-4" style="width: 150px;" id="cancelReason">Cancel</button>
-                              </div>
-                            </form>
-                          </div>
-                        </div>
-                        <div style="margin-left: 50px;">
-                          <hr width="950px;">
-                          <label for="unit">REASON</label>
-                          <hr width="950px;">
-
-                  
-                          <ul class="list-unstyled">
-
-                            {% for i in reason %}
-                            <li class="py-2">{{i.reason }}</li>
-                            {% endfor %}
-                          </ul>
-                        
-                        </div>
 
 
-                        <div class="col-md-4 mt-2"></div>
-                      </div>
-
-                    
-                  </div>
-                </div>
-              </div>
-            </div>  
-          </div>  
-       
-
-
-<!-- add/cancel/save button -->
-       <script>
-        document.addEventListener('DOMContentLoaded', function() {
-          // Get references to the elements
-          var showReasonInputBtn = document.getElementById('showReasonInput');
-          var reasonInput = document.getElementById('reasonInput');
-          var newReasonInput = document.getElementById('newReason');
-        //   var saveReasonBtn = document.getElementById('saveReason');
-          var cancelReasonBtn = document.getElementById('cancelReason');
-        
-          // Add click event listener to the "+ Add new Reason" button
-          showReasonInputBtn.addEventListener('click', function(event) {
-            showReasonInputBtn.style.display = 'none';
-           // event.preventDefault();  Prevent form submission
-            reasonInput.style.display = 'block'; // Show the input box and buttons
-          });
-
-         
-        
-          // Add click event listener to the "Cancel" button
-          cancelReasonBtn.addEventListener('click', function() {
-            reasonInput.style.display = 'none'; // Hide the input box and buttons
-            newReasonInput.value = ''; // Clear the input field
-            showReasonInputBtn.style.display = '';
-          });
-        });
-      </script>
+          
       
-<!--END ADD REASON MODAL -->
+          <!--END ADD REASON MODAL -->
 
 
     

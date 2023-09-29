@@ -510,6 +510,7 @@ urlpatterns = [
     path('customize_vendor_report',views.customize_vendor_report,name='customize_vendor_report'),
     path('purchasebyitem',views.purchasebyitem,name='purchasebyitem'),
     path('customize_report_purchasebyitem',views.customize_report_purchasebyitem,name='customize_report_purchasebyitem'),
+
     path('inventory_adjustment',views.inventory_adjustment,name='inventory_adjustment'),
     path('new_adjustment',views.new_adjustment,name='new_adjustment'),
     path('newreasons',views.newreasons,name='newreasons'),
@@ -523,6 +524,8 @@ urlpatterns = [
     path('edit_inventory/<int:id>/',views.edit_inventory,name='edit_inventory'),
     path('purchase_unit_eway',views.purchase_unit_eway,name='purchase_unit_eway'),
     path('purchase_unit_dropdown_eway',views.purchase_unit_dropdown_eway,name='purchase_unit_dropdown_eway'),
+    path('update_adjustment/<int:id>/',views.update_adjustment,name='update_adjustment'),
+    path('newreasonslist',views.newreasonslist,name='newreasonslist'),
     
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
     

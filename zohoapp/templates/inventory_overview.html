@@ -117,38 +117,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
 
-<!-- <script>
 
-    $(document).on('click', '.btn_print', function (event) {
-        event.preventDefault();
-
-        // get the content to print
-        var content = document.getElementById("whatToPrint");
-
-        // create a blob object from the content
-        var blob = new Blob([content.outerHTML], { type: "text/html" });
-
-        // show the Save As dialog box
-        if (window.showSaveFilePicker) {
-            // if the browser supports the method
-            window.showSaveFilePicker().then(function (fileHandle) {
-                // write the blob to the file
-                fileHandle.createWritable().then(function (writer) {
-                    writer.write(blob);
-                    writer.close();
-                });
-            });
-        } else {
-            // if the browser doesn't support the method, fall back to a normal download
-            var url = URL.createObjectURL(blob);
-            var a = document.createElement("a");
-            a.href = url;
-            a.download = "file.html";
-            a.click();
-            URL.revokeObjectURL(url);
-        }
-    });
-</script> -->
 
 <script type="text/javascript">
     $(document).ready(function ($) {
@@ -193,54 +162,6 @@
 
 
 
-<!-- <script>
-
-    function uplodfile() {
-        console.log('upload');
-
-        async function generatePDF() {
-            // document.getElementById("downloadButton").innerHTML = "Currently downloading, please wait";
-
-            //Downloading
-            var downloading = document.getElementById("whatToPrint");
-            var doc = new jsPDF('l', 'pt');
-
-            await html2canvas(downloading, {
-                //allowTaint: true,
-                //useCORS: true,
-                // width: 600
-
-            }).then((canvas) => {
-                //Canvas (convert to PNG)
-                doc.addImage(canvas.toDataURL("image/png"), 'PNG', 15, 10, 700, 850);
-            })
-
-
-
-            data = doc.save("Document.pdf");
-
-
-            //End of downloading
-
-            // document.getElementById("downloadButton").innerHTML = "Click to download";
-        }
-
-        $.ajax({
-            method: "POST",
-            url: "/estimate_pdf/",
-            processData: false,
-            contentType: false,
-            data: data,
-            success: function (res) {
-                console.log(res)
-            }
-
-
-        })
-    }
-
-</script> -->
-
 
 
 <div style="top: 7rem; ">
@@ -250,16 +171,8 @@
                 <div class="col-md-12 py-2"><h2 class="text-white ">Inventory Adjustments</h2></div>
                 
                     
-                    <!-- <div class="dropdown rounded" style="color: white; background-color: rgb(210, 132, 30);">
-                        <button type="button" class="btn dropdown-toggle text-white" data-toggle="dropdown">
+                
 
-                        </button>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">Create Estimate</a>
-                            <a class="dropdown-item" href="#">Create Estimate (Pre GST)</a>
-                        </div> -->
-                
-                
             
             <div class="row">
                 <div class="col-sm-8 col-md-8 col-lg-8">

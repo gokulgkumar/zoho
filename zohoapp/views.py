@@ -10921,6 +10921,42 @@ def customize_vendor_report(request):
 
 
 
+
+@login_required(login_url='login')
+def purchase_unit_eway(request):
+    
+    company = company_details.objects.get(user = request.user)
+
+    if request.method=='POST':
+
+        unit =request.POST.get('unit')
+        print(unit)
+        
+        u = User.objects.get(id = request.user.id)
+
+        unit = Unit(unit= unit)
+
+        unit.save()
+     
+        return JsonResponse({"message": "success"})
+
+
+@login_required(login_url='login')        
+def purchase_unit_dropdown_eway(request):
+
+    user = User.objects.get(id=request.user.id)
+
+    options = {}
+    option_objects = Unit.objects.all()
+    for option in option_objects:
+        options[option.id] = option.unit
+    
+    return JsonResponse(options)
+
+
+
+
+
 @login_required(login_url='login')
 def inventory_adjustment(request):
     user=request.user.id
@@ -10943,47 +10979,21 @@ def new_adjustment(request):
 
 
 
-@login_required(login_url='login')
-def purchase_unit_eway(request):
-    
-    company = company_details.objects.get(user = request.user)
-
-    if request.method=='POST':
-
-        unit =request.POST.get('unit')
-        print(unit)
-        
-        u = User.objects.get(id = request.user.id)
-
-        unit = Unit(unit= unit)
-
-        unit.save()
-     
-        return JsonResponse({"message": "success"})
-
-
-
-@login_required(login_url='login')        
-def purchase_unit_dropdown_eway(request):
-
-    user = User.objects.get(id=request.user.id)
-
-    options = {}
-    option_objects = Unit.objects.all()
-    for option in option_objects:
-        options[option.id] = option.unit
-    
-    return JsonResponse(options)
-
 
 
 @login_required(login_url='login')
 def newreasons(request):
     if request.method == 'POST':
-        newreason= request.POST.get('newReason')
+        newreason= request.POST.get('reasonlist')
+        print(newreason,'reason')
         reasons=Reason(reason=newreason)
         reasons.save()
         return JsonResponse({"message": "success"})
+
+
+def newreasonslist(request):
+    reasons=Reason.objects.all()
+    return JsonResponse(reasons)
 
 
 
@@ -11021,10 +11031,17 @@ def save_adjustment(request):
              item_names = request.POST.getlist('item[]')
              qty_available = request.POST.getlist('qtyav[]')
              new_qty_on_hand = request.POST.getlist('newqty[]')
+
+             print(new_qty_on_hand,"new_qty_on_hand is")
              qty_adjusted = request.POST.getlist('qtyadj[]')
 
              if len(item_names) == len(qty_available) == len(new_qty_on_hand) == len(qty_adjusted):
                 for i in range(len(item_names)):
+
+                    item_instance = AddItem.objects.get(Name=item_names[i])
+                    item_instance.stock += int(new_qty_on_hand[i])
+                    item_instance.save()
+
                     items1 = ItemAdjustment.objects.create(
                         item=item_names[i],
                         quantity_available=qty_available[i],
@@ -11161,8 +11178,86 @@ def edit_inventory(request,id):
   
 
     
+def update_adjustment(request,id):
+    user=request.user
+    user_id=request.user.id
+    user_instance = User.objects.get(id=user_id)
+    if request.method=='POST':
+        
+        adjustment=Adjustment.objects.get(id=id)
+        adjustment.user=user_instance
+        adjustment.type=request.POST.get('type','')
+        adjustment.adjustment_type=request.POST.get('type','')
+        adjustment.reference_number=request.POST['refno']
+        adjustment.date=request.POST['date']
+        account=request.POST['account']
+        account_instance = Chart_of_Account.objects.get(id=account)
+        adjustment.account=account_instance
+        reason=request.POST['reason']
+        reason_instance=Reason.objects.get(id=reason)
+        adjustment.reason=reason_instance
+        adjustment.description=request.POST['description']
+        company = company_details.objects.get(user=user)
+        adjustment.company=company
 
+        adjustment.save()
 
+        itemadjustment = ItemAdjustment.objects.filter(adjustment_id=adjustment.id)
+        itemadjustment.delete()
+        
+        if adjustment.adjustment_type == 'Quantity':
+             item_names = request.POST.getlist('item[]')
+             qty_available = request.POST.getlist('qtyav[]')
+             new_qty_on_hand = request.POST.getlist('newqty[]')
+             qty_adjusted = request.POST.getlist('qtyadj[]')
+
+             if len(item_names) == len(qty_available) == len(new_qty_on_hand) == len(qty_adjusted):
+                for i in range(len(item_names)):
+
+                    item_instance = AddItem.objects.get(Name=item_names[i])
+                    item_instance.stock += int(float(new_qty_on_hand[i]))
+                    item_instance.save()
+                    
+                    items1 = ItemAdjustment.objects.create(
+                        item=item_names[i],
+                        quantity_available=qty_available[i],
+                        new_quantity_on_hand=new_qty_on_hand[i],
+                        adjusted_quantity=qty_adjusted[i],
+                        adjustment_type=adjustment.adjustment_type,
+                        adjustment=adjustment,
+                        user=user_instance,
+                    )
+                    items1.save()
+
+        elif adjustment.adjustment_type == 'Value':
+             items_names = request.POST.getlist('item2[]')
+             current_value = request.POST.getlist('cuval[]')
+             changed_value = request.POST.getlist('chval[]')
+             value_adjusted = request.POST.getlist('adjval[]')
+
+             if len(items_names) == len(current_value) == len(changed_value) == len(value_adjusted):
+                for j in range(len(items_names)):
+                    items2 = ItemAdjustment.objects.create(
+                        item=items_names[j],
+                        current_value=current_value[j],
+                        changed_value=changed_value[j],
+                        adjusted_value=value_adjusted[j],
+                        adjustment_type=adjustment.adjustment_type,
+                        adjustment=adjustment,
+                        user=user_instance,       
+                    )
+                    items2.save()
+
+        if 'save_draft' in request.POST:
+            adjustment.status = "Draft"
+
+        elif 'convert_adjusted' in request.POST:
+             adjustment.status = "Adjusted"
+
+        adjustment.save()
+         
+    return redirect("inventory_adjustment")
+        
 
 
 
