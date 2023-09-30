@@ -213,8 +213,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <p>{{ a.reason }}&nbsp; |&nbsp; <span class="tooltip-container"><span class="tooltip-trigger"><i class="fas fa-comment-alt"></i></span>
-                                        <span class="tooltip-text text-dark">{{ a.description }}</span></span> </p>
+                                    <p>{{ a.reason }} </p>
                                     <span>{{ a.date }}</span>
                                 </div>
                                 <div class="col-md-6 text-left" >
@@ -275,10 +274,28 @@
                                         
                             </div>
                         </div>
+
                         {% if adj.status == "Draft" %}
+                        <div class="dropdown ms-1" style="background-color: rgb(212, 139, 3);border-radius: 5px;">
+                            <button style="background-color: rgb(212, 139, 3);" class="btn dropdown-toggle" type="button" id="convertDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Convert
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="convertDropdown">
+                                
+                                <a class="dropdown-item text-center" data-toggle="tooltip" data-placement="top" title="Change Status" href="{% url 'change_inventory_status' adj.id %}">
+                                 Adjusted
+                                </a>
+                               
+                            </div>
+                        </div>
+                        {% endif %}
+
+
+
+                        <!-- {% if adj.status == "Draft" %}
                         <a class="btn btn-sm ms-1" data-toggle="tooltip" data-placement="top" title="Change Status"  style="background-color:  rgb(212, 139, 3);"
                         href="{% url 'change_inventory_status' adj.id %}" ></i><i class="fas fa-info-circle"></i></a>
-                        {% endif %}
+                        {% endif %} -->
                         <!-- <button  class="btn btn-sm text-white ms-1"
                         style="background-color:  rgb(212, 139, 3);border-radius: 5px;" data-toggle="tooltip" title="Comments" onclick="comment_list()">
                             <i class="fas fa-comment-dots"></i></button> -->
@@ -292,7 +309,7 @@
             </div>
 
             <div id="div_inventory" class="mx-2 my-4 p-4 "
-                style="background-color: rgba(124, 124, 123, 0.507); height: 600px; overflow-y: scroll;">
+                style="background-color: rgba(124, 124, 123, 0.507); height:690px; ">
                 <div class="slip p-5 convert_to_pdf bg-light" id="whatToPrint"
                     style="box-shadow: 5px 5px 10px rgb(45, 45, 45);">
                     <div class="row py-2">

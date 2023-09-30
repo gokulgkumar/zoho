@@ -511,6 +511,8 @@ urlpatterns = [
     path('purchasebyitem',views.purchasebyitem,name='purchasebyitem'),
     path('customize_report_purchasebyitem',views.customize_report_purchasebyitem,name='customize_report_purchasebyitem'),
 
+
+#new urls for inventory adjustment
     path('inventory_adjustment',views.inventory_adjustment,name='inventory_adjustment'),
     path('new_adjustment',views.new_adjustment,name='new_adjustment'),
     path('newreasons',views.newreasons,name='newreasons'),
@@ -526,7 +528,12 @@ urlpatterns = [
     path('purchase_unit_dropdown_eway',views.purchase_unit_dropdown_eway,name='purchase_unit_dropdown_eway'),
     path('update_adjustment/<int:id>/',views.update_adjustment,name='update_adjustment'),
     path('newreasonslist',views.newreasonslist,name='newreasonslist'),
-    
+
+    path('new_item',views.new_item,name='new_item'),
+    path('new_item_dropdown',views.new_item_dropdown,name='new_item_dropdown'),
+
+#end new urls for inventory adjustment   
+
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
     
     

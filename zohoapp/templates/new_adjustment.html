@@ -183,7 +183,7 @@
         <div class="form-group row">
           <label class="col-sm-2 col-form-label">Reason *</label>
           <div class="col-sm-6 col-md-5 col-6" style="margin-left: -2.2rem;">
-              <select name="reason" class="form-control bg-white text-dark" id="unit">
+              <select name="reason" class="form-control bg-white text-dark rsn" id="rsns">
                 <option value="{{u.id}}" selected hidden disabled>Select a reason</option>
                  {% for i in reason %}
                   <option value="{{i.id}}">{{ i.reason }}</option>
@@ -195,7 +195,7 @@
           <div class="col-2">
 
             <!-- onclick="openForm()" -->
-            <a href="#" class="btn btn-outline-secondary py-2 mt-1 mx-1 mx-auto p-3" style="background-color: white;color: #000; padding-bottom: 6px!important;" data-target="#newreason" data-toggle="modal">Add Reason</a></button>
+            <a href="#" class="btn btn-outline-secondary py-2 mt-1 mx-1 mx-auto p-3" style="background-color:  rgb(245, 154, 36);color: #ffffff; padding-bottom: 6px!important;border-color:  rgb(245, 154, 36);" data-target="#newreason" data-toggle="modal">+ Add Reason</a></button>
         </div>
       </div>
 
@@ -611,7 +611,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             <!--..................................... item modal ..................................................-->
 
-            <div class="modal fade" id="newitem">
+            <div class="modal fade" style="font-size: 1rem" id="newitem">
               <div class="modal-dialog modal-xl">
                 <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
                   <div class="modal-header " style="background: rgb(32, 35, 37);">
@@ -802,8 +802,96 @@ document.addEventListener('DOMContentLoaded', function() {
                           <div class="col-md-4 ">
                             <input  type="text" name="cost_desc" class="form-control bg-light text-dark"  id="cost_desc">
                           </div>
-          
                         </div>
+
+                        <br>
+                        <fieldset class="form-group" style="font-size: 1rem">
+                          <div class="row">
+                            <label class="col-form-label col-sm-2 pt-3">Activation tag<i class="fa fa-question-circle"></i></label>
+                            <div class="col-sm-10 form-inline">
+                              <div class="form-check ">
+                                <input required class="form-check-input" type="radio" name="status" id="gridRadios1" value="Active"  style="margin-left:225px;" >
+                                <label class="form-check-label text-white" for="gridRadios1">Activate</label>
+                              </div>
+                              <div class="form-check ml-5">
+                                <input required class="form-check-input" type="radio" name="status" id="gridRadios2" value="Inactive" style="margin-left:50px;">
+                                <label class="form-check-label text-white" for="gridRadios2">Non-Activate</label>
+                              </div>
+                                
+                            </div>
+                          </div>
+                        </fieldset>
+
+
+                        
+                        <div class="row" style="font-size: 1rem" >
+                          <div class="col-md-10 px-2">
+                            {% comment %} <label><input type="checkbox" value="trackstate" name="trackstate" onclick="toggleForm()" style="display: none;">
+                           Track Inventory for this item</label> {% endcomment %}
+                            {% comment %} <input type="hidden" name="trackState" id="trackState" value="" unchecked> {% endcomment %}
+                            <label>
+                              <input type="checkbox" name="trackstate" value="trackstate" class=" bg-dark"  onclick="toggleFormFields()">
+                              Track Inventory for this item
+                            </label>
+                            <div id="formFields" style="display: none;"> 
+                              <div class="form-group row mt-1" >
+                                <label class="col-sm-3 col-form-label px-1 mt-2" style="margin-left: 1%;">Inventory Account *</label>
+                                <div class="col-sm-9 col-md-7 col-9" style="margin-left: 16px;">
+                                  <select class="form-select form-select-sm mt-3" name="invacc" style="width: 400px;">
+                                    <option>Choose..</option>
+                                    <option value="inventory assets">Inventory Asset</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div class="form-group row mt-1">
+                                <label class="col-sm-3 col-form-label">Opening Stock</label>
+                                <div class=" col-sm-9 ">
+                                  <input  type="number" class="form-control  bg-white text-dark" style="margin-left: 24px; width: 400px;"  name="openstock" value="0">
+                                </div>
+                               
+                                  <div class="row align-items-center mt-3" >
+                                    <label class="col-sm-3 col-form-label" >Opening Stock Rate per Unit</label>
+                                    <div class="col-sm-9">
+                                      <input type="number" class="form-control bg-white text-dark" name="inventoryaccntperunit" style="width: 400px;margin-left: 30px;"  value="0" >
+                                    </div>
+          
+                                  </div>
+                                
+                                <fieldset class="form-group mt-3" style="font-size: 1rem ">
+                                  <div class="row">
+                                    <label class="col-form-label col-sm-2 pt-2 mt-1">Activation tag<i class="fa fa-question-circle"></i></label>
+                                    <div class="col-sm-10 form-inline">
+                                      <div class="form-check ">
+                                        <input  class="form-check-input" type="radio" name="satus" id="gridRadios1" value="Active"  style="margin-left:250px;" >
+                                        <label class="form-check-label text-white" for="gridRadios1">Activate</label>
+                                      </div>
+                                      <div class="form-check ml-5">
+                                        <input  class="form-check-input" type="radio" name="satus" id="gridRadios2" value="Inactive"  style="margin-left:50px;">
+                                        <label class="form-check-label text-white" for="gridRadios2">Non-Activate</label>
+                                      </div>
+                                                  
+                                    </div>
+                                  </div>
+                                </fieldset>
+          
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <script>
+                          function toggleFormFields() {
+                            var formFields = document.getElementById("formFields");
+                            var checkbox = document.querySelector("input[name=trackstate]");
+                      
+                            if (checkbox.checked) {
+                              formFields.style.display = "block";
+                            } else {
+                              formFields.style.display = "none";
+                            }
+                          }
+                        </script>
+
+
           
                         <div class="row mt-3">
                             <div class="col-md-6">
@@ -812,6 +900,11 @@ document.addEventListener('DOMContentLoaded', function() {
                               <div class="invalid-feedback text-warning" >You must agree before submitting.</div>
                             </div>
                         </div>
+
+                    
+
+
+
                         <div class="row">
                           <div class="col-md-4"></div>
                           <div class="col-md-4">
@@ -868,11 +961,15 @@ document.addEventListener('DOMContentLoaded', function() {
                   <h4 class="text-danger">Reason *</h4>
 
                   <form  method="post" class="needs-validation" novalidate autocomplete="off" id="modalReason">
+                    {% csrf_token %}
+                    
+
                   <input type="text" name="" id="reasoninp" required style="width: 90%;border-radius: 5px;"><br>
-                  <button class="btn mt-4" style="background-color: rgb(210, 132, 30);" id="reasaveButton" type="submit"> Save </button>
+                  <button class="btn mt-4" style="background-color: rgb(210, 132, 30);" id="reasaveButton" type="button"> Save </button>
                 
                   <span class="p-2"></span>
                   <button class="btn mt-4" style="background-color: rgb(210, 132, 30);" id="cancelBtn"> Cancel </button>
+
                 </form>
               </div>
                 
@@ -882,10 +979,11 @@ document.addEventListener('DOMContentLoaded', function() {
               <hr>
               <h3 style="margin-left: 40px;">REASON</h3>
               <hr>
-              <ul class="list-unstyled" id="reasonList" style="margin-left: 40px;">
+              <ul class="list-unstyled"  style="margin-left: 40px;">
                 {% for i in reason %}
                 <li class="mt-1" style="padding: 5px;">{{ i.reason }}</li>
                 {% endfor %}
+                <li id="rsn2"></li>
               </ul>
             </div>
         </div>
@@ -1141,7 +1239,7 @@ $(document).on("click","#itemSave",function(){
   $.ajax({
     
     type : 'POST',
-    url:"{% url 'purchase_item' %}",
+    url:"{% url 'new_item' %}",
     
     data:{
         type : itemtype,
@@ -1170,7 +1268,7 @@ $(document).on("click","#itemSave",function(){
 
 function reloadItem() {
   $.ajax({
-    url: "{% url 'purchase_item_dropdown' %}",
+    url: "{% url 'new_item_dropdown' %}",
     type: "GET",
     dataType: "json",
     data: $(this).serialize(),
@@ -1241,7 +1339,7 @@ $(document).on("click","#unitSave",function(){
 
 
           // reason modal
-
+          
           $(document).on("click","#reasaveButton",function(){
             $.ajax({
               
@@ -1249,30 +1347,33 @@ $(document).on("click","#unitSave",function(){
               url:"{% url 'newreasons' %}",
               data:{
                   reasonlist : $("#reasoninp").val(),      
-                  csrfmiddlewaretoken: '{{ csrf_token }}'
-                  
                 },
-              
+                headers: {
+                            "X-CSRFToken": "{{ csrf_token }}"
+                      },
                 success: function(response) {
                   document.getElementById("modalReason").reset();
-                  reloadUnit();
+                  reloadReason();
                 },
             });        
           });
-          
-         
-          
-function reloadItem() {
+                    
+function reloadReason() {
   $.ajax({
     url: "{% url 'newreasonslist' %}",
-    type: "GET",
-    dataType: "json",
-    data: $(this).serialize(),
-    csrfmiddlewaretoken: '{{ csrf_token }}',
-
+  
     success: function(data) {
-                var list = $('#reasonlists');
+      console.log('hi')
+                var dropdown = $('#rsns');
+                var list = $('#rsn2');
+                dropdown.empty();
                 list.empty();
+
+                $.each(data, function(key, value) {
+                  dropdown.append($('<option></option>').attr('value', key).text(value).val(value));
+                  list.append($('<li></li>').attr('value', key).text(value).val(value));
+                });
+                
               },
     error: function(xhr, status, error) {
     console.error(xhr.responseText);

@@ -83,17 +83,12 @@ tr:hover{
     <table id="dataTable" class="table text-white mt-2 table-border border-1" style="width: 100%; margin-top: 40px;">
       <thead>
         <tr style="color: beige;" class="text-center">
-            <!-- id="nameHeader" -->
           <th class="col" style="color: beige;">Date</th> 
-
           <th class="col"style="color: beige;">Reason</th>
           <th class="col"style="color: beige;">Description</th>
-          <th class="col"style="color: beige;">Status</th>
           <th class="col"style="color: beige;">Reference Number</th>
-
-          <!-- id="stockHeader" -->
           <th class="col"style="color: beige;" >Type</th>
-
+          <th class="col"style="color: beige;">Status</th>
           <th class="col"style="color: beige;">Adjusted by</th>
         </tr>
       </thead>
@@ -107,9 +102,10 @@ tr:hover{
             <span class="tooltip-trigger"><i class="fas fa-comment-alt"></i></span>
           <span class="tooltip-text"> <a href="{% url 'inv_overview' a.id %}" style="text-decoration: none;color: white;" class="text-dark">{{ a.description }}</a> </span>
           </td>
-          <td> <a href="{% url 'inv_overview' a.id %}" style="text-decoration: none;color: white;">{{ a.status }}</a> </td>
+          
           <td> <a href="{% url 'inv_overview' a.id %}" style="text-decoration: none;color: white;">{{ a.reference_number }}</a> </td>
           <td> <a href="{% url 'inv_overview' a.id %}" style="text-decoration: none;color: white;">{{ a.adjustment_type }}</a> </td>
+          <td> <a href="{% url 'inv_overview' a.id %}" style="text-decoration: none;color: white;">{{ a.status }}</a> </td>
           <td> <a href="{% url 'inv_overview' a.id %}" style="text-decoration: none;color: white;">{{ a.company.company_name }}</a> </td>
         </tr>
         {% endfor %}

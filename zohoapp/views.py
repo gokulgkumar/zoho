@@ -10962,7 +10962,6 @@ def inventory_adjustment(request):
     user=request.user.id
     company_data = company_details.objects.get(user=request.user)
     adjustment=Adjustment.objects.filter(user_id=user)
-    # print("adjustment",adjustment,)
     return render(request,'inventory_adjustment.html',{'company': company_data,'adjustment':adjustment})
 
 @login_required(login_url='login')
@@ -10978,9 +10977,6 @@ def new_adjustment(request):
     return render(request,'new_adjustment.html',{'company': company_data,'accounts':accounts,'items':items,'sales':sales,'purchase':purchase,'units':unit,'reason':reason})
 
 
-
-
-
 @login_required(login_url='login')
 def newreasons(request):
     if request.method == 'POST':
@@ -10992,9 +10988,13 @@ def newreasons(request):
 
 
 def newreasonslist(request):
+    print('hello')
+    rson={}
     reasons=Reason.objects.all()
-    return JsonResponse(reasons)
+    for r in reasons:
+        rson[r.id]= r.reason
 
+    return JsonResponse(rson)
 
 
 def save_adjustment(request):
@@ -11262,3 +11262,47 @@ def update_adjustment(request,id):
 
 
 
+@login_required(login_url='login')
+def new_item(request):
+
+    company = company_details.objects.get(user = request.user)
+
+    if request.method=='POST':
+        type=request.POST.get('type')
+        name=request.POST['name']
+        ut=request.POST['unit']
+        inter=request.POST['inter']
+        intra=request.POST['intra']
+        sell_price=request.POST.get('sell_price')
+        sell_acc=request.POST.get('sell_acc')
+        sell_desc=request.POST.get('sell_desc')
+        cost_price=request.POST.get('cost_price')
+        cost_acc=request.POST.get('cost_acc')      
+        cost_desc=request.POST.get('cost_desc')
+        units=Unit.objects.get(id=ut)
+        sel=Sales.objects.get(id=sell_acc)
+        cost=Purchase.objects.get(id=cost_acc)
+
+        history="Created by " + str(request.user)
+        user = User.objects.get(id = request.user.id)
+
+        item=AddItem(type=type,unit=units,sales=sel,purchase=cost,Name=name,p_desc=cost_desc,s_desc=sell_desc,s_price=sell_price,p_price=cost_price,
+                    user=user,creat=history,interstate=inter,intrastate=intra)
+
+        item.save()
+        return HttpResponse({"message": "success"})
+    
+
+
+  
+@login_required(login_url='login')        
+def new_item_dropdown(request):
+
+    user = User.objects.get(id=request.user.id)
+
+    options = {}
+    option_objects = AddItem.objects.all()
+    for option in option_objects:
+        options[option.id] = option.Name
+
+    return JsonResponse(options)

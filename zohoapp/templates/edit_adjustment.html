@@ -162,7 +162,7 @@
           <div class="col-2">
 
             <!-- onclick="openForm()" -->
-            <a href="#" class="btn btn-outline-secondary py-2 mt-1 mx-1 mx-auto p-3" style="background-color: white;color: #000; padding-bottom: 6px!important;" data-target="#newreason" data-toggle="modal">Add Reason</a></button>
+            <a href="#" class="btn btn-outline-secondary py-2 mt-1 mx-1 mx-auto p-3" style="background-color: rgb(245, 154, 36) ;color: #ffffff; padding-bottom: 6px!important;border-color:  rgb(245, 154, 36);" data-target="#newreason" data-toggle="modal">+ Add Reason</a></button>
         </div>
       </div>
 
@@ -205,7 +205,7 @@
               
 
                 <tr id='row1'>
-                    <td class="bg-transparent text-light rownum" id="" value=""></td>
+                    <td class="bg-transparent text-light rownum" id="" value="">{{ forloop.counter }}</td>
                     <td>
                         <div class='form-group'><select class=' bg-transparent text-light border-0 item_select itm' name='item[]' id='item1'>
                           
@@ -216,7 +216,7 @@
                             </select>
                         </div>
                     </td>
-
+                    <input type="hidden" id="forloopCounter" value="{{ forloop.counter }}">
                     
                     <td class='text-right' ><input type='number' class='form-control bg-transparent border-1 border-light text-light text-right qty' value='{{ i.quantity_available }}' name="qtyav[]" >
                     </td>
@@ -262,12 +262,13 @@ document.addEventListener("DOMContentLoaded", function() {
     if (clickedButton.classList.contains('delete-row')) {
       const parentRow = clickedButton.closest('tr');
       parentRow.remove();
+      updateRowNumbers(); 
     }
   }
 
   // Attach a delegate event listener to the table body
   const tableBody = document.querySelector('#item_table tbody');
-  tableBody.addEventListener('click', handleDeleteRow, { once: true });
+  tableBody.addEventListener('click', handleDeleteRow);
 });
 
 
@@ -308,23 +309,24 @@ rateInputs.forEach(function(rateInput) {
 
 
 //#### NEW ROW ####
-
 document.addEventListener('DOMContentLoaded', function() {
     const addRowButton = document.getElementById('add-row');
-    // let rowNum = 1;
+    let rowNum = parseInt(document.getElementById('forloopCounter').value); // Initialize the row number
 
     addRowButton.addEventListener('click', function() {
         const tableBody = document.querySelector('#item_table tbody');
+
+        // Increment the row number before adding a new row
+        rowNum++;
 
         // Create a new row element
         const newRow = document.createElement('tr');
 
         newRow.innerHTML = `
-            <td class="bg-transparent text-light rownum" ></td>
+            <td class="bg-transparent text-light rownum">${rowNum}</td>
             <td>
                 <div class='form-group'>
                     <select class='bg-transparent text-light border-0 item_select itm' name='item[]' id='item${rowNum}'>
-                  
                       <option class='text-white' hidden>Select Items</option>
                         {% for i in items %}
                         <option class="text-dark" value="{{i.Name}}" data-stock="{{i.stock}}" data-rate="{{i.rate}}">{{i.Name}}</option>
@@ -364,11 +366,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
         deleteButton.addEventListener('click', function() {
             newRow.remove();
+            rowNum--;
+            updateRowNumbers(); // Update row numbers after deleting a row
         });
 
-        rowNum++;
+        updateRowNumbers(); // Update row numbers after adding a new row
     });
+
+    function updateRowNumbers() {
+        const rownumElements = document.querySelectorAll('.rownum');
+        rownumElements.forEach(function(rownumElement, index) {
+            rownumElement.textContent = index + 1;
+        });
+    }
 });
+
+
 
 
 
@@ -404,7 +417,7 @@ document.addEventListener('DOMContentLoaded', function() {
           <tbody>
             {% for j in adj_items %}
               <tr id='row2'>
-                  <td class="bg-transparent text-light rownum2"  ></td>
+                  <td class="bg-transparent text-light rownum2"  >{{ forloop.counter }}</td>
                   <td>
                       <div class='form-group'><select class=' bg-transparent text-light border-0 item_select2 itm' name='item2[]' id=''>
                               <option class='text-dark' value="{{j.item}}"  selected hidden>{{j.item}}</option>
@@ -415,6 +428,8 @@ document.addEventListener('DOMContentLoaded', function() {
                           </select>
                       </div>
                   </td>
+                  <input type="hidden" id="forloopCounter" value="{{ forloop.counter }}">
+
                   <!-- id='rate1' -->
                   <td class='text-right'><input type='number'  class='form-control bg-transparent border-1 border-light text-light text-right values' name='cuval[]'
                     value="{{ j.current_value }}"   >
@@ -457,82 +472,86 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
 <!-- Adding row for table 1 -->
 
-
 document.addEventListener('DOMContentLoaded', function() {
-const addRowButton2 = document.getElementById('add-row2');
-let rowNum2 = 1; // Initialize the row number
+    const addRowButton2 = document.getElementById('add-row2');
+    let rowNum2 = document.querySelectorAll('.rownum2').length; // Initialize the row number
 
-addRowButton2.addEventListener('click', function() {
-// Create a new row element
-const newRow2 = document.createElement('tr');
+    addRowButton2.addEventListener('click', function() {
+        // Create a new row element
+        const newRow2 = document.createElement('tr');
 
-rowNum2++; // Update the row number
+        rowNum2++; // Update the row number
 
-newRow2.innerHTML = `
-<td class="bg-transparent text-light">${rowNum2}</td>
-<td>
-<div class='form-group'><select class='bg-transparent text-light border-0 item_select2 itm' name='item2[]'>
-        <option class='text-dark'>Select Items</option>
-        {% for i in items %}
-        <!-- data-rate="{{i.rate}}" -->
-        <option class="text-dark" value="{{i.Name}}" data-stock="{{i.stock}}" data-rate="{{i.rate}}">{{i.Name}}</option>
-        {% endfor %}
-    </select>
-</div>
-</td>
-<td class='text-right'><input type='number' class='form-control bg-transparent border-1 border-light text-light text-right values' name='cuval[]' value=''></td>
-<td class='text-right'><input type='number' class='form-control bg-transparent border-1 border-light text-light text-right rate' name='chval[]' value=''></td>
-<td class='text-right'><input type='text' class='form-control bg-transparent border-1 border-light text-light text-right discount' name='adjval[]' value=''></td>
-<td class='text-center'>
-<button type='button' class='btn btn-transparent text-danger btn-sm btn-outline-danger rounded-circle delete-row' style='width:30px'><i class='fa fa-times'></i></button>
-</td>
-`;
+        newRow2.innerHTML = `
+            <td class="bg-transparent text-light rownum2">${rowNum2}</td>
+            <td>
+                <div class='form-group'><select class='bg-transparent text-light border-0 item_select2 itm' name='item2[]'>
+                        <option class='text-dark'>Select Items</option>
+                        {% for i in items %}
+                        <option class="text-dark" value="{{i.Name}}" data-stock="{{i.stock}}" data-rate="{{i.rate}}">{{i.Name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </td>
+            <td class='text-right'><input type='number' class='form-control bg-transparent border-1 border-light text-light text-right values' name='cuval[]' value=''></td>
+            <td class='text-right'><input type='number' class='form-control bg-transparent border-1 border-light text-light text-right rate' name='chval[]' value=''></td>
+            <td class='text-right'><input type='text' class='form-control bg-transparent border-1 border-light text-light text-right discount' name='adjval[]' value=''></td>
+            <td class='text-center'>
+                <button type='button' class='btn btn-transparent text-danger btn-sm btn-outline-danger rounded-circle delete-row' style='width:30px'><i class='fa fa-times'></i></button>
+            </td>
+        `;
 
-const tableBody2 = document.querySelector('#item_table2 tbody');
-tableBody2.appendChild(newRow2);
-});
+        const tableBody2 = document.querySelector('#item_table2 tbody');
+        tableBody2.appendChild(newRow2);
+    });
 
-// Manually set row number for the first row
-document.querySelector('#item_table2 tbody tr:first-child .bg-transparent').textContent = "1";
+    // Set row numbers for existing rows
+    document.querySelectorAll('.rownum2').forEach(function(rownumElement, index) {
+        rownumElement.textContent = index + 1;
+    });
 
-// Event delegation for dynamic rows
-document.querySelector('#item_table2 tbody').addEventListener('change', function(e) {
-const target = e.target;
-if (target.classList.contains('item_select2')) {
-const selectedOption = target.options[target.selectedIndex];
-const stock = selectedOption.getAttribute('data-stock');
-const stockrate = selectedOption.getAttribute('data-rate');
-const row = target.closest('tr');
+    // Event delegation for dynamic rows
+    document.querySelector('#item_table2 tbody').addEventListener('change', function(e) {
+        const target = e.target;
+        if (target.classList.contains('item_select2')) {
+            const selectedOption = target.options[target.selectedIndex];
+            const stock = selectedOption.getAttribute('data-stock');
+            const stockrate = selectedOption.getAttribute('data-rate');
+            const row = target.closest('tr');
 
-row.querySelector('.values').value = stock * stockrate;
+            row.querySelector('.values').value = stock * stockrate;
 
-// Recalculate adjusted value
-const valuesValue = parseFloat(row.querySelector('.values').value) || 0;
-const rateValue = parseFloat(row.querySelector('.rate').value) || 0;
-const difference2 = rateValue - valuesValue;
-row.querySelector('.discount').value = difference2.toFixed(2);
-}
-});
+            // Recalculate adjusted value
+            const valuesValue = parseFloat(row.querySelector('.values').value) || 0;
+            const rateValue = parseFloat(row.querySelector('.rate').value) || 0;
+            const difference2 = rateValue - valuesValue;
+            row.querySelector('.discount').value = difference2.toFixed(2);
+        }
+    });
 
-document.querySelector('#item_table2 tbody').addEventListener('input', function(e) {
-const target = e.target;
-if (target.classList.contains('values') || target.classList.contains('rate')) {
-const row = target.closest('tr');
-const valuesValue = parseFloat(row.querySelector('.values').value) || 0;
-const rateValue = parseFloat(row.querySelector('.rate').value) || 0;
-const difference2 = rateValue - valuesValue;
-row.querySelector('.discount').value = difference2.toFixed(2);
-}
-});
+    document.querySelector('#item_table2 tbody').addEventListener('input', function(e) {
+        const target = e.target;
+        if (target.classList.contains('values') || target.classList.contains('rate')) {
+            const row = target.closest('tr');
+            const valuesValue = parseFloat(row.querySelector('.values').value) || 0;
+            const rateValue = parseFloat(row.querySelector('.rate').value) || 0;
+            const difference2 = rateValue - valuesValue;
+            row.querySelector('.discount').value = difference2.toFixed(2);
+        }
+    });
 
-document.querySelector('#item_table2 tbody').addEventListener('click', function(e) {
-const target = e.target;
-if (target.classList.contains('delete-row')) {
-const row = target.closest('tr');
-row.remove();
-rowNum2--; // Update the row number
-}
-});
+    document.querySelector('#item_table2 tbody').addEventListener('click', function(e) {
+        const target = e.target;
+        if (target.classList.contains('delete-row')) {
+            const row = target.closest('tr');
+            row.remove();
+            // Update row numbers after deleting a row
+            document.querySelectorAll('.rownum2').forEach(function(rownumElement, index) {
+                rownumElement.textContent = index + 1;
+            });
+            rowNum2--; // Update the row number
+        }
+    });
 });
 
 </script>
@@ -857,6 +876,92 @@ document.addEventListener("DOMContentLoaded", function() {
           <!--.................................................... ADD REASON MODAL ....................................................-->
 
 
+
+          
+          <!------------------------------------ REASON MODAL ---------------------------------------------->
+
+                      
+<div class="modal fade" id="newreason">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
+      <div class="modal-header " style="background: rgb(32, 35, 37);">
+          <h3 class="m-3 text-uppercase">New Adjustment</h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+      <div class="modal-body" style="background: rgb(32, 35, 37);">
+        <div class="card p-3 m-3">
+          
+            <div class="row mt-2">
+                <!-- <label for="unit" style="color: rgb(190, 88, 88);">Unit</label> -->
+                <div id="Reasonshow" class="p-1 border-1 border-white" style="margin-left: 10%;"></div>
+                <a class=" btn p-2 border-0 mt-3" style="background-color: rgb(210, 132, 30); border-radius: 5px; color: white; width: 15%; margin-left: 30px; " id="addNewReasonBtn"><b>+</b> Add new reason</a>
+                
+                <div class="border-1 mb-2 p-2" style="border:1px solid white;display: none;width: 60%;margin-left: 50px;" id="reasonDiv">
+                  <div class="text-left" style="margin-left: 50px;margin-bottom: 30px;margin-top: 30px;">
+                  <h4 class="text-danger">Reason *</h4>
+
+                  <form  method="post" class="needs-validation" novalidate autocomplete="off" id="modalReason">
+                    {% csrf_token %}
+                    
+
+                  <input type="text" name="" id="reasoninp" required style="width: 90%;border-radius: 5px;"><br>
+                  <button class="btn mt-4" style="background-color: rgb(210, 132, 30);" id="reasaveButton" type="submit"> Save </button>
+                
+                  <span class="p-2"></span>
+                  <button class="btn mt-4" style="background-color: rgb(210, 132, 30);" id="cancelBtn"> Cancel </button>
+
+                </form>
+              </div>
+                
+                </div>
+              <div class="col-md-4 mt-4 "> </div>
+              <span class="p-4"></span>
+              <hr>
+              <h3 style="margin-left: 40px;">REASON</h3>
+              <hr>
+              <ul class="list-unstyled" id="reasonList" style="margin-left: 40px;">
+                {% for i in reason %}
+                <li class="mt-1" style="padding: 5px;">{{ i.reason }}</li>
+                {% endfor %}
+                <li id="rsn2"></li>
+              </ul>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>  
+</div>
+
+
+<script>
+  const addNewReasonBtn = document.getElementById('addNewReasonBtn');
+  const reasonDiv = document.getElementById('reasonDiv');
+  const cancelBtn = document.getElementById('cancelBtn');
+  
+
+  addNewReasonBtn.addEventListener('click', () => { 
+    reasonDiv.style.display = 'block';
+    addNewReasonBtn.style.display='none'
+  });
+  
+  cancelBtn.addEventListener('click', (e) => {
+    e.preventDefault(); 
+    reasonDiv.style.display = 'none';
+    addNewReasonBtn.style.display = 'block';
+    reasonInput.value = ''; 
+  });
+  </script>
+
+        <!------------------------------------ END REASON MODAL ---------------------------------------------->
+
+
+
+    
+
+
+
           
       
           <!--END ADD REASON MODAL -->
@@ -1175,6 +1280,63 @@ function reloadUnit() {
           dropdown.append($('<option></option>').attr('value', key).text(value).val(value));
       });
     },
+    error: function(xhr, status, error) {
+    console.error(xhr.responseText);
+    }
+  });
+}
+
+
+
+          // reason modal
+          console.log('csrf_token')
+
+          $(document).on("click","#reasaveButton",function(){
+            $.ajax({
+              
+              type : 'POST',
+              url:"{% url 'newreasons' %}",
+              data:{
+
+                  reasonlist : $("#reasoninp").val(),      
+                  
+                  
+                  
+                },
+                headers: {
+                            "X-CSRFToken": "{{ csrf_token }}"
+                      },
+                
+              
+                success: function(response) {
+                  document.getElementById("modalReason").reset();
+                  reloadUnit();
+                },
+            });        
+          });
+          
+         
+          
+function reloadItem() {
+  $.ajax({
+    url: "{% url 'newreasonslist' %}",
+    type: "GET",
+    dataType: "json",
+    data: $(this).serialize(),
+    csrfmiddlewaretoken: '{{ csrf_token }}',
+
+    success: function(data) {
+                var dropdown = $('.rsn');
+                var list = $('#rsn2');
+                dropdown.empty();
+                list.empty();
+
+                $.each(data, function(key, value) {
+                  dropdown.append($('<option></option>').attr('value', key).text(value).val(value));
+                  list.append($('<li></li>').attr('value', key).text(value).val(value));
+                });
+                
+              },
     error: function(xhr, status, error) {
     console.error(xhr.responseText);
     }
