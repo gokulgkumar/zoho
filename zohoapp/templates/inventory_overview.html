@@ -141,11 +141,12 @@
             //more custom settings
             var opt =
             {
-                margin: 1,
+                
                 filename: 'Inventoryadjustment_' + '.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { scale: 2 },
-                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
+                margin: 0.5
             };
 
             // New Promise-based usage:
@@ -212,14 +213,11 @@
                                 <div class="col-md-6 text-right" style="color: rgb(218, 143, 5);"></div>
                             </div>
                             <div class="row">
-                                <div class="col-md-6">
-                                    <p>{{ a.reason }} </p>
+                                <div class="col-md-6 ">
                                     <span>{{ a.date }}</span>
                                 </div>
-                                <div class="col-md-6 text-left" >
-                                    {{ a.status }}
-                                </div>
-                                <div class="col-md-12 text-right" >
+                                <div class="col-md-6 "style="text-align: right;">
+                                    {{ a.status }} &nbsp;&nbsp;&nbsp;&nbsp;
                                 </div>
                             </div>
                             
@@ -282,7 +280,7 @@
                             </button>
                             <div class="dropdown-menu" aria-labelledby="convertDropdown">
                                 
-                                <a class="dropdown-item text-center" data-toggle="tooltip" data-placement="top" title="Change Status" href="{% url 'change_inventory_status' adj.id %}">
+                                <a class="dropdown-item text-center" data-toggle="tooltip" data-placement="top" title="Change Status" href="{% url 'change_inventory_status' adj.id %}" style="color: white!important;">
                                  Adjusted
                                 </a>
                                
@@ -308,10 +306,13 @@
                 </div>
             </div>
 
-            <div id="div_inventory" class="mx-2 my-4 p-4 "
-                style="background-color: rgba(124, 124, 123, 0.507); height:690px; ">
+
+
+
+            <div id="div_inventory" class="mx-2 my-1 p-4 "
+                >
                 <div class="slip p-5 convert_to_pdf bg-light" id="whatToPrint"
-                    style="box-shadow: 5px 5px 10px rgb(45, 45, 45);">
+                    style="box-shadow: 5px 5px 10px rgb(45, 45, 45); background-color: burlywood!important;">
                     <div class="row py-2">
                         <div class="col-md-6">
                             <h4 class="text-black">Date</h4>
@@ -395,19 +396,34 @@
                         <h3 class="text-black">Adjusted Items</h3> 
                     </div>
                     
-                    <table class="table mt-2 " style="border-color: black;">
+                    <table class="table mt-2 text-white" style="border-color: black; background-color: rgb(110, 61, 46);border-radius:5px;" >
                         <thead >
                            
                             <tr>
-                                <th style="color: black;">#</th>
-                                <th style="width: 30rem;color: black;">Item Details</th>
-                                <th class="text-right;" style="color: black;">
+                                <th class="text-white">#</th>
+                                <th style="width: 30rem;" class="text-white">Item Details</th>
+                                <th class="text-white">
+                                    {% if adjItems.0.adjustment.type == "Value" %}
+                                        Changed Value
+                                    {% else %}
+                                        New Quantity on Hand
+                                    {% endif %}
+                                </th>
+                                <th class="text-white">
+                                    {% if adjItems.0.adjustment.type == "Value" %}
+                                        Current Value
+                                    {% else %}
+                                        Quantity Available
+                                    {% endif %}
+                                </th>
+                                <th class="text-right text-white" >
                                     {% if adjItems.0.adjustment.type == "Value" %}
                                         Value Adjusted
                                     {% else %}
                                         Quantity Adjusted
                                     {% endif %}
                                 </th>
+                                
                             </tr>
                            
                         </thead>
@@ -416,6 +432,20 @@
                             <tr>
                                 <td>{{ forloop.counter }}</td>
                                 <td>{{ item.item }}</td>
+
+                                {% if item.adjustment.adjustment_type == "Value" %}
+                                <td class="text-right">{{ item.changed_value }}</td>
+                                {% else %}
+                                <td class="text-right">{{ item.quantity_available }}</td>
+                                {% endif %}
+
+                                {% if item.adjustment.adjustment_type == "Value" %}
+                                <td class="text-right">{{ item.current_value }}</td>
+                                {% else %}
+                                <td class="text-right">{{ item.new_quantity_on_hand }}</td>
+                                {% endif %}
+
+
                                 {% if item.adjustment.adjustment_type == "Value" %}
                                 <td class="text-right">{{ item.adjusted_value }}</td>
                                 {% else %}
@@ -429,10 +459,7 @@
 
 
                 </div>
-                <!-- <button id="generate-pdf">Generate PDF</button> -->
-
-                <!-- <h4 class="text-light pt-5">More Information</h4>
-                <h6 class="text-light">Sales Person: Xyz</h6> -->
+               
             </div>
             
 

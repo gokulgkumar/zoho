@@ -218,8 +218,15 @@
                     </td>
                     <input type="hidden" id="forloopCounter" value="{{ forloop.counter }}">
                     
-                    <td class='text-right' ><input type='number' class='form-control bg-transparent border-1 border-light text-light text-right qty' value='{{ i.quantity_available }}' name="qtyav[]" >
-                    </td>
+                    <td class='text-right'>
+                      <input type='number' class='form-control bg-transparent border-1 border-light text-light text-right qty' 
+                             {% if value == i.current_value %}
+                                 value='{{ i.quantity_available }}'
+                             {% else %}
+                                 value='{{ i.quantity_available }}'
+                             {% endif %}
+                             name="qtyav[]">
+                  </td>
                     
                     <td class='text-right'><input type='number' id='rates' class='form-control bg-transparent border-1 border-light text-light text-right rate' name='newqty[]' value='{{ i.new_quantity_on_hand }}'>
                     </td>
@@ -473,6 +480,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- Adding row for table 1 -->
 
 document.addEventListener('DOMContentLoaded', function() {
+
     const addRowButton2 = document.getElementById('add-row2');
     let rowNum2 = document.querySelectorAll('.rownum2').length; // Initialize the row number
 

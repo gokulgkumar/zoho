@@ -11282,12 +11282,17 @@ def new_item(request):
         units=Unit.objects.get(id=ut)
         sel=Sales.objects.get(id=sell_acc)
         cost=Purchase.objects.get(id=cost_acc)
+        stock=request.POST.get('openstock')
+        rate=request.POST.get('inventoryaccntperunit')
+      
+        status_stock=request.POST.get('satus',0)
+        invacc=request.POST.get('invacc')
 
         history="Created by " + str(request.user)
         user = User.objects.get(id = request.user.id)
 
         item=AddItem(type=type,unit=units,sales=sel,purchase=cost,Name=name,p_desc=cost_desc,s_desc=sell_desc,s_price=sell_price,p_price=cost_price,
-                    user=user,creat=history,interstate=inter,intrastate=intra)
+                    user=user,creat=history,interstate=inter,intrastate=intra,stock=stock,rate=rate,status_stock=status_stock,invacc=invacc)
 
         item.save()
         return HttpResponse({"message": "success"})
@@ -11304,5 +11309,6 @@ def new_item_dropdown(request):
     option_objects = AddItem.objects.all()
     for option in option_objects:
         options[option.id] = option.Name
+        print(options,"options")
 
     return JsonResponse(options)
