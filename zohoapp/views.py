@@ -11304,11 +11304,20 @@ def new_item(request):
 def new_item_dropdown(request):
 
     user = User.objects.get(id=request.user.id)
-
+    
     options = {}
     option_objects = AddItem.objects.all()
     for option in option_objects:
-        options[option.id] = option.Name
-        print(options,"options")
 
-    return JsonResponse(options)
+         options[option.id] = {
+            'name': option.Name,
+            'stock': option.stock,  
+            'rate': option.rate,   
+        }
+    
+    return JsonResponse(options, safe=False)
+
+
+    #     options[option.id] = option.Name
+    #     print(options,"options")
+    # return JsonResponse(options, safe=False)
