@@ -11163,6 +11163,9 @@ def edit_inventory(request,id):
     accounts=Chart_of_Account.objects.all()
     adj_items=ItemAdjustment.objects.filter(adjustment=adj)
     reason=Reason.objects.all()
+    unit=Unit.objects.all()
+    sales=Sales.objects.all()
+    purchase=Purchase.objects.all()
 
     value =[]
     for adjustment in adj_items:
@@ -11173,7 +11176,7 @@ def edit_inventory(request,id):
         print(val,'val')
     print(value,'value is ')
     
-    return render(request,'edit_adjustment.html',{'company':company,'adj':adj,'accounts':accounts,'items':items,'adj_items':adj_items,'value':value,'reason':reason})
+    return render(request,'edit_adjustment.html',{'company':company,'adj':adj,'accounts':accounts,'items':items,'adj_items':adj_items,'value':value,'reason':reason,'units':unit,'sales':sales,'purchase':purchase})
 
   
 

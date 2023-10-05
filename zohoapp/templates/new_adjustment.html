@@ -61,6 +61,9 @@
 #item1 option:first-child {
   color: white !important;
 }
+.custom-color{
+  color: black;
+}
 
 </style>
 
@@ -239,11 +242,13 @@
                 <tr id='row1'>
                     <td class="bg-transparent text-white rownum" id="" value=""></td>
                     <td>
-                        <div class='form-group'><select class=' bg-transparent border-0 item_select itm text-white' name='item[]' id='item1' onchange="selectonchange()" >
+                        <div class='form-group'><select class=' bg-transparent border-0 item_select  text-white' name='item[]' id='item1' onchange="selectonchange()" >
+
                                 <option id="selectitem" hidden >Select Items </option>
                                 {% for i in items %}
                                 <option class="text-dark" value="{{i.Name}}" data-stock="{{i.stock}}" style="color: black !important;">{{i.Name}}</option>
                                 {% endfor %}
+
                             </select>
                         </div>
                     </td>
@@ -310,6 +315,8 @@ const rateInput = document.getElementById('rates');
 const discountInput = document.getElementById('diff');
     
     rateInput.addEventListener('input', function() {
+
+      console.log('hello')
         
         const qtyInput = document.querySelector('.qty'); 
         const rateValue = parseFloat(rateInput.value) || 0;
@@ -324,6 +331,12 @@ const discountInput = document.getElementById('diff');
 
 document.addEventListener('DOMContentLoaded', function() {
   
+  // const ratesInput = newRow.querySelector('#rates'); 
+  // ratesInput.addEventListener('input', function() {
+  //           const qtyValue = parseFloat(qtyInput.value) || 0; 
+  //           const ratesValue = parseFloat(ratesInput.value) || 0; 
+  //           const difference =ratesValue - qtyValue ;
+  // })
 
     const addRowButton = document.getElementById('add-row');
 
@@ -334,51 +347,57 @@ document.addEventListener('DOMContentLoaded', function() {
 
         rowNum++;
 
+        
         newRow.innerHTML = `
             <td class="bg-transparent text-light">${rowNum}</td>
             <td>
-                <div class='form-group'><select class='bg-transparent text-light border-0 item_select itm' name='item[]' id='item1'>
-                        <option class='text-white' hidden>Select Items</option>
+                <div class='form-group'><select class='bg-transparent text-light border-0 item_select${rowNum} inneritm' name='item[]' id='item1' onchange="selectonchange2(${rowNum})">
+                        <option class='text-white' selected>Select Items</option>
                         {% for i in items %}
-                        <option class="text-dark" value="{{i.Name}}" data-stock="{{i.stock}}">{{i.Name}}</option>
+                        <option class="text-dark" value="{{i.Name}}" data-stock="{{i.stock}}" >{{i.Name}}</option>
                         {% endfor %}
                     </select>
                 </div>
             </td>
 
-            <td class='text-right'><input type='number' class='form-control bg-transparent border-1 border-light text-light text-right qty' name="qtyav[]" value=''></td>
-            <td class='text-right'><input type='number' id='rates' class='form-control bg-transparent border-1 border-light text-light text-right rate' name="newqty[]" value=''></td>
-            <td class='text-right'><input type='text' id='diff' class='form-control bg-transparent border-1 border-light text-light text-right discount' name="qtyadj[]" value=''></td>
+            <td class='text-right'><input type='number' class='form-control bg-transparent border-1 border-light text-light text-right qty2${rowNum}'  name="qtyav[]"></td>
+            <td class='text-right'><input type='number' id='rates' class='form-control bg-transparent border-1 border-light text-light text-right rate${rowNum} ' onchange='quaninp(e,${rowNum})' name="newqty[]" value=''></td>
+            <td class='text-right'><input type='text' id='diff${rowNum}' class='form-control bg-transparent border-1 border-light text-light text-right discount' name="qtyadj[]" value=''></td>
             <td class='text-center'>
                 <button type='button' class='btn btn-transparent text-danger btn-sm btn-outline-danger rounded-circle delete-row' style='width:30px'><i class='fa fa-times'></i></button>
             </td>
         `;
 
+
+        
+
        
         const tableBody = document.querySelector('#item_table tbody');
         tableBody.appendChild(newRow);
 
+        // reloadItem();
+       
+
         const itemSelect = newRow.querySelector('.item_select');
-        const qtyInput = newRow.querySelector('.qty');
+        const qtyInput = newRow.querySelector('.qty2');
         const ratesInput = newRow.querySelector('#rates'); 
         const diffInput = newRow.querySelector('#diff'); 
 
-        itemSelect.addEventListener('change', function() {
-            const selectedOption = itemSelect.options[itemSelect.selectedIndex];
-            const stock = selectedOption.getAttribute('data-stock');
-            
-            qtyInput.value = stock;
-        });
+        // itemSelect.addEventListener('change', function() {
+        //     const selectedOption = itemSelect.options[itemSelect.selectedIndex];
+        //     const stock = selectedOption.getAttribute('data-stock');
+        //     qtyInput.value = stock;
+        // });
 
        
-        ratesInput.addEventListener('input', function() {
-            const qtyValue = parseFloat(qtyInput.value) || 0; 
-            const ratesValue = parseFloat(ratesInput.value) || 0; 
-            const difference =ratesValue - qtyValue ;
+        // ratesInput.addEventListener('input', function() {
+        //     const qtyValue = parseFloat(qtyInput.value) || 0; 
+        //     const ratesValue = parseFloat(ratesInput.value) || 0; 
+        //     const difference =ratesValue - qtyValue ;
 
            
-            diffInput.value = difference.toFixed(2); 
-        });
+        //     diffInput.value = difference.toFixed(2); 
+        // });
 
         const deleteButton = newRow.querySelector('.delete-row');
         deleteButton.addEventListener('click', function() {
@@ -389,6 +408,24 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+
+function quaninp(e,num){
+  console.log(e.target.value)
+  const discountInput = document.getElementById(`diff${num}`);
+  const ratesInput = document.querySelector(`#rates${num}`);
+  const qtyInput = document.querySelector(`.qty2${num}`); 
+        const rateValue = parseFloat(rateInput.value) ;
+        const qtyValue = parseFloat(qtyInput.value); 
+        const difference = rateValue&&rateValue - qtyValue&&qtyValue  ;
+
+        
+        discountInput.value = difference.toFixed(2);
+console.log('hi')
+
+}
+
+
 
 </script>
    
@@ -425,7 +462,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <tr id='row2'>
                                     <td class="bg-transparent text-light rownum2"  ></td>
                                     <td>
-                                        <div class='form-group'><select class=' bg-transparent text-light border-0 item_select2 itm' name='item2[]' id=''>
+                                        <div class='form-group'><select class=' bg-transparent text-light border-0 item_select2 itm2 text-light' name='item2[]' id='' onchange="valuechange()">
                                                 <option class='text-light'>Select Items</option>
                                                 {% for i in items %}
                                                 <!--  -->
@@ -485,13 +522,13 @@ document.addEventListener('DOMContentLoaded', function() {
         rowNum2++;
 
         newRow2.innerHTML = `
-            <td class="bg-transparent text-light">${rowNum2}</td>
+            <td class="bg-transparent text-white">${rowNum2}</td>
             <td>
-                <div class='form-group'><select class='bg-transparent border-0 item_select2 itm' name='item2[]'>
-                        <option class='text-white'>Select Items</option>
+                <div class='form-group'><select class='bg-transparent border-0 item_select2 inneritm2' name='item2[]' onchange="valuechange2()">
+                        <option class='text-light'>Select Items</option>
                         {% for i in items %}
                         <!-- data-rate="{{i.rate}}" -->
-                        <option class="text-dark" value="{{i.Name}}" data-stock="{{i.stock}}" data-rate="{{i.rate}}">{{i.Name}}</option>
+                        <option  value="{{i.Name}}" data-stock="{{i.stock}}" data-rate="{{i.rate}}" style="color:white!important;">{{i.Name}}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -506,6 +543,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const tableBody2 = document.querySelector('#item_table2 tbody');
         tableBody2.appendChild(newRow2);
+
+        reloadItem();
     });
 
     // set row number for the first row
@@ -513,7 +552,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Event delegation for dynamic rows
     document.querySelector('#item_table2 tbody').addEventListener('change', function(e) {
+      
         const target = e.target;
+        console.log(target)
         if (target.classList.contains('item_select2')) {
             const selectedOption = target.options[target.selectedIndex];
             const stock = selectedOption.getAttribute('data-stock');
@@ -1100,28 +1141,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-<script>
 
-
-
-
-
-
-
-
-
-
-$(document).ready(function() {
-    $("#cfname, #clname").change(function() {
-      $("#cdisplayname").text($("#ctitle").val() +" " + $("#cfname").val() + " " + $("#clname").val());
-    });
-  });
-
-
-
-  
-   
-</script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
@@ -1225,48 +1245,114 @@ function reloadItem() {
     csrfmiddlewaretoken: '{{ csrf_token }}',
 
     success: function(data) {
-      var dropdown = $('.itm');
       var quantity = $('#quant');
-      quantity.val('');
+
+      // quantity
+      var dropdown = $('.itm');
+      var row1drop = $('.inneritm');
       
+      // value
+      var dropdown2 = $('.itm2');
+      var row2drop=$('.inneritm2');
+
+      row1drop.empty();
+      row2drop.empty();
       dropdown.empty();
-      
+      dropdown2.empty();
+
+      row1drop.append($('<option class="custom-color" ></option>').attr('value', '').text('select a value'));
+      dropdown.append($('<option class="custom-color" ></option>').attr('value', '').text('select a value'));
+
       $.each(data, function(key, value) {
 
        var itemInfo = data[key];
 
       //  + " - Stock: " + itemInfo.stock + ", Value: " + (itemInfo.rate * itemInfo.stock)
         var optionText = value.name ;
-        dropdown.append($('<option></option>').attr('data-stock',value.stock).attr('value', optionText).text(optionText));
 
-        var stockinfo = itemInfo.stock
-        quantity.val(stockinfo);
-        console.log(stockinfo)
+
+//         <div class='form-group'><select class=' bg-transparent border-0 item_select itm text-white' name='item[]' id='item1' onchange="selectonchange()" >
+
+// <option id="selectitem" hidden >Select Items </option>
+// {% for i in items %}
+// <option class="text-dark" value="{{i.Name}}" data-stock="{{i.stock}}" style="color: black !important;">{{i.Name}}</option>
+// {% endfor %}
+
+// </select>
+// </div>
+
+        
+
+
+
+        // row1drop.append($('<option class="custom-color" selected></option>').attr('value', '').text('select a value'));
+        // dropdown.append($('<option class="custom-color" selected></option>').attr('value', '').text('select a value'));
+        dropdown.append($('<option class="custom-color"></option>').attr('data-stock',value.stock).attr('value', optionText).text(optionText));
+        row1drop.append($('<option class="custom-color"></option>').attr('data-stock',value.stock).attr('value', optionText).text(optionText));
+
+        // dropdown2.append($('<option class="custom-color" selected></option>').attr('value', '').text('select a value'));
+        dropdown2.append(($('<option class="custom-color"></option>').attr('data-rate',value.rate).attr('data-stock',value.stock).attr('value', optionText).text(optionText)));
+        row2drop.append(($('<option class="custom-color"></option>').attr('data-rate',value.rate).attr('data-stock',value.stock).attr('value', optionText).text(optionText)));
+
+        
 
         
       });
-          
+
+     
      
     },
     error: function(xhr, status, error) {
     console.error(xhr.responseText);
     }
   });
+
+
 }
 
+
+
+// quantity-innerhtml
+function selectonchange2(no){
+  const itemSelect = document.querySelector(`.item_select${no}`);
+    const qtyInput = document.querySelector(`.qty2${no}`); 
+    const selectedOption = itemSelect.options[itemSelect.selectedIndex];
+    const stock = selectedOption.getAttribute('data-stock');
+    qtyInput.value = stock;
+}
+
+
+// quantity
 function selectonchange(){
   const itemSelect = document.querySelector('.item_select');
-
   const qtyInput = document.querySelector('.qty');
-
-  const selectedOption = itemSelect.options[itemSelect.selectedIndex];
-       
-        
+  const selectedOption = itemSelect.options[itemSelect.selectedIndex];       
         const stock = selectedOption.getAttribute('data-stock');
-        
         qtyInput.value = stock;
  
 }
+
+// value-innerhtml
+function valuechange2(){
+const selectedOption = target.options[target.selectedIndex];
+const stock = selectedOption.getAttribute('data-stock');
+const stockrate = selectedOption.getAttribute('data-rate');
+const valuesInput = row.querySelector('.values');
+valuesInput.value = stock * stockrate;
+
+}
+
+// value
+function valuechange(){
+const selectedOption = target.options[target.selectedIndex];
+const stock = selectedOption.getAttribute('data-stock');
+const stockrate = selectedOption.getAttribute('data-rate');
+const valuesInput = row.querySelector('.values');
+valuesInput.value = stock * stockrate;
+
+}
+
+
 
 
 
@@ -1303,10 +1389,12 @@ $(document).on("click","#unitSave",function(){
           
               success: function(data) {
                 var dropdown = $('#item_units');
+                
                 dropdown.empty();
           
                 $.each(data, function(key, value) {
                     dropdown.append($('<option></option>').attr('value', key).text(value).val(value));
+                    
                 });
               },
               error: function(xhr, status, error) {

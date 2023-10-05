@@ -185,7 +185,7 @@
         <label for="" id="label_tab1" class="tab1"></label><br>
         <div style="width: 100%;">
             <table class="table  text-black table-bordered tab1" id="item_table" style="background-color: rgba(250, 227, 198, 0.8);width: 100%;background-color: #b6b3b36b;"
-            onchange="calc()">
+            >
             <thead>
                 <tr>
                     <th class="" style="font-weight: bold;color: rgb(245, 154, 36);" colspan="2">Item Details <a href="" data-toggle="modal" data-target="#newitem"><i class="fas fa-plus p-2 rounded"
@@ -207,7 +207,7 @@
                 <tr id='row1'>
                     <td class="bg-transparent text-light rownum" id="" value="">{{ forloop.counter }}</td>
                     <td>
-                        <div class='form-group'><select class=' bg-transparent text-light border-0 item_select itm' name='item[]' id='item1'>
+                        <div class='form-group'><select class=' bg-transparent text-light border-0 item_select itm' name='item[]' id='item1' onchange="selectonchange()">
                           
                                <option class='text-dark' value="{{i.item}}">{{i.item}}</option>
                                {% for i in items %}
@@ -218,15 +218,10 @@
                     </td>
                     <input type="hidden" id="forloopCounter" value="{{ forloop.counter }}">
                     
-                    <td class='text-right'>
-                      <input type='number' class='form-control bg-transparent border-1 border-light text-light text-right qty' 
-                             {% if value == i.current_value %}
-                                 value='{{ i.quantity_available }}'
-                             {% else %}
-                                 value='{{ i.quantity_available }}'
-                             {% endif %}
-                             name="qtyav[]">
-                  </td>
+                    <td class='text-right' >
+                      
+                      <input type='number' class='form-control bg-transparent border-1 border-light text-light text-right qty'  value='{{ i.quantity_available }}'   name="qtyav[]" >
+                    </td>
                     
                     <td class='text-right'><input type='number' id='rates' class='form-control bg-transparent border-1 border-light text-light text-right rate' name='newqty[]' value='{{ i.new_quantity_on_hand }}'>
                     </td>
@@ -333,7 +328,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <td class="bg-transparent text-light rownum">${rowNum}</td>
             <td>
                 <div class='form-group'>
-                    <select class='bg-transparent text-light border-0 item_select itm' name='item[]' id='item${rowNum}'>
+                    <select class='bg-transparent text-light border-0 item_select itm' name='item[]' id='item${rowNum}' onchange="selectonchange2()">
                       <option class='text-white' hidden>Select Items</option>
                         {% for i in items %}
                         <option class="text-dark" value="{{i.Name}}" data-stock="{{i.stock}}" data-rate="{{i.rate}}">{{i.Name}}</option>
@@ -411,7 +406,7 @@ document.addEventListener('DOMContentLoaded', function() {
       <label for="" id="label_tab2" class="tab2"></label><br>
       <div style="width: 100%;">
           <table class="table  text-black table-bordered tab2" id="item_table2" style="background-color: rgba(250, 227, 198, 0.8);width: 100%;background-color: #b6b3b36b;"
-          onchange="calc()">
+          >
           <thead>
               <tr>
                   <th class="" style="font-weight: bold;color: rgb(245, 154, 36);" colspan="2" >Item Details <a href="" data-toggle="modal" data-target="#newitem"><i class="fas fa-plus p-2 rounded"
@@ -426,7 +421,7 @@ document.addEventListener('DOMContentLoaded', function() {
               <tr id='row2'>
                   <td class="bg-transparent text-light rownum2"  >{{ forloop.counter }}</td>
                   <td>
-                      <div class='form-group'><select class=' bg-transparent text-light border-0 item_select2 itm' name='item2[]' id=''>
+                      <div class='form-group'><select class=' bg-transparent text-light border-0 item_select2 itm2' name='item2[]' id='' onchange="valuechange()">
                               <option class='text-dark' value="{{j.item}}"  selected hidden>{{j.item}}</option>
                               {% for i in items %}
                               <!--  -->
@@ -493,7 +488,7 @@ document.addEventListener('DOMContentLoaded', function() {
         newRow2.innerHTML = `
             <td class="bg-transparent text-light rownum2">${rowNum2}</td>
             <td>
-                <div class='form-group'><select class='bg-transparent text-light border-0 item_select2 itm' name='item2[]'>
+                <div class='form-group'><select class='bg-transparent text-light border-0 item_select2 inneritm2' name='item2[]' onchange="valuechange2()">
                         <option class='text-dark'>Select Items</option>
                         {% for i in items %}
                         <option class="text-dark" value="{{i.Name}}" data-stock="{{i.stock}}" data-rate="{{i.rate}}">{{i.Name}}</option>
@@ -651,7 +646,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             <!--..................................... item modal ..................................................-->
 
-            <div class="modal fade" id="newitem">
+            <div class="modal fade" style="font-size: 1rem" id="newitem">
               <div class="modal-dialog modal-xl">
                 <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
                   <div class="modal-header " style="background: rgb(32, 35, 37);">
@@ -842,8 +837,79 @@ document.addEventListener("DOMContentLoaded", function() {
                           <div class="col-md-4 ">
                             <input  type="text" name="cost_desc" class="form-control bg-light text-dark"  id="cost_desc">
                           </div>
-          
                         </div>
+
+                        <br>
+                    
+                        
+                        <div class="row" style="font-size: 1rem" >
+                          <div class="col-md-10 px-2">
+                            {% comment %} <label><input type="checkbox" value="trackstate" name="trackstate" onclick="toggleForm()" style="display: none;">
+                           Track Inventory for this item</label> {% endcomment %}
+                            {% comment %} <input type="hidden" name="trackState" id="trackState" value="" unchecked> {% endcomment %}
+                            <label>
+                              <input type="checkbox" name="trackstate" value="trackstate" class=" bg-dark"  onclick="toggleFormFields()">
+                              Track Inventory for this item
+                            </label>
+                            <div id="formFields" style="display: none;"> 
+                              <div class="form-group row mt-1" >
+                                <label class="col-sm-3 col-form-label px-1 mt-2" style="margin-left: 1%;">Inventory Account *</label>
+                                <div class="col-sm-9 col-md-7 col-9" style="margin-left: 16px;">
+                                  <select class="form-select form-select-sm mt-3" name="invacc" id="invacc" style="width: 400px;">
+                                    <option>Choose..</option>
+                                    <option value="inventory assets">Inventory Asset</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div class="form-group row mt-1">
+                                <label class="col-sm-3 col-form-label">Opening Stock</label>
+                                <div class=" col-sm-9 ">
+                                  <input  type="number" class="form-control  bg-white text-dark" style="margin-left: 24px; width: 400px;" id="openstock"  name="openstock" value="0">
+                                </div>
+                               
+                                  <div class="row align-items-center mt-3" >
+                                    <label class="col-sm-3 col-form-label" >Opening Stock Rate per Unit</label>
+                                    <div class="col-sm-9">
+                                      <input type="number" class="form-control bg-white text-dark" id="inventoryaccntperunit" name="inventoryaccntperunit" style="width: 400px;margin-left: 30px;"  value="0" >
+                                    </div>
+          
+                                  </div>
+                                
+                                <fieldset class="form-group mt-3" style="font-size: 1rem ">
+                                  <div class="row">
+                                    <label class="col-form-label col-sm-2 pt-2 mt-1">Activation tag<i class="fa fa-question-circle"></i></label>
+                                    <div class="col-sm-10 form-inline">
+                                      <div class="form-check ">
+                                        <input  class="form-check-input" type="radio" name="satus" id="gridRadio1" value="Active"  style="margin-left:250px;" >
+                                        <label class="form-check-label text-white" for="gridRadios1">Activate</label>
+                                      </div>
+                                      <div class="form-check ml-5">
+                                        <input  class="form-check-input" type="radio" name="satus" id="gridRadio2" value="Inactive"  style="margin-left:50px;">
+                                        <label class="form-check-label text-white" for="gridRadios2">Non-Activate</label>
+                                      </div>
+                                                  
+                                    </div>
+                                  </div>
+                                </fieldset>
+          
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <script>
+                          function toggleFormFields() {
+                            var formFields = document.getElementById("formFields");
+                            var checkbox = document.querySelector("input[name=trackstate]");
+                      
+                            if (checkbox.checked) {
+                              formFields.style.display = "block";
+                            } else {
+                              formFields.style.display = "none";
+                            }
+                          }
+                        </script>
+
+
           
                         <div class="row mt-3">
                             <div class="col-md-6">
@@ -852,6 +918,11 @@ document.addEventListener("DOMContentLoaded", function() {
                               <div class="invalid-feedback text-warning" >You must agree before submitting.</div>
                             </div>
                         </div>
+
+                    
+
+
+
                         <div class="row">
                           <div class="col-md-4"></div>
                           <div class="col-md-4">
@@ -878,7 +949,6 @@ document.addEventListener("DOMContentLoaded", function() {
           
           
           <!-- ....................................................  END ITEM MODAL................................. -->
-
 
 
           <!--.................................................... ADD REASON MODAL ....................................................-->
@@ -1063,80 +1133,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-<script>
-
-
-
-
-    // set todays date on estimate date field
-    var today = new Date().toISOString().substr(0, 10);
-    document.getElementById("estimate_date").value = today;
-    document.getElementById("expiry_date").value = today;
-
-// Event handler for clone button
-var rowCount = 1;
-$('#item_table').on('click', '.clone-row', function () {
-  var row = $(this).closest('tr');
-  var clonedRow = row.clone(); // Clone the current row
-  var newRowId = 'row' + rowCount; // Generate a new ID for the cloned row
-  clonedRow.attr('id', newRowId); // Set the new ID for the cloned row
-
-  // Clone the options for tax, account, and item
-  var currentItem = row.find('.item_select').val();
-  clonedRow.find('.item_select').val(currentItem);
-  
-  var currentTax = row.find('.tax').val();
-  clonedRow.find('.tax').val(currentTax);
-
-  rowCount++; // Increment row counter
-
-  $('#item_table tbody').append(clonedRow);
-  var row = $(this).closest('tr');
-  calc();
-  calc_total();
-     
-});
-
-//........................... Event handler for clone button  TABLE 2  ...................................
-var rowCountt = 1;
-$('#item_tablee').on('click', '.clone-roww', function () {
-  var roww = $(this).closest('tr');
-  var clonedRoww = roww.clone(); // Clone the current row
-  var newRowIdd = 'row' + rowCountt; // Generate a new ID for the cloned row
-  clonedRoww.attr('id', newRowIdd); // Set the new ID for the cloned row
-
-  // Clone the options for tax, account, and item
-  var currentItemm = roww.find('.item_selectt').val();
-  clonedRoww.find('.item_selectt').val(currentItemm);
-  
-  var currentTaxx = roww.find('.taxx').val();
-  clonedRoww.find('.taxx').val(currentTaxx);
-
-  rowCountt++; // Increment row counter
-
-  $('#item_tablee tbody').append(clonedRoww);
-  var roww = $(this).closest('tr');
-  calc();
-  calc_total();
-     
-});
 
 
 
 
 
 
-$(document).ready(function() {
-    $("#cfname, #clname").change(function() {
-      $("#cdisplayname").text($("#ctitle").val() +" " + $("#cfname").val() + " " + $("#clname").val());
-    });
-  });
 
 
-
-  
-   
-</script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
@@ -1175,6 +1179,9 @@ $(document).ready(function() {
 
 $(document).on("click","#itemSave",function(){
 
+  var activationStatus = $("input[name='satus']:checked").val();
+  
+
   if ($('input[name="radioOption"]:checked').val() == 'Goods'){
 
       itemtype = $('#item_type1').val();
@@ -1196,7 +1203,7 @@ $(document).on("click","#itemSave",function(){
   $.ajax({
     
     type : 'POST',
-    url:"{% url 'purchase_item' %}",
+    url:"{% url 'new_item' %}",
     
     data:{
         type : itemtype,
@@ -1210,11 +1217,16 @@ $(document).on("click","#itemSave",function(){
         cost_acc : $("#cost_acc").val(),
         sell_desc : $("#sell_desc").val(),
         cost_desc : $("#cost_desc").val(),
+        openstock : $("#openstock").val(),
+        inventoryaccntperunit: $("input[name='inventoryaccntperunit']").val(),
+        invacc: $("invacc").val(),
+        satus: activationStatus,
+      
         
         csrfmiddlewaretoken: '{{ csrf_token }}'
         
       },
-    
+      
       success: function(response) {
         document.getElementById("modalItem").reset();
         reloadItem();
@@ -1225,27 +1237,109 @@ $(document).on("click","#itemSave",function(){
 
 function reloadItem() {
   $.ajax({
-    url: "{% url 'purchase_item_dropdown' %}",
+    url: "{% url 'new_item_dropdown' %}",
     type: "GET",
     dataType: "json",
     data: $(this).serialize(),
     csrfmiddlewaretoken: '{{ csrf_token }}',
 
     success: function(data) {
+      var quantity = $('#quant');
+
+      // quantity
       var dropdown = $('.itm');
-      var dropdown1 = $('.itmm');
+      var row1drop = $('.inneritm');
+      
+      // value
+      var dropdown2 = $('.itm2');
+      var row2drop=$('.inneritm2');
+
+      row1drop.empty();
+      row2drop.empty();
       dropdown.empty();
-      dropdown1.empty();
+      dropdown2.empty();
+
       $.each(data, function(key, value) {
-          dropdown.append($('<option></option>').attr('value', key).text(value).val(value));
-          dropdown1.append($('<option></option>').attr('value', key).text(value).val(value));
+
+       var itemInfo = data[key];
+
+      //  + " - Stock: " + itemInfo.stock + ", Value: " + (itemInfo.rate * itemInfo.stock)
+        var optionText = value.name ;
+        dropdown.append($('<option></option>').attr('data-stock',value.stock).attr('value', optionText).text(optionText));
+        row1drop.append($('<option></option>').attr('data-stock',value.stock).attr('value', optionText).text(optionText));
+
+        dropdown2.append(($('<option></option>').attr('data-rate',value.rate).attr('data-stock',value.stock).attr('value', optionText).text(optionText)));
+        row2drop.append(($('<option></option>').attr('data-rate',value.rate).attr('data-stock',value.stock).attr('value', optionText).text(optionText)));
+
+        var stockinfo = itemInfo.stock
+        quantity.val(stockinfo);
+        console.log(stockinfo)
+
+        
       });
+
+     
+     
     },
     error: function(xhr, status, error) {
     console.error(xhr.responseText);
     }
   });
+
+
 }
+
+
+
+
+function selectonchange2(){
+  const newRow = document.createElement('tr');
+  
+  const itemSelect = newRow.querySelector(`#item${rowNum}`);
+  const qtyInput = newRow.querySelector('.qty');
+  const selectedOption = itemSelect.options[itemSelect.selectedIndex];
+  const stock = selectedOption.getAttribute('data-stock');
+ qtyInput.value = stock;
+  
+        
+}
+
+
+
+function selectonchange(){
+  const itemSelect = document.querySelector('.item_select');
+  const selectedOption = itemSelect.options[itemSelect.selectedIndex];
+            const stock = selectedOption.getAttribute('data-stock');
+            const qtyInput = currentRow.querySelector('.qty');
+            qtyInput.value = stock;
+        
+    }
+ 
+
+function valuechange2(){
+
+const selectedOption = target.options[target.selectedIndex];
+const stock = selectedOption.getAttribute('data-stock');
+const stockrate = selectedOption.getAttribute('data-rate');
+const row = target.closest('tr');
+
+// Calculate and set the value
+const valuesInput = row.querySelector('.values');
+valuesInput.value = stock * stockrate;
+
+
+}
+
+function valuechange(){
+  const selectedOption = target.options[target.selectedIndex];
+            const stock = selectedOption.getAttribute('data-stock');
+            const stockrate = selectedOption.getAttribute('data-rate');
+            const row = target.closest('tr');
+            row.querySelector('.values').value = stock * stockrate;
+}
+
+
+
 
 
 // unit modal
