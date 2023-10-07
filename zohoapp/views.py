@@ -11004,12 +11004,16 @@ def save_adjustment(request):
          date=request.POST['date']
          account=request.POST['account']
          reason=request.POST['reason']
+
+         print(f"reason: {reason}")
          description = request.POST['description']
          user_id = request.user.id 
 
          account_instance = Chart_of_Account.objects.get(id=account)
          user_instance = User.objects.get(id=user_id)
+         
          reason_instance = Reason.objects.get(id=reason)
+         reason_id = reason_instance.id
          company = company_details.objects.get(user=request.user)
 
          adjustment = Adjustment.objects.create(

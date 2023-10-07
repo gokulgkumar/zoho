@@ -181,6 +181,7 @@
             <label class="col-sm-2 col-form-label">Account *</label>
             <div class="col-sm-6 col-md-5 col-6" style="margin-left: -2.2rem;">
                 <select required name="account" class="form-control bg-white text-dark" id="unit">
+                  <option selected hidden disabled>Select an account</option>
                     {% for a in accounts %}
                     <option required value="{{a.id}}">{{a.account_name}}</option>
                     
@@ -193,9 +194,9 @@
           <label class="col-sm-2 col-form-label">Reason *</label>
           <div class="col-sm-6 col-md-5 col-6" style="margin-left: -2.2rem;">
               <select name="reason" class="form-control bg-white text-dark rsn" id="rsns">
-                <option value="{{u.id}}" selected hidden disabled>Select a reason</option>
+                <option selected hidden disabled>Select a reason</option>
                  {% for i in reason %}
-                  <option value="{{i.id}}">{{ i.reason }}</option>
+                  <option value="{{ i.id }}">{{ i.reason }}</option>
                   {% endfor %}
 
 
@@ -242,7 +243,7 @@
                 <tr id='row1'>
                     <td class="bg-transparent text-white rownum" id="" value=""></td>
                     <td>
-                        <div class='form-group'><select class=' bg-transparent border-0 item_select  text-white' name='item[]' id='item1' onchange="selectonchange()" >
+                        <div class='form-group'><select class=' bg-transparent border-0 item_select  text-white itm' name='item[]' id='item1' onchange="selectonchange()" >
 
                                 <option id="selectitem" hidden >Select Items </option>
                                 {% for i in items %}
@@ -286,72 +287,49 @@
 <!-- adding row for table 2 -->
 
 <script>
-
-//#### FIRST ROW ####
+// FIRST ROW
 let rowNum = 1;
-const rownumber =document.querySelector('.rownum');
+const rownumber = document.querySelector('.rownum');
 rownumber.innerHTML = rowNum;
 
 document.addEventListener('DOMContentLoaded', function() {
     const itemSelect = document.querySelector('.item_select');
-
-   
-  
     const qtyInput = document.querySelector('.qty');
-    
+    const rateInput = document.getElementById('rates');
+    const discountInput = document.getElementById('diff');
+
     itemSelect.addEventListener('change', function() {
-        
         const selectedOption = itemSelect.options[itemSelect.selectedIndex];
-       
-        
         const stock = selectedOption.getAttribute('data-stock');
-        
         qtyInput.value = stock;
+        updateDiscount();
     });
+
+    rateInput.addEventListener('input', function() {
+        updateDiscount();
+    });
+
+    function updateDiscount() {
+        const rateValue = parseFloat(rateInput.value) || 0;
+        const qtyValue = parseFloat(qtyInput.value) || 0;
+        const difference = rateValue - qtyValue;
+        discountInput.value = difference.toFixed(2);
+    }
 });
 
-
-const rateInput = document.getElementById('rates');
-const discountInput = document.getElementById('diff');
-    
-    rateInput.addEventListener('input', function() {
-
-      console.log('hello')
-        
-        const qtyInput = document.querySelector('.qty'); 
-        const rateValue = parseFloat(rateInput.value) || 0;
-        const qtyValue = parseFloat(qtyInput.value) || 0; 
-        const difference = rateValue - qtyValue ;
-
-        
-        discountInput.value = difference.toFixed(2);
-    });
-
-//#### NEW ROW ####
-
+// NEW ROW
 document.addEventListener('DOMContentLoaded', function() {
-  
-  // const ratesInput = newRow.querySelector('#rates'); 
-  // ratesInput.addEventListener('input', function() {
-  //           const qtyValue = parseFloat(qtyInput.value) || 0; 
-  //           const ratesValue = parseFloat(ratesInput.value) || 0; 
-  //           const difference =ratesValue - qtyValue ;
-  // })
-
     const addRowButton = document.getElementById('add-row');
+    const tableBody = document.querySelector('#item_table tbody');
 
-    // event listener to the button
     addRowButton.addEventListener('click', function() {
-        // new row element
         const newRow = document.createElement('tr');
-
         rowNum++;
 
-        
         newRow.innerHTML = `
             <td class="bg-transparent text-light">${rowNum}</td>
             <td>
-                <div class='form-group'><select class='bg-transparent text-light border-0 item_select${rowNum} inneritm' name='item[]' id='item1' onchange="selectonchange2(${rowNum})">
+                <div class='form-group'><select class='bg-transparent text-light border-0 item_select${rowNum} inneritm' name='item[]' id='item${rowNum}' onchange='selectonchange2(${rowNum})'>
                         <option class='text-white' selected>Select Items</option>
                         {% for i in items %}
                         <option class="text-dark" value="{{i.Name}}" data-stock="{{i.stock}}" >{{i.Name}}</option>
@@ -359,73 +337,49 @@ document.addEventListener('DOMContentLoaded', function() {
                     </select>
                 </div>
             </td>
-
             <td class='text-right'><input type='number' class='form-control bg-transparent border-1 border-light text-light text-right qty2${rowNum}'  name="qtyav[]"></td>
-            <td class='text-right'><input type='number' id='rates' class='form-control bg-transparent border-1 border-light text-light text-right rate${rowNum} ' onchange='quaninp(e,${rowNum})' name="newqty[]" value=''></td>
+            <td class='text-right'><input type='number' id='rates${rowNum}' class='form-control bg-transparent border-1 border-light text-light text-right rate${rowNum}' onchange='quaninp(${rowNum})' name="newqty[]" value=''></td>
             <td class='text-right'><input type='text' id='diff${rowNum}' class='form-control bg-transparent border-1 border-light text-light text-right discount' name="qtyadj[]" value=''></td>
             <td class='text-center'>
                 <button type='button' class='btn btn-transparent text-danger btn-sm btn-outline-danger rounded-circle delete-row' style='width:30px'><i class='fa fa-times'></i></button>
             </td>
         `;
 
-
-        
-
-       
-        const tableBody = document.querySelector('#item_table tbody');
         tableBody.appendChild(newRow);
 
-        // reloadItem();
-       
+        reloadItem();
 
-        const itemSelect = newRow.querySelector('.item_select');
-        const qtyInput = newRow.querySelector('.qty2');
-        const ratesInput = newRow.querySelector('#rates'); 
-        const diffInput = newRow.querySelector('#diff'); 
+        
+        const itemSelectNewRow = document.querySelector(`#item${rowNum}`);
+        const qtyInputNewRow = document.querySelector(`.qty2${rowNum}`);
+        const rateInputNewRow = document.querySelector(`#rates${rowNum}`);
+        const diffInputNewRow = document.querySelector(`#diff${rowNum}`);
 
-        // itemSelect.addEventListener('change', function() {
-        //     const selectedOption = itemSelect.options[itemSelect.selectedIndex];
-        //     const stock = selectedOption.getAttribute('data-stock');
-        //     qtyInput.value = stock;
-        // });
+        itemSelectNewRow.addEventListener('change', function() {
+            const selectedOption = itemSelectNewRow.options[itemSelectNewRow.selectedIndex];
+            const stock = selectedOption.getAttribute('data-stock');
+            qtyInputNewRow.value = stock;
+            updateDiscount(diffInputNewRow, rateInputNewRow, qtyInputNewRow);
+        });
 
-       
-        // ratesInput.addEventListener('input', function() {
-        //     const qtyValue = parseFloat(qtyInput.value) || 0; 
-        //     const ratesValue = parseFloat(ratesInput.value) || 0; 
-        //     const difference =ratesValue - qtyValue ;
-
-           
-        //     diffInput.value = difference.toFixed(2); 
-        // });
+        rateInputNewRow.addEventListener('input', function() {
+            updateDiscount(diffInputNewRow, rateInputNewRow, qtyInputNewRow);
+        });
 
         const deleteButton = newRow.querySelector('.delete-row');
         deleteButton.addEventListener('click', function() {
-            const parentRow = deleteButton.closest('tr');
-            parentRow.remove();
-
+            newRow.remove();
             rowNum--;
         });
     });
 });
 
-
-function quaninp(e,num){
-  console.log(e.target.value)
-  const discountInput = document.getElementById(`diff${num}`);
-  const ratesInput = document.querySelector(`#rates${num}`);
-  const qtyInput = document.querySelector(`.qty2${num}`); 
-        const rateValue = parseFloat(rateInput.value) ;
-        const qtyValue = parseFloat(qtyInput.value); 
-        const difference = rateValue&&rateValue - qtyValue&&qtyValue  ;
-
-        
-        discountInput.value = difference.toFixed(2);
-console.log('hi')
-
+function updateDiscount(diffInput, rateInput, qtyInput) {
+    const rateValue = parseFloat(rateInput.value) || 0;
+    const qtyValue = parseFloat(qtyInput.value) || 0;
+    const difference = rateValue - qtyValue;
+    diffInput.value = difference.toFixed(2);
 }
-
-
 
 </script>
    
@@ -516,7 +470,7 @@ console.log('hi')
     let rowNum2 = 1; 
 
     addRowButton2.addEventListener('click', function() {
-        // new row element
+       
         const newRow2 = document.createElement('tr');
 
         rowNum2++;
@@ -524,11 +478,11 @@ console.log('hi')
         newRow2.innerHTML = `
             <td class="bg-transparent text-white">${rowNum2}</td>
             <td>
-                <div class='form-group'><select class='bg-transparent border-0 item_select2 inneritm2' name='item2[]' onchange="valuechange2()">
+                <div class='form-group'><select class='bg-transparent border-0 item_select2 inneritm2 text-light' name='item2[]' onchange="valuechange2()">
                         <option class='text-light'>Select Items</option>
                         {% for i in items %}
                         <!-- data-rate="{{i.rate}}" -->
-                        <option  value="{{i.Name}}" data-stock="{{i.stock}}" data-rate="{{i.rate}}" style="color:white!important;">{{i.Name}}</option>
+                        <option  value="{{i.Name}}" data-stock="{{i.stock}}" data-rate="{{i.rate}}" style="color:black!important;">{{i.Name}}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -1016,7 +970,7 @@ console.log('hi')
               <hr>
               <ul class="list-unstyled"  style="margin-left: 40px;">
                 {% for i in reason %}
-                <li class="mt-1" style="padding: 5px;">{{ i.reason }}</li>
+                <li class="mt-1" style="padding: 5px;" value="{{ i.id }}">{{ i.reason }}</li>
                 {% endfor %}
                 <li id="rsn2"></li>
               </ul>
@@ -1255,10 +1209,10 @@ function reloadItem() {
       var dropdown2 = $('.itm2');
       var row2drop=$('.inneritm2');
 
-      row1drop.empty();
-      row2drop.empty();
-      dropdown.empty();
-      dropdown2.empty();
+      // row1drop.empty();
+      // row2drop.empty();
+      // dropdown.empty();
+      // dropdown2.empty();
 
       row1drop.append($('<option class="custom-color" ></option>').attr('value', '').text('select a value'));
       dropdown.append($('<option class="custom-color" ></option>').attr('value', '').text('select a value'));
