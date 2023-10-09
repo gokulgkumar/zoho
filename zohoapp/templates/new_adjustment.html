@@ -196,7 +196,7 @@
               <select name="reason" class="form-control bg-white text-dark rsn" id="rsns">
                 <option selected hidden disabled>Select a reason</option>
                  {% for i in reason %}
-                  <option value="{{ i.id }}">{{ i.reason }}</option>
+                  <option value="{{ i.reason }}">{{ i.reason }}</option>
                   {% endfor %}
 
 
@@ -247,7 +247,7 @@
 
                                 <option id="selectitem" hidden >Select Items </option>
                                 {% for i in items %}
-                                <option class="text-dark" value="{{i.Name}}" data-stock="{{i.stock}}" style="color: black !important;">{{i.Name}}</option>
+                                <option class="text-dark" value="{{i.Name}}" data-stock="{{i.stock}}" >{{i.Name}}</option>
                                 {% endfor %}
 
                             </select>
@@ -338,7 +338,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             </td>
             <td class='text-right'><input type='number' class='form-control bg-transparent border-1 border-light text-light text-right qty2${rowNum}'  name="qtyav[]"></td>
-            <td class='text-right'><input type='number' id='rates${rowNum}' class='form-control bg-transparent border-1 border-light text-light text-right rate${rowNum}' onchange='quaninp(${rowNum})' name="newqty[]" value=''></td>
+            <td class='text-right'><input type='number' id='rates${rowNum}' class='form-control bg-transparent border-1 border-light text-light text-right rate' onchange='quaninp(${rowNum})' name="newqty[]" value=''></td>
             <td class='text-right'><input type='text' id='diff${rowNum}' class='form-control bg-transparent border-1 border-light text-light text-right discount' name="qtyadj[]" value=''></td>
             <td class='text-center'>
                 <button type='button' class='btn btn-transparent text-danger btn-sm btn-outline-danger rounded-circle delete-row' style='width:30px'><i class='fa fa-times'></i></button>
@@ -662,7 +662,7 @@ function updateDiscount(diffInput, rateInput, qtyInput) {
                               <select class="form-control bg-light text-dark" id="item_units" name="item_units" required>
                                 <option value="" hidden>Select Unit</option>
                                 {% for u in units %}
-                                <option value="{{u.id}}">{{u.unit}}</option>
+                                <option value="{{u.unit}}">{{u.unit}}</option>
                                 {% endfor %}
                               </select>                
                               <a href="#" class="btn btn-outline-secondary py-2 mb-1 mx-1" style="padding-bottom: 3px!important;" data-target="#newunit" data-toggle="modal">+</a>  

@@ -11012,7 +11012,7 @@ def save_adjustment(request):
          account_instance = Chart_of_Account.objects.get(id=account)
          user_instance = User.objects.get(id=user_id)
          
-         reason_instance = Reason.objects.get(id=reason)
+         reason_instance = Reason.objects.get(reason=reason)
          reason_id = reason_instance.id
          company = company_details.objects.get(user=request.user)
 
@@ -11201,7 +11201,7 @@ def update_adjustment(request,id):
         account_instance = Chart_of_Account.objects.get(id=account)
         adjustment.account=account_instance
         reason=request.POST['reason']
-        reason_instance=Reason.objects.get(id=reason)
+        reason_instance=Reason.objects.get(reason=reason)
         adjustment.reason=reason_instance
         adjustment.description=request.POST['description']
         company = company_details.objects.get(user=user)
@@ -11278,6 +11278,8 @@ def new_item(request):
         type=request.POST.get('type')
         name=request.POST['name']
         ut=request.POST['unit']
+
+        print('ut',ut)
         inter=request.POST['inter']
         intra=request.POST['intra']
         sell_price=request.POST.get('sell_price')
@@ -11286,7 +11288,11 @@ def new_item(request):
         cost_price=request.POST.get('cost_price')
         cost_acc=request.POST.get('cost_acc')      
         cost_desc=request.POST.get('cost_desc')
-        units=Unit.objects.get(id=ut)
+
+        
+
+
+        units=Unit.objects.get(unit=ut)
         sel=Sales.objects.get(id=sell_acc)
         cost=Purchase.objects.get(id=cost_acc)
         stock=request.POST.get('openstock')

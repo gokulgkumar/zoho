@@ -53,7 +53,9 @@
       z-index: 9999;
       overflow: scroll;
     }
-
+    .custom-color{
+    color: black;
+    }
 
 
 </style>
@@ -149,11 +151,11 @@
         <div class="form-group row">
           <label class="col-sm-2 col-form-label">Reason *</label>
           <div class="col-sm-6 col-md-5 col-6" style="margin-left: -2.2rem;">
-              <select name="reason" class="form-control bg-white text-dark" id="unit">
+              <select name="reason" class="form-control bg-white text-dark rsn" id="rsns">
                 
-                <option value="{{adj.reason.id}}" selected hidden >{{ adj.reason }}</option>
+                <option value="{{adj.reason}}" selected hidden >{{ adj.reason }}</option>
                  {% for i in reason %}
-                  <option value="{{i.id}}">{{ i.reason }}</option>
+                  <option value="{{i.reason}}">{{ i.reason }}</option>
                   {% endfor %}
 
 
@@ -220,7 +222,7 @@
                     
                     <td class='text-right' >
                       
-                      <input type='number' class='form-control bg-transparent border-1 border-light text-light text-right qty'  value='{{ i.quantity_available }}'   name="qtyav[]" >
+                      <input type='number' class='form-control bg-transparent border-1 border-light text-light text-right qty'  value='{{ i.quantity_available }}'   name="qtyav[]" id="quant">
                     </td>
                     
                     <td class='text-right'><input type='number' id='rates' class='form-control bg-transparent border-1 border-light text-light text-right rate' name='newqty[]' value='{{ i.new_quantity_on_hand }}'>
@@ -328,7 +330,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <td class="bg-transparent text-light rownum">${rowNum}</td>
             <td>
                 <div class='form-group'>
-                    <select class='bg-transparent text-light border-0 item_select itm' name='item[]' id='item${rowNum}' onchange="selectonchange2()">
+                    <select class='bg-transparent text-light border-0 item_select itm' name='item[]' id='item${rowNum}' onchange="selectonchange2(${rowNum})">
                       <option class='text-white' hidden>Select Items</option>
                         {% for i in items %}
                         <option class="text-dark" value="{{i.Name}}" data-stock="{{i.stock}}" data-rate="{{i.rate}}">{{i.Name}}</option>
@@ -336,9 +338,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     </select>
                 </div>
             </td>
-            <td class='text-right'><input type='number' class='form-control bg-transparent border-1 border-light text-light text-right qty' name="qtyav[]"></td>
-            <td class='text-right'><input type='number' class='form-control bg-transparent border-1 border-light text-light text-right rate' name="newqty[]"></td>
-            <td class='text-right'><input type='text' class='form-control bg-transparent border-1 border-light text-light text-right discount' name="qtyadj[]"></td>
+            <td class='text-right'><input type='number' class='form-control bg-transparent border-1 border-light text-light text-right qty2${rowNum}' name="qtyav[]"></td>
+            <td class='text-right'><input type='number' id='rates${rowNum}' class='form-control bg-transparent border-1 border-light text-light text-right rate' name="newqty[]"></td>
+            <td class='text-right'><input type='text' id='diff${rowNum}' class='form-control bg-transparent border-1 border-light text-light text-right discount${rowNum}' name="qtyadj[]"></td>
             <td class='text-center'>
                 <button type='button' class='btn btn-transparent text-danger btn-sm btn-outline-danger rounded-circle delete-row' style='width:30px'><i class='fa fa-times'></i></button>
             </td>
@@ -346,11 +348,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         tableBody.appendChild(newRow);
 
+        reloadItem();
+
         // Add event listeners for the new row
-        const itemSelect = newRow.querySelector(`#item${rowNum}`);
-        const qtyInput = newRow.querySelector('.qty');
-        const rateInput = newRow.querySelector('.rate');
-        const diffInput = newRow.querySelector('.discount');
+        const itemSelect = document.querySelector(`#item${rowNum}`);
+        const qtyInput = document.querySelector(`.qty2${rowNum}`);
+        const rateInput = document.querySelector(`#rates${rowNum}`);
+        const diffInput = document.querySelector(`#diff${rowNum}`);
         const deleteButton = newRow.querySelector('.delete-row');
 
         itemSelect.addEventListener('change', function() {
@@ -489,7 +493,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <td class="bg-transparent text-light rownum2">${rowNum2}</td>
             <td>
                 <div class='form-group'><select class='bg-transparent text-light border-0 item_select2 inneritm2' name='item2[]' onchange="valuechange2()">
-                        <option class='text-dark'>Select Items</option>
+                        <option class='text-light'>Select Items</option>
                         {% for i in items %}
                         <option class="text-dark" value="{{i.Name}}" data-stock="{{i.stock}}" data-rate="{{i.rate}}">{{i.Name}}</option>
                         {% endfor %}
@@ -506,7 +510,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const tableBody2 = document.querySelector('#item_table2 tbody');
         tableBody2.appendChild(newRow2);
+
+
+        reloadItem();
     });
+
+   
 
     // Set row numbers for existing rows
     document.querySelectorAll('.rownum2').forEach(function(rownumElement, index) {
@@ -691,7 +700,7 @@ document.addEventListener("DOMContentLoaded", function() {
                               <select class="form-control bg-light text-dark" id="item_units" name="item_units" required>
                                 <option value="" hidden>Select Unit</option>
                                 {% for u in units %}
-                                <option value="{{u.id}}">{{u.unit}}</option>
+                                <option value="{{u.unit}}">{{u.unit}}</option>
                                 {% endfor %}
                               </select>                
                               <a href="#" class="btn btn-outline-secondary py-2 mb-1 mx-1" style="padding-bottom: 3px!important;" data-target="#newunit" data-toggle="modal">+</a>  
@@ -950,12 +959,15 @@ document.addEventListener("DOMContentLoaded", function() {
           
           <!-- ....................................................  END ITEM MODAL................................. -->
 
-
-          <!--.................................................... ADD REASON MODAL ....................................................-->
+         
 
 
 
           
+          <!------------------------------------ REASON MODAL ---------------------------------------------->
+            
+
+
           <!------------------------------------ REASON MODAL ---------------------------------------------->
 
                       
@@ -985,7 +997,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     
 
                   <input type="text" name="" id="reasoninp" required style="width: 90%;border-radius: 5px;"><br>
-                  <button class="btn mt-4" style="background-color: rgb(210, 132, 30);" id="reasaveButton" type="submit"> Save </button>
+                  <button class="btn mt-4" style="background-color: rgb(210, 132, 30);" id="reasaveButton" type="button"> Save </button>
                 
                   <span class="p-2"></span>
                   <button class="btn mt-4" style="background-color: rgb(210, 132, 30);" id="cancelBtn"> Cancel </button>
@@ -999,9 +1011,9 @@ document.addEventListener("DOMContentLoaded", function() {
               <hr>
               <h3 style="margin-left: 40px;">REASON</h3>
               <hr>
-              <ul class="list-unstyled" id="reasonList" style="margin-left: 40px;">
+              <ul class="list-unstyled"  style="margin-left: 40px;">
                 {% for i in reason %}
-                <li class="mt-1" style="padding: 5px;">{{ i.reason }}</li>
+                <li class="mt-1" style="padding: 5px;" value="{{ i.id }}">{{ i.reason }}</li>
                 {% endfor %}
                 <li id="rsn2"></li>
               </ul>
@@ -1033,6 +1045,13 @@ document.addEventListener("DOMContentLoaded", function() {
   </script>
 
         <!------------------------------------ END REASON MODAL ---------------------------------------------->
+                      
+
+
+
+
+
+        <!------------------------------------ END REASON MODAL ---------------------------------------------->
 
 
 
@@ -1046,58 +1065,59 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
     
-
-
 <!-- ............................................unit modal............................................ -->
 
+<!-- unit modal -->
+          
 <div class="modal fade" id="newunit">
-    <div class="modal-dialog modal-xl">
-      <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
-        <div class="modal-header " style="background: rgb(32, 35, 37);">
-            <h3 class="m-3 text-uppercase">Add Unit</h3>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="modal-body" style="background: rgb(32, 35, 37);">
-          <div class="card p-3 m-3">
-            <form action="" method="post" class="needs-validation" novalidate autocomplete="off" id="modalUnit">
-              <div class="row mt-2">
-                <div class="col-md-3 mt-2"></div>
-                <div class="col-md-1 mt-2">
-                  <label for="unit" style="color: rgb(190, 88, 88);">Unit</label>
-                </div>
-
-                <div class="col-md-4 mt-2">
-                  <input type="text" class="form-control bg-light text-dark" id="unit" name="unit" required>
-                </div>
-                <div class="col-md-4 mt-2"></div>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
+      <div class="modal-header " style="background: rgb(32, 35, 37);">
+          <h3 class="m-3 text-uppercase">Add Unit</h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+      <div class="modal-body" style="background: rgb(32, 35, 37);">
+        <div class="card p-3 m-3">
+          <form action="" method="post" class="needs-validation" novalidate autocomplete="off" id="modalUnit">
+            <div class="row mt-2">
+              <div class="col-md-3 mt-2"></div>
+              <div class="col-md-1 mt-2">
+                <label for="unit" style="color: rgb(190, 88, 88);">Unit</label>
               </div>
-              
-              <div class="row mt-5">
-                <div class="col-md-4"></div>
-                <div class="col-md-4">
-                  <div class="d-flex">
-                    <button class="btn save_btn rounded-pill text-grey w-50 my-4 mx-3"
-                    type="submit" data-dismiss="modal" id="unitSave">Save
-                    </button> 
-                    
 
-                    <button type="button" class="close btn save_btn rounded-pill text-grey w-50 my-4" 
-                      data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">Cancel</span>
-                    </button>
-                  </div>
-                </div>
-                <div class="col-md-4"></div>
+              <div class="col-md-4 mt-2">
+                <input type="text" class="form-control bg-light text-dark" id="unitval" name="unit" required>
               </div>
-            </form>
-          </div>
+              <div class="col-md-4 mt-2"></div>
+            </div>
+            
+            <div class="row mt-5">
+              <div class="col-md-4"></div>
+              <div class="col-md-4">
+                <div class="d-flex">
+                  <button class="btn save_btn rounded-pill text-grey w-50 my-4 mx-3"
+                  type="submit" data-dismiss="modal" id="unitSave">Save
+                  </button> 
+                  
+
+                  <button type="button" class="close btn save_btn rounded-pill text-grey w-50 my-4" 
+                    data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">Cancel</span>
+                  </button>
+                </div>
+              </div>
+              <div class="col-md-4"></div>
+            </div>
+          </form>
         </div>
       </div>
-    </div>  
+    </div>
   </div>  
+</div>
 <!-- ............................................  END UNIT MODAL..................................................... -->
+
 
 
 
@@ -1145,6 +1165,8 @@ document.addEventListener("DOMContentLoaded", function() {
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 <script>
+
+
 
 
   // item modal
@@ -1254,10 +1276,9 @@ function reloadItem() {
       var dropdown2 = $('.itm2');
       var row2drop=$('.inneritm2');
 
-      row1drop.empty();
-      row2drop.empty();
-      dropdown.empty();
-      dropdown2.empty();
+
+      row1drop.append($('<option class="custom-color" ></option>').attr('value', '').text('select a value'));
+      dropdown.append($('<option class="custom-color" ></option>').attr('value', '').text('select a value'));
 
       $.each(data, function(key, value) {
 
@@ -1265,15 +1286,23 @@ function reloadItem() {
 
       //  + " - Stock: " + itemInfo.stock + ", Value: " + (itemInfo.rate * itemInfo.stock)
         var optionText = value.name ;
-        dropdown.append($('<option></option>').attr('data-stock',value.stock).attr('value', optionText).text(optionText));
-        row1drop.append($('<option></option>').attr('data-stock',value.stock).attr('value', optionText).text(optionText));
 
-        dropdown2.append(($('<option></option>').attr('data-rate',value.rate).attr('data-stock',value.stock).attr('value', optionText).text(optionText)));
-        row2drop.append(($('<option></option>').attr('data-rate',value.rate).attr('data-stock',value.stock).attr('value', optionText).text(optionText)));
 
-        var stockinfo = itemInfo.stock
-        quantity.val(stockinfo);
-        console.log(stockinfo)
+
+        
+
+
+
+        // row1drop.append($('<option class="custom-color" selected></option>').attr('value', '').text('select a value'));
+        // dropdown.append($('<option class="custom-color" selected></option>').attr('value', '').text('select a value'));
+        dropdown.append($('<option class="custom-color"></option>').attr('data-stock',value.stock).attr('value', optionText).text(optionText));
+        row1drop.append($('<option class="custom-color"></option>').attr('data-stock',value.stock).attr('value', optionText).text(optionText));
+
+        // dropdown2.append($('<option class="custom-color" selected></option>').attr('value', '').text('select a value'));
+        dropdown2.append(($('<option class="custom-color"></option>').attr('data-rate',value.rate).attr('data-stock',value.stock).attr('value', optionText).text(optionText)));
+        row2drop.append(($('<option class="custom-color"></option>').attr('data-rate',value.rate).attr('data-stock',value.stock).attr('value', optionText).text(optionText)));
+
+        
 
         
       });
@@ -1291,144 +1320,123 @@ function reloadItem() {
 
 
 
-
-function selectonchange2(){
-  const newRow = document.createElement('tr');
-  
-  const itemSelect = newRow.querySelector(`#item${rowNum}`);
-  const qtyInput = newRow.querySelector('.qty');
-  const selectedOption = itemSelect.options[itemSelect.selectedIndex];
-  const stock = selectedOption.getAttribute('data-stock');
- qtyInput.value = stock;
-  
-        
+// quantity-innerhtml
+function selectonchange2(no){
+  const itemSelect = document.querySelector(`.item_select${no}`);
+    const qtyInput = document.querySelector(`.qty2${no}`); 
+    const selectedOption = itemSelect.options[itemSelect.selectedIndex];
+    const stock = selectedOption.getAttribute('data-stock');
+    qtyInput.value = stock;
 }
 
 
-
+// quantity
 function selectonchange(){
   const itemSelect = document.querySelector('.item_select');
-  const selectedOption = itemSelect.options[itemSelect.selectedIndex];
-            const stock = selectedOption.getAttribute('data-stock');
-            const qtyInput = currentRow.querySelector('.qty');
-            qtyInput.value = stock;
-        
-    }
+  const qtyInput = document.querySelector('.qty');
+  const selectedOption = itemSelect.options[itemSelect.selectedIndex];       
+        const stock = selectedOption.getAttribute('data-stock');
+        qtyInput.value = stock;
  
+}
 
+// value-innerhtml
 function valuechange2(){
-
 const selectedOption = target.options[target.selectedIndex];
 const stock = selectedOption.getAttribute('data-stock');
 const stockrate = selectedOption.getAttribute('data-rate');
-const row = target.closest('tr');
-
-// Calculate and set the value
 const valuesInput = row.querySelector('.values');
 valuesInput.value = stock * stockrate;
 
-
 }
 
+// value
 function valuechange(){
-  const selectedOption = target.options[target.selectedIndex];
-            const stock = selectedOption.getAttribute('data-stock');
-            const stockrate = selectedOption.getAttribute('data-rate');
-            const row = target.closest('tr');
-            row.querySelector('.values').value = stock * stockrate;
+const selectedOption = target.options[target.selectedIndex];
+const stock = selectedOption.getAttribute('data-stock');
+const stockrate = selectedOption.getAttribute('data-rate');
+const valuesInput = row.querySelector('.values');
+valuesInput.value = stock * stockrate;
+
 }
 
 
 
 
-
-// unit modal
-
-
+// unit modal      
 $(document).on("click","#unitSave",function(){
-  $.ajax({
-    
-    type : 'POST',
-    url:"{% url 'purchase_unit' %}",
-
-    data:{
-        unit : $("#unit").val(),      
-        csrfmiddlewaretoken: '{{ csrf_token }}'
-        
-      },
-    
-      success: function(response) {
-        document.getElementById("modalUnit").reset();
-        reloadUnit();
-      },
-  });        
-});
-
-
-function reloadUnit() {
-
-  $.ajax({
-    url: "{% url 'purchase_unit_dropdown' %}",
-    type: "GET",
-    dataType: "json",
-    data: $(this).serialize(),
-    csrfmiddlewaretoken: '{{ csrf_token }}',
-
-    success: function(data) {
-      var dropdown = $('#item_units');
-      dropdown.empty();
-
-      $.each(data, function(key, value) {
-          dropdown.append($('<option></option>').attr('value', key).text(value).val(value));
-      });
-    },
-    error: function(xhr, status, error) {
-    console.error(xhr.responseText);
-    }
-  });
-}
-
-
-
-          // reason modal
-          console.log('csrf_token')
-
-          $(document).on("click","#reasaveButton",function(){
             $.ajax({
               
               type : 'POST',
-              url:"{% url 'newreasons' %}",
+              url:"{% url 'purchase_unit_eway' %}",
+          
               data:{
-
-                  reasonlist : $("#reasoninp").val(),      
-                  
-                  
+                  unit : $("#unitval").val(),      
+                  csrfmiddlewaretoken: '{{ csrf_token }}'
                   
                 },
-                headers: {
-                            "X-CSRFToken": "{{ csrf_token }}"
-                      },
-                
               
                 success: function(response) {
-                  document.getElementById("modalReason").reset();
+                  document.getElementById("modalUnit").reset();
                   reloadUnit();
                 },
             });        
           });
           
-         
           
-function reloadItem() {
+          function reloadUnit() {
+          
+            $.ajax({
+              url: "{% url 'purchase_unit_dropdown_eway' %}",
+              type: "GET",
+              dataType: "json",
+              data: $(this).serialize(),
+              csrfmiddlewaretoken: '{{ csrf_token }}',
+          
+              success: function(data) {
+                var dropdown = $('#item_units');
+                
+                dropdown.empty();
+          
+                $.each(data, function(key, value) {
+                    dropdown.append($('<option></option>').attr('value', key).text(value).val(value));
+                    
+                });
+              },
+              error: function(xhr, status, error) {
+              console.error(xhr.responseText);
+              }
+            });
+          }
+
+
+
+// reason modal
+$(document).on("click","#reasaveButton",function(){
+            $.ajax({
+              
+              type : 'POST',
+              url:"{% url 'newreasons' %}",
+              data:{
+                  reasonlist : $("#reasoninp").val(),      
+                },
+                headers: {
+                            "X-CSRFToken": "{{ csrf_token }}"
+                      },
+                success: function(response) {
+                  document.getElementById("modalReason").reset();
+                  reloadReason();
+                },
+            });        
+          });
+                    
+function reloadReason() {
   $.ajax({
     url: "{% url 'newreasonslist' %}",
-    type: "GET",
-    dataType: "json",
-    data: $(this).serialize(),
-    csrfmiddlewaretoken: '{{ csrf_token }}',
-
+  
     success: function(data) {
-                var dropdown = $('.rsn');
+      console.log('hi')
+                var dropdown = $('#rsns');
                 var list = $('#rsn2');
                 dropdown.empty();
                 list.empty();
@@ -1445,7 +1453,11 @@ function reloadItem() {
   });
 }
 
+
+
+
 </script>
+
 
 
 {% endblock %}
