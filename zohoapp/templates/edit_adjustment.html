@@ -616,40 +616,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="-sm-12 col-md-6 col-lg-6">
                 <input type="submit" class="btn text-white mt-5" style="background-color:  rgb(59, 59, 58) ;  " name="save_draft" value="Save As Draft">
                 <input type="submit" class="btn text-white mt-5" style="background-color: rgb(210, 132, 30) ; " name="convert_adjusted" value="Convert to Adjusted"> 
-                <input type="reset" class="btn text-white mt-5" style="background-color: rgb(59, 59, 58);" value="Cancel" id="cancelButton">
-                        <div class="-sm-12 col-md-6 col-lg-6"></div>
+                
                     </div>
             
         </form>
 <!-- #### FORM ####  -->
 
-<!-- CANCEL BUTTON -->
-        <script>
-         // CANCEL BUTTON
-document.addEventListener("DOMContentLoaded", function() {
-    // Get a reference to the Cancel button
-    const cancelButton = document.getElementById("cancelButton");
-
-    // Add an event listener to the Cancel button
-    cancelButton.addEventListener("click", function(event) {
-        event.preventDefault(); // Prevent the form from actually submitting
-
-        // Get a reference to the form
-        const form = document.getElementById("forms");
-
-        // Reset the form to its initial state
-        form.reset();
-
-        // Reset the table display to Quantity Adjustment by default
-        showQuantityAdjustmentTable();
-
-        // Optionally, you can reset any other elements or data on the page here
-    });
-});
-
-
-        </script>
-<!-- CANCEL BUTTON -->
 
 
 

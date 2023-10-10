@@ -11092,8 +11092,6 @@ def save_adjustment(request):
 def inv_overview(request,id):
     users1=request.user.id
     user=request.user
-
-    
     alladj=Adjustment.objects.filter(user=user)
     adj=Adjustment.objects.get(id=id)
     adjItems=ItemAdjustment.objects.filter(adjustment=adj)
@@ -11263,7 +11261,7 @@ def update_adjustment(request,id):
 
         adjustment.save()
          
-    return redirect("inventory_adjustment")
+    return redirect("inv_overview",id)
         
 
 
