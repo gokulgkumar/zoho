@@ -330,7 +330,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <td class="bg-transparent text-light rownum">${rowNum}</td>
             <td>
                 <div class='form-group'>
-                    <select class='bg-transparent text-light border-0 item_select itm' name='item[]' id='item${rowNum}' onchange="selectonchange2(${rowNum})">
+                    <select class='bg-transparent text-light border-0 item_select inneritm' name='item[]' id='item${rowNum}' onchange="selectonchange2(${rowNum})">
                       <option class='text-white' hidden>Select Items</option>
                         {% for i in items %}
                         <option class="text-dark" value="{{i.Name}}" data-stock="{{i.stock}}" data-rate="{{i.rate}}">{{i.Name}}</option>
@@ -349,6 +349,8 @@ document.addEventListener('DOMContentLoaded', function() {
         tableBody.appendChild(newRow);
 
         reloadItem();
+
+        populateSelectsFromJSON();
 
         // Add event listeners for the new row
         const itemSelect = document.querySelector(`#item${rowNum}`);
@@ -385,6 +387,25 @@ document.addEventListener('DOMContentLoaded', function() {
             rownumElement.textContent = index + 1;
         });
     }
+
+    function populateSelectsFromJSON() {
+  var dropdown = $('.itm');
+  var row1drop = $('.inneritm');
+  var jsonData = JSON.parse(sessionStorage.getItem('itemData'));
+
+  jsonData.forEach(function(value) {
+    var optionText = value.optionText;
+
+    // Create options for the 'dropdown' select
+    dropdown.append($('<option class="custom-color"></option>').attr('data-stock', value.stock).attr('value', optionText).text(optionText));
+
+    // Create options for the 'row1drop' select
+    row1drop.append($('<option class="custom-color"></option>').attr('data-stock', value.stock).attr('value', optionText).text(optionText));
+  });
+}
+
+
+
 });
 
 
@@ -513,6 +534,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         reloadItem();
+
+        populateSelectsFromJSON();
     });
 
    
@@ -565,6 +588,22 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+function populateSelectsFromJSON() {
+  var dropdown = $('.itm2');
+  var row1drop = $('.inneritm2');
+  var jsonData = JSON.parse(sessionStorage.getItem('itemData'));
+
+  jsonData.forEach(function(value) {
+    var optionText = value.optionText;
+
+    // Create options for the 'dropdown' select
+    dropdown.append($('<option class="custom-color"></option>').attr('data-stock', value.stock).attr('data-rate', value.rate).attr('value', optionText).text(optionText));
+
+    // Create options for the 'row1drop' select
+    row1drop.append($('<option class="custom-color"></option>').attr('data-stock', value.stock).attr('data-rate', value.rate).attr('value', optionText).text(optionText));
+  });
+}
 
 </script>
 
@@ -1228,7 +1267,6 @@ $(document).on("click","#itemSave",function(){
   });        
 });
 
-
 function reloadItem() {
   $.ajax({
     url: "{% url 'new_item_dropdown' %}",
@@ -1248,45 +1286,37 @@ function reloadItem() {
       var dropdown2 = $('.itm2');
       var row2drop=$('.inneritm2');
 
-
-      row1drop.append($('<option class="custom-color" ></option>').attr('value', '').text('select a value'));
-      dropdown.append($('<option class="custom-color" ></option>').attr('value', '').text('select a value'));
+      var itemData = []
 
       $.each(data, function(key, value) {
 
        var itemInfo = data[key];
-
-      //  + " - Stock: " + itemInfo.stock + ", Value: " + (itemInfo.rate * itemInfo.stock)
-        var optionText = value.name ;
-
-
-
         
+        var optionText = value.name;
+        var stock = value.stock;
+        var rate = value.rate;
 
 
-
-        // row1drop.append($('<option class="custom-color" selected></option>').attr('value', '').text('select a value'));
-        // dropdown.append($('<option class="custom-color" selected></option>').attr('value', '').text('select a value'));
-        dropdown.append($('<option class="custom-color"></option>').attr('data-stock',value.stock).attr('value', optionText).text(optionText));
-        row1drop.append($('<option class="custom-color"></option>').attr('data-stock',value.stock).attr('value', optionText).text(optionText));
-
-        // dropdown2.append($('<option class="custom-color" selected></option>').attr('value', '').text('select a value'));
-        dropdown2.append(($('<option class="custom-color"></option>').attr('data-rate',value.rate).attr('data-stock',value.stock).attr('value', optionText).text(optionText)));
-        row2drop.append(($('<option class="custom-color"></option>').attr('data-rate',value.rate).attr('data-stock',value.stock).attr('value', optionText).text(optionText)));
-
+        itemData.push({
+          optionText: optionText,
+          stock: stock,
+          rate: rate
+        });
         
+      var dropdown = $('.itm');
+      var row1drop = $('.inneritm');
+      dropdown.append($('<option class="custom-color"></option>').attr('data-stock',value.stock).attr('value', optionText).text(optionText));
+      row1drop.append($('<option class="custom-color"></option>').attr('data-stock',value.stock).attr('value', optionText).text(optionText));
 
-        
       });
 
-     
+      sessionStorage.setItem('itemData', JSON.stringify(itemData));
      
     },
     error: function(xhr, status, error) {
     console.error(xhr.responseText);
     }
   });
-
 
 }
 
