@@ -52,13 +52,9 @@ tr:hover{
             Sort
           </button>
           <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-            <a class="dropdown-item" href="#"  data-sort="all"></a>
+            <a class="dropdown-item" href="#"  data-sort="all">All</a>
             <a class="dropdown-item" href="#"  data-sort="reason" style="color: white!important;">Reason</a>
             <a class="dropdown-item" href="#"  data-sort="referencenumber" style="color: white!important;">Reference Number</a>
-            <!-- <a class="dropdown-item" href="#"  data-sort="usage"></a>
-            {% comment %} <a class="dropdown-item" href="#" id="sortByName"></a>
-            <a class="dropdown-item" href="#" id="sortByreferencenumber"></a>
-            <a class="dropdown-item" href="#" id="sortByUsageUnit"></a> {% endcomment %} -->
           </div>
           
         </div>
@@ -160,6 +156,10 @@ $('#filterAllButton').on('click', function() {
 
 <script>
 
+$(document).ready(function() {
+      var originalTable = $('#dataTable').clone(); // Clone the original table on page load
+
+
 function sortByReason() {
   var rows = $('#dataTable tbody tr').get();
   rows.sort(function(a, b) {
@@ -178,14 +178,19 @@ function sortByReason() {
 function sortByReferenceNumber() {
   var rows = $('#dataTable tbody tr').get();
   rows.sort(function(a, b) {
-    var keyA = $(a).children('td').eq(4).text(); // Column index 4 for Reference Number
-    var keyB = $(b).children('td').eq(4).text();
+    var keyA = $(a).children('td').eq(3).text(); // Column index 4 for Reference Number
+    var keyB = $(b).children('td').eq(3).text();
     return keyA.localeCompare(keyB);
   });
   $.each(rows, function(index, row) {
     $('#dataTable').children('tbody').append(row);
   });
 }
+
+function restoreOriginalTable() {
+        $('#dataTable').replaceWith(originalTable.clone()); // Replace the current table with the original table clone
+      }
+
 
 // Modify the event handler for the "Sort" dropdown
 $('[data-sort]').on('click', function() {
@@ -199,6 +204,7 @@ $('[data-sort]').on('click', function() {
   } else if (sortType === 'all') {
     restoreOriginalTable();
   }
+});
 });
 
 

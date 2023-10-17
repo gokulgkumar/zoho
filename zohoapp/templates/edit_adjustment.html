@@ -1305,6 +1305,11 @@ function reloadItem() {
         
       var dropdown = $('.itm');
       var row1drop = $('.inneritm');
+      var dropdown2 = $('.itm2');
+      var row2drop=$('.inneritm2');
+
+      dropdown2.append($('<option class="custom-color"></option>').attr('data-rate',value.rate).attr('data-stock',value.stock).attr('value', optionText).text(optionText));
+      row2drop.append($('<option class="custom-color"></option>').attr('data-rate',value.rate).attr('data-stock',value.stock).attr('value', optionText).text(optionText));
       dropdown.append($('<option class="custom-color"></option>').attr('data-stock',value.stock).attr('value', optionText).text(optionText));
       row1drop.append($('<option class="custom-color"></option>').attr('data-stock',value.stock).attr('value', optionText).text(optionText));
 

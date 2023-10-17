@@ -286,6 +286,8 @@
 
 <!-- adding row for table 2 -->
 
+
+
 <script>
 // FIRST ROW
 let rowNum = 1;
@@ -409,7 +411,7 @@ function updateDiscount(diffInput, rateInput, qtyInput) {
     diffInput.value = difference.toFixed(2);
 }
 
-</script>
+</script> 
    
 
 <!--..................................... END OF TABLE 2 ..................................................-->
@@ -489,6 +491,11 @@ function updateDiscount(diffInput, rateInput, qtyInput) {
 
 
 <!-- adding row for table 1 -->
+
+
+
+
+
 
 
 <script>
@@ -571,7 +578,7 @@ function updateDiscount(diffInput, rateInput, qtyInput) {
             row.querySelector('.discount').value = difference2.toFixed(2);
         }
     });
-
+    
     document.querySelector('#item_table2 tbody').addEventListener('click', function(e) {
         const target = e.target;
         if (target.classList.contains('delete-row')) {
@@ -580,6 +587,10 @@ function updateDiscount(diffInput, rateInput, qtyInput) {
             rowNum2--; 
         }
     });
+
+
+
+    
 });
 
 function populateSelectsFromJSON() {
@@ -599,6 +610,7 @@ function populateSelectsFromJSON() {
 }
 
 </script>
+
 
 
   
@@ -1278,6 +1290,11 @@ function reloadItem() {
         
       var dropdown = $('.itm');
       var row1drop = $('.inneritm');
+      var dropdown2 = $('.itm2');
+      var row2drop=$('.inneritm2');
+
+      dropdown2.append($('<option class="custom-color"></option>').attr('data-rate',value.rate).attr('data-stock',value.stock).attr('value', optionText).text(optionText));
+      row2drop.append($('<option class="custom-color"></option>').attr('data-rate',value.rate).attr('data-stock',value.stock).attr('value', optionText).text(optionText));
       dropdown.append($('<option class="custom-color"></option>').attr('data-stock',value.stock).attr('value', optionText).text(optionText));
       row1drop.append($('<option class="custom-color"></option>').attr('data-stock',value.stock).attr('value', optionText).text(optionText));
 
